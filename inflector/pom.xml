@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<name>Inflector</name>
+	<packaging>jar</packaging>
+	<groupId>net.java.dev.inflector</groupId>
+	<artifactId>inflector</artifactId>
+	<version>0.7.0-patched</version>
+
+	<organization>
+		<name>Tom White</name>
+		<url>http://www.tiling.org/</url>
+	</organization>
+
+	<inceptionYear>2006</inceptionYear>
+
+
+	<description>Inflector is a Java API for forming plurals of
+		words. The goal of the project is to provide a high-quality,
+		easy-to-use API that is localizable to support any language.
+	</description>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>2.4</version>
+		</dependency>
+	</dependencies>
+	
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

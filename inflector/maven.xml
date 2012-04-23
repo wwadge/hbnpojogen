@@ -1,0 +1,9 @@
+<project xmlns:j="jelly:core" xmlns:u="jelly:util">
+
+	<postGoal name="xdoc:register-reports">
+		<attainGoal name="maven-changelog-plugin:deregister"/>
+		<attainGoal name="maven-file-activity-plugin:deregister"/>
+		<attainGoal name="maven-developer-activity-plugin:deregister"/>
+	</postGoal>   
+
+</project>

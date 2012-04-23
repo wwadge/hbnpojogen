@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>Inflector - User Guide</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+
+<p>
+Inflector provides an API for forming the plurals of nouns. Here's a simple example:
+</p>
+
+<pre><code>System.out.println(Noun.pluralOf("loaf"));</code></pre>
+
+<p>
+This will print
+</p>
+
+<pre><code>loaves</code></pre>
+
+<p>
+to the console.
+</p>
+
+<p>
+It's handy to use Java 5 static imports to make this more readable,
+particularly if you are forming lots of plurals.
+</p>
+
+<pre><code>import static org.jvnet.inflector.Noun.pluralOf;
+...
+System.out.println(pluralOf("loaf"));
+</code></pre>
+ 
+<h3>Nouns</h3>
+
+<p>
+It is often useful to use a {@link java.util.Formatter}. For example, 
+</p>
+
+<pre><code>System.out.printf("I bought 10 %s.", pluralOf("loaf"));
+</code></pre>
+
+<p>
+prints
+</p>
+
+<pre><code>I bought 10 loaves.</code></pre>
+
+<p>
+Of course, you can parameterize the number, as follows.
+</p>
+
+<pre><code>int n = 10;
+System.out.printf("I bought %d %s.", n, pluralOf("loaf", n));
+</code></pre>
+
+<p>
+Notice that you pass the number into the <code>pluralOf</code> method to make sure the noun agrees.
+For example, if <code>n = 1</code> in the previous example, it would correctly print
+</p>
+
+<pre><code>I bought 1 loaf.</code></pre>
+
+<h3>Internationalization</h3>
+
+<p>
+The examples so far use the default locale to determine the pluralization algorithm to use. You can explictly set
+the locale to use by passing another argument:
+</p>
+
+<pre><code>System.out.println(pluralOf("pagnotta", Locale.ITALIAN));
+</code></pre>
+
+<p>
+prints
+</p>
+
+<pre><code>pagnotte</code></pre>
+
+<h3>Custom Pluralization</h3>
+
+<p>
+The pluralization algorithms that come with Inflector may not meet your needs. Perhaps there is no algorithm for your language,
+or perhaps the rules don't fit the usage that is appropriate for your application. The English
+pluralizer, for example, is fairly modern: it does not support many classical rules that are rare nowadays.
+</p>
+
+<p>
+In this case it is straightforward to write your own pluralizer, or simply extend another one to override some of its rules.
+The follow code overrides the plural for <i>box</i> to <a href="http://www.catb.org/~esr/jargon/html/B/boxen.html"><i>boxen</i></a> by using a {@link org.jvnet.inflector.rule.RegexReplacementRule}:
+</p>
+
+<pre><code>List&lt;Rule&gt; customRules = new ArrayList&lt;Rule&gt;();
+customRules.add(new RegexReplacementRule("(?i)(.*)box", "$1boxen"));
+Pluralizer customPluralizer = new RuleBasedPluralizer(customRules, Locale.ENGLISH, Noun.pluralizer(Locale.ENGLISH));
+System.out.println(pluralOf("box"));
+System.out.println(pluralOf("box", customPluralizer));
+System.out.println(pluralOf("chatterbox", customPluralizer));
+</code></pre>
+
+<p>
+This prints
+</p>
+
+<pre><code>boxes
+boxen
+chatterboxen</code></pre>
+
+<p>
+If you are interested in writing more complex rules, there are many other implementations of
+{@link org.jvnet.inflector.Rule} in the {@link org.jvnet.inflector.rule} package.
+</p>
+
+</body>
+</html>
+
