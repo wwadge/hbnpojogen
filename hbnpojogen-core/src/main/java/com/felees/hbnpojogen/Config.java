@@ -583,6 +583,9 @@ public class Config {
             else if (State.getInstance().dbType.equalsIgnoreCase("MSSQL")) {
                 State.getInstance().dbMode = 1;
             }
+            else if (State.getInstance().dbType.equalsIgnoreCase("PostgreSQL")) {
+            	                State.getInstance().dbMode = 2;
+            	            }
         }
         State.getInstance().dbIP = Config.config.getString(Constants.DATABASE_IP);
         State.getInstance().dbCatalog = Config.config.getString(Constants.DATABASE_CATALOG);

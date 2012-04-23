@@ -101,7 +101,9 @@ implements Serializable {
 		String result = "";
 		// Get the table name
 		if (rs2.next()) {
-			result = rs2.getString(TABLE_CAT) + "." + rs2.getString(JDBC_TABLE_NAME);
+			  String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
+			  result = catalog + "." + rs2.getString(JDBC_TABLE_NAME);
+
 		}
 		rs2.close();
 		return result;
@@ -167,7 +169,9 @@ implements Serializable {
 
 			// Get the table name
 			while (resultSet.next()) {
-				tables.add(resultSet.getString(TABLE_CAT) + "." + resultSet.getString(JDBC_TABLE_NAME));
+				  String catalog = resultSet.getString(TABLE_CAT) == null ? dbCat : resultSet.getString(TABLE_CAT); //STANIMIR
+				  tables.add(catalog + "." + resultSet.getString(JDBC_TABLE_NAME));
+
 			}
 		}
 
@@ -177,7 +181,9 @@ implements Serializable {
 
 			// Get the table name
 			while (resultSet.next()) {
-				String name = resultSet.getString(TABLE_CAT) + "." + resultSet.getString(JDBC_TABLE_NAME);
+				   String catalog = resultSet.getString(TABLE_CAT) == null ? dbCat : resultSet.getString(TABLE_CAT);  //STANIMIR
+				   String name = catalog + "." + resultSet.getString(JDBC_TABLE_NAME);
+
 				tables.add(name);
 				viewSet.add(name);
 			}
@@ -215,7 +221,9 @@ implements Serializable {
 
 				while (importedK.next()) {
 					RelationItem relItem = new RelationItem();
-					relItem.setCatalog(importedK.getString(JDBC_PKTABLE_CAT));
+					 String catalog = importedK.getString(JDBC_PKTABLE_CAT) == null ? dbCatalog : importedK.getString(JDBC_PKTABLE_CAT);  //STANIMIR
+					 relItem.setCatalog(catalog);
+
 					relItem.setTableName(importedK.getString(JDBC_PKTABLE_NAME));
 					relItem.setFkColumnName(importedK.getString(FKCOLUMN_NAME));
 					
@@ -238,7 +246,9 @@ implements Serializable {
 
 								// Get the table name
 								while (rs2.next()) {
-									tables.add(rs2.getString(TABLE_CAT) + "." + rs2.getString(JDBC_TABLE_NAME));
+									
+									 String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
+									 tables.add(catalog + "." + rs2.getString(JDBC_TABLE_NAME));
 								}
 
 								// New catalog seen. Add all views
@@ -246,7 +256,9 @@ implements Serializable {
 
 								// Get the table name
 								while (rs2.next()) {
-									String name = rs2.getString(TABLE_CAT) + "." + rs2.getString(JDBC_TABLE_NAME);
+									  String catalog = rs2.getString(TABLE_CAT) == null ? dbCatalog : rs2.getString(TABLE_CAT);  //STANIMIR
+									  String name = catalog + "." + rs2.getString(JDBC_TABLE_NAME);
+
 									tables.add(name);
 									viewSet.add(name);
 								}
@@ -266,7 +278,9 @@ implements Serializable {
 												new String[] { JDBC_TABLE, "VIEW" });
 								
 									if (resultSet.next()) {
-										String match = resultSet.getString(TABLE_CAT) + "." + resultSet.getString(JDBC_TABLE_NAME);
+										   String catalog = resultSet.getString(TABLE_CAT) == null ? dbCatalog : resultSet.getString(TABLE_CAT);  //STANIMIR
+										    String match = catalog + "." + resultSet.getString(JDBC_TABLE_NAME);
+
 										boolean matched = false;
 
 										for (String s : tables) { // sucks!! : O(n)
@@ -421,8 +435,10 @@ implements Serializable {
 
 				// Get the table name
 				if (rs2.next()) {
+					  String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
+
 					// keep in a treeset to avoid adding the same table twice
-					tablesToAdd.add(rs2.getString(TABLE_CAT) + "." + rs2.getString(JDBC_TABLE_NAME));
+					  tablesToAdd.add(catalog + "." + rs2.getString(JDBC_TABLE_NAME));
 				}
 
 

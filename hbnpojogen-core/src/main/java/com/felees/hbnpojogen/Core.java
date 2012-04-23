@@ -100,7 +100,7 @@ public class Core {
 			String tmpTableName = tableName;
 
 			String rsQuery = String.format("SELECT * FROM `%s`.`%s` WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), SyncUtils.getTableName(tmpTableName));
-			if (State.getInstance().dbMode == 1) {
+			if (State.getInstance().dbMode == 1 || State.getInstance().dbMode == 2) {
 				tmpTableName = SyncUtils.getTableName(tmpTableName);
 				rsQuery = String.format("SELECT * FROM %s  WHERE 1=2 ", tmpTableName);
 			}
