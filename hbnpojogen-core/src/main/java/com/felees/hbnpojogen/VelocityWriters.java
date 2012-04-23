@@ -937,6 +937,10 @@ public class VelocityWriters {
         			!State.getInstance().ignoreEverythingExceptList.contains(cat)){
     				continue;
     			}
+        	
+        	if (State.getInstance().noOutPutForSchemaList.contains(cat)){
+        		continue;
+        	}
     				
     			
             String shortest = SyncUtils.getConfigPackage(cat, PackageTypeEnum.DAO);
