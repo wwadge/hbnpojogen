@@ -1,0 +1,4 @@
+hbnpojogen
+==========
+
+Hibernate Pojo Generator
