@@ -5,7 +5,7 @@
 
 	<groupId>com.felees</groupId>
 	<artifactId>hbnpojogen</artifactId>
-	<version>1.4.30</version>
+	<version>1.4.31</version>
 	<packaging>pom</packaging>
 
 	<name>Hibernate POJO Generator</name>
