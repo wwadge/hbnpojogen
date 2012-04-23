@@ -1,0 +1,35 @@
+Changelog
+---------
+
+
+hbnpojogen-persistence v1.3.3:
+- Fixed Jetty classloading setup
+
+hbnpojogen v1.0.1
+  - Fixed incorrect 2nd level cache setting in template
+  
+hbnpojogen v1.0.2
+  - Added noArtifactVersions support in maven pom output.
+  
+hbnpojogen v1.0.3
+  - Fixed dbversion bug in case of different sort order.
+ 
+hbnpojogen v1.0.4
+  - Added JNDI support.
+
+hbnpojogen v1.0.6
+  - LDAP support
+  - Synchronizer version in pom.xml
+  - DAOTest -> DAOIntegrationTest
+  
+ hbnpojogen v1.0.8
+  - Don't generate hashcode for subclasses.
+
+hbnpojogen v1.0.9
+  - Support version checking using >= too
+  
+hbnpojogen v1.0.10
+  - Manual saves in daotest: add support for problematic OneToOne too
+  - Add extra meta-data to fail early on nullables in joinColumns
+  
+    

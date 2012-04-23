@@ -1,0 +1,1056 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Hibernate Pojo Generator</title>
+<link rel="shortcut icon" href="favicon.ico" />
+
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script>
+	function loadpage(page){
+		document.getElementById("ContentArea").innerHTML=document.getElementById(page).innerHTML;
+	}	
+	
+</script>
+</head>
+
+<body onload="javascript:loadpage('main');">
+<div id="header2">
+<div class="logo">
+Hibernate Pojo Generator
+</div>
+<div class="banner"><span>Java source code generator</span></div>
+</div>
+<div id="sampleoutput" style="display:none">
+	<h1>Sample output</h1>
+	Only the code marked with "author: auto-generated" is directly produced from the generator. The rest of the code is merely copied over from a skeleton directory and may be removed from your target application. The main packages to note are:
+	<ul>
+		<li>The objects representing each table<p><b>com.demo.demo.model.obj.demo</b>
+		<li>Unit tests<p><b>test.com.demo</b>
+	</ul>
+
+	<a href="output/index.html">Access the sample code</a>
+</div>
+<div id="thanks" style="display:none">
+	<h1>Thanks</h1>
+	Thanks goes to:
+	<ul><li> My employer, who accepted to release the source of this project (but opted to remain anonymous)
+		<li> Joe Hudson for inspiring this project - see his <a href="http://hibernatesynch.sourceforge.net/" target="_">alternate hibernate source code generator</a>
+		<li> YourKit for providing me with a license to their <a href="http://www.yourkit.com/java/profiler/index.jsp">awesome java profiler</a>. 
+	</ul>	
+</div>
+
+<div id="configuration" style="display:none">
+	HbnPojoGen takes its input from one central configuration. Normally you will edit a provided configuration file to suit your requirements. A minimal config file looks as follows:
+	<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;appconfig&gt;
+	&lt;dbType&gt;MYSQL&lt;/dbType&gt;
+	&lt;driver&gt;com.mysql.jdbc.Driver&lt;/driver&gt;
+      	&lt;jdbcConnectionString&gt;jdbc:mysql://127.0.0.1/hbnPojoTest&lt;/jdbcConnectionString&gt;
+	&lt;databaseIP&gt;localhost&lt;/databaseIP&gt;
+	&lt;databaseCatalog&gt;someDBName&lt;/databaseCatalog&gt;
+	&lt;databaseUsername&gt;root&lt;/databaseUsername&gt;
+	&lt;databasePassword&gt;abcdefgh&lt;/databasePassword&gt;
+	&lt;sourceTarget&gt;D:/Workspace/yourProject&lt;/sourceTarget&gt;
+	&lt;projectName&gt;yourProjectName&lt;/projectName&gt;
+	&lt;topLevel&gt;com.yourcompany&lt;/topLevel&gt;
+	&lt;libPath&gt;libs&lt;/libPath&gt;
+	&lt;schemaStrategy&gt;PARTIAL&lt;/schemaStrategy&gt;
+&lt;/appconfig&gt;
+</pre>
+
+The menu on this page also lists additional configuration options you may include.
+</div>	
+<div id="requirements" style="display:none">
+<h1>Requirements</h1>
+
+The binary releases have been compiled using JVM version 6. You will need this version (or later) to run it directly.
+Alternatively, download the source code and compile it with your favourite compiler. The source code is in a form ready to be loaded as an eclipse project.
+You will also need a working MySQL DB and some free space to output the source files.
+
+</div>
+<div id="usageexample" style="display:none">
+<h1>Usage</h1>
+
+HbnPojoGen is not (yet) an eclipse plugin. To use, run the jar file provided together with a config file which you’ll have to customize to your liking as follows:<h4>&nbsp;</h4>
+
+<b>java -jar hbnPojoGen.jar config.xml</b><h4>&nbsp;</h4>
+
+The <a href="javascript:loadpage('configuration')">configuration file</a> contains everything necessary to generate your source code. 
+	
+<h1>Using the generated code</h1>
+
+The generator sets up <a href="http://www.springframework.org/"  target="_">Spring</a>, via applicationContext.xml, to provide for the right dependency injection for use in the generated test cases. You might need to modify this file to provide injection support for your application.  See Spring documentation for more information about this.
+<p>
+Once setup, usage of the generated code is fairly typical:
+<p><pre>
+SomeTableDao someTableDao = HibernateDaoFactory.getSomeTableDao();
+SomeTable someTable = new someTable();
+someTable.setFoo(..);
+someTableDao.save(someTable);
+</pre>
+
+With the generated data services layer, the code becomes even simpler:
+<p><pre>
+SomeTable someTable = DataServices.getSomeTable(100);
+someTable.setFoo(..);
+DataServices.save(someTable);
+</pre>
+
+or you might wish to use spring:
+<p>
+<pre>
+@Autowire
+SomeTableDao dao;
+...
+SomeTable someTable = DataServices.getSomeTable(100);
+someTable.setFoo(..);
+dao.save(sometable);
+</pre>
+
+Remember that the generator also creates a test case for every table in your schema so just have a look at the generated code for examples of saving and retreiving your data. You might also wish to have a look at some <a href="javascript:loadpage('sampleoutput')">sample output.</a>
+
+</div>
+<div id="news" style="display:none">
+<h1>News & releases</h1>
+<ul>
+<li>2009/4/23 - v1.0: Mavenized, Equals, subclass, composite keys & other bug fixes, Enums can now support additional columns, 
+NarrowProxy changes, OSGi meta inf added, ehcache outside of target pom, hibernate bug workaround for typedef in composite PK,
+random-generator fixes, Support for lazy connections in spring, multiple interfaces possible + onetoone bugfix, reverse lookups for enums, new component scan
+allow more fine tuning of treatLinkAsEnum, assembly plugin for maven, inverse renaming supported, Cascade all --> cascade persist / merge
+
+<li>2008/10/29 - v0.9.5 adds maven support, DB version checking,  bug fixes and more!
+
+<li>2008/7/18 - v0.9.4.3 adds the following features: configuration options for configuring cascading and lazy/eager fetching. It also fixes numerous bugs especially
+related to proxies/lazy loading. Important: Until http://opensource.atlassian.com/projects/hibernate/browse/HHH-3334;jsessionid=aafS6to7TNW-flCL1S is fixed, this new
+distribution is including hibernate3-custom.jar, the hibernate distribution jar with the fix applied. This bypasses a
+large number of problems and makes test cases much simpler. 
+
+<li>2008/5/21 - v0.9.4.2 adds the following features: disabling of back links, suppressing schema output, custom class imports.
+ 
+<li>2008/5/1 - v0.9.4 brings you abstract classes support, state dumping, interfaces for your objects, cyclic dependency support and more. 
+It also further simplifies spring/hibernate configuration: hibernate.cfg.xml is now merged in spring's applicationContext file and we now longer explicitly list each class to map but rely on scanning for classes instead. 
+Upgrade notes: You might wish to add &lt;objectInterfacePackage&gt; in the dbPackageMap section to specify the target output for the new interface generation code.  See the sample configuration file for more details.
+ 
+
+<li>Version 0.9.3 fixes the usual plethora of bugs and makes some pretty good changes
+in the spring setup. Specifically, session management is now handled almost completely by spring and the configuration file is much shorter since we're using annotation-driven configuration now. The unit test cases also make use of spring features by automatically rolling back any changes after each test (add @Rollback(false) on any test you wish to persist the changes to the database). 
+<p><p>
+Version 0.9 fixes a number of bugs and adds support for:
+<ul>
+<li> Custom package naming
+<li> Coalescing of enums
+<li> Ability to customize the generator used (Auto, UUID, etc)
+<li> Allow breakup an enum into a table
+<li> Allow custom annotations on classes
+<li> Option to disable code generation of table cleanup code.
+</ul> 
+</ul>
+Upgrading notes:
+
+<ul><li> The config file requires an additional mandatory parameter: &lt;dbType&gt;
+<li>JUnit jar file has been updated to version 4.4, thus deprecating some methods. 
+</ul>
+ 
+You are strongly encouraged to upgrade from any previous release. 
+</div>
+<div id="howitworks" style="display:none">
+<h1>How does it work?</h1>
+<p>The generator uses JDBC to look at your database metadata to obtain the relationships between the tables, field types and so on. Once this is done, it constructs an object model representing the tables in the java world and thereafter uses <a href=\"http://velocity.apache.org\"  target="_">Velocity</a> as a templating engine to actually write out your source code.<br /> 
+
+The whole process, usually lasting just several seconds, is completely automated and requires no further interaction on your part.
+
+<h1>What about the generated code?</h1>
+
+A lot of work has gone into ensuring the resultant code is free from any errors, warnings or broken conventions. At the end of the run, your target folder will contain: 
+
+<ul><li> A class for each table in your database
+	<li> A Data Access Object (+ interface) to access that table 
+	<li> Enumeration objects pertaining to that class <li> Data factories <li> JUnit v4 test case per table 
+	<li> All the relevant hibernate and spring configuration files
+	<li> A data services layer containing static methods to access your data (load(..), save(..), etc)
+	<li> Other minor stuff like Maven POM files and Ant build files.
+</ul>
+<p>
+Of course, you always have access to both the source code as well as the velocity template files.
+
+<h1>I have business logic code...</h1>
+Keep that in your own services layer. Remember that the generator will build your <i>data layer</i> for you, it is up to your application to provide higher level abstractions for the rest of your codebase. The code generated is meant to be completely overwritten on each database change; indeed it is recommended that you script your changes in such a way so as to regenerate your data layer automatically on each change.
+</div>
+
+<div id="main" style="display:none">
+	<h1>What does it do?</h1>
+	<p>	Given an accessible database schema, the Hibernate POJO Generator produces all the Java code
+	necessary to access each field in each table via the <a href="http://www.hibernate.org"  target="_">Hibernate</a> persistence framework. Additionally, the generator also creates all the necessary helper classes and test units for each component.
+<h1>&nbsp;</h1>
+	<blockquote>
+	<p> Typically, invocation of the generator generates source code with
+no errors/warnings and test cases that are able to run immediately
+without further customizations.</blockquote><p>
+<h1>&nbsp;</h1>
+<h1>Features</h1>
+Given a source database, Hibernate POJO Generator (hbnPojoGen)
+generates:
+<ul>
+	<li>Java objects representing each table using annotations for use
+	with Hibernate.</li>
+	<li>A JUnit test case per table that uses the objects generated to
+	create, populate, save, retrieve and compare results</li>
+	<li>DAO per class</li>
+	<li>The appropriate enumeration files</li>
+	<li>Spring and hibernate configuration</li>
+	<li>DAO layers</li>
+	<li>A data factory class per schema to return a pre-populated
+	object with random data (for boundary checking, database population,
+	etc)</li>
+</ul>
+<h1>Also supports</h1>
+<ul>
+	<li>Join tables including those with additional fields in link
+	tables</li>
+	<li>Polymorphism/inheritance support</li>
+	<li>Composite Keys</li>
+	<li>One-To-One, many-to-one, many-to-many, etc</li>
+	<li>Multiple schema support (4 modes)</li>
+	<li>Natural Keys</li>
+	<li>Enumerations (including those entries which cannot be mapped cleanly onto the java world)
+	<li>A whole bunch of more stuff (see sample.xml)
+</ul>
+<br>
+
+<blockquote>
+YourKit is kindly supporting open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of innovative and intelligent tools for profiling
+Java and .NET applications. Take a look at YourKit's leading software products:
+<a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a> and
+<a href="http://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>.
+</blockquote>
+<br>
+</div>
+<div id="Content">
+	<h2>Hibernate POJO Generator </h2>
+<div id="ContentArea">
+</div>
+</div>
+
+<div id="knownissues" style="display:none">
+	<h1>Known Issues</h1>
+	<ul>
+		<li> Although JDBC is meant to hide database differences, each connector driver has its quirks; therefore at the moment, the generator is only known to work correctly on MySQL databases though it has been reported that MS-SQL support looks pretty good too. Support for other databases, notably PostgreSQL, is coming soon. Other databases are as yet untested (submit reports!)	
+		<li> On MySQL, it is recommended to switch on <i>lower_case_names</i> to 2 prior to creating your database schema so as to have prettier java name conventions. Alternately, should your table/field names contain underscores as separators, the generator will automatically convert these to camelCase.
+	</ul>
+</div>
+
+
+
+<div id="configuration-versioncheck" style="display:none">
+<h1>Version Checking</h1>
+
+Suppose you want to make sure that the model code that is generated is only used
+on the database schema that was present during code generation stage. In addition
+to using hbm2ddl.auto=validate to check your schema via hibernate, you may also 
+switch on version checking code during run-time. This works by creating a file
+in each schema/package that is scanned during startup by Spring like all other
+components. This file contains the version number as read during code generation,
+which is then checked at runtime to make sure that the database is what we were
+expecting. 
+
+<pre>
+	&lt;versionCheck defaultEnabled="true" defaultTable="db_version" defaultFields="branch, alter_no"&gt;
+	 	&lt;except schema="someSchema" table="db_version" fields="branch, alter_no" enabled="false"/&gt;
+	&lt;/versionCheck&gt;
+</pre>
+
+where: 
+<ul>
+	<li> defaultEnabled = enable/disable all version checking for all schemas. Default: true</li>
+	<li>defaultTable = table Name to use for each schema so you can have schema1.db_version, schema2.db_version. Default: db_version</li>
+	<li>defaultFields = comma-separated list of fields to use during version check. Default: branch, alter_no</li>
+	<li>
+	Except section: Override the default values. Eg: Enable all checks for all
+	schemas (defaultEnable=true) except schema someSchema.</li>  
+</ul>
+</div>
+
+
+
+<div id="configuration-maven" style="display:none">
+Hibernate Pojo Generator offers Maven support in two ways: it allows you to set the 
+target folders (eg src/main/java - see <a href="javascript:loadpage('configuration-packagenaming')">Package naming</a>) and is able to create pom files.
+<p>
+Note that enabling maven support also implies that the default output folders will change to reflect the ones normally used by maven (src/main/java etc). 
+
+<pre>
+&lt;maven enabled="true" artifactId="some-artifact" groupId="com.yourcompany" version="1.3" name="Some friendly name"&gt;
+	&lt;dependencies&gt;&lt;![CDATA[
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+		&lt;artifactId&gt;hibernate&lt;/artifactId&gt;
+		&lt;version&gt;3.2.6&lt;/version&gt;
+	&lt;/dependency&gt;]]&gt;
+	&lt;/dependencies&gt;
+		
+	&lt;distributionManagement&gt;
+			&lt;![CDATA[
+			&lt;repository&gt;
+				&lt;id&gt;someid&lt;/id&gt;
+				&lt;name&gt;somename&lt;/name&gt;
+				&lt;url&gt;http://some.url.here/archiva/repository/&lt;/url&gt;
+			&lt;/repository&gt;
+			]]&gt;
+	&lt;/distributionManagement&gt;
+&lt;/maven&gt;
+</pre>
+
+To enable maven support, make sure that you have specified enabled="true" in the &lt;maven&gt; tag. 
+The version, artifactIds and other attributes are copied over to the appropriate sections in
+your resultant pom.xml file. Use the &lt;dependencies&gt; and &lt;distributionManagement&gt; 
+sections to copy over segments to your maven configuration file.
+<p>
+
+Note: At time of writing, the Hibernate artifact must be specified in the config file
+(this is due to Hibernate not yet having merged in some important bug fixes). When the Hibernate
+team release a corrected version, this will go away. Alternatively, add the required item in
+the template file (templates/pom.vm). 
+</div>
+
+
+
+
+<div id="configuration-disablebacklinks" style="display:none">
+<h1>Disabling backlinks</h1>
+
+Use the disableBackLinks section to specify that the generator should not generate 
+inverse links in the case of one-to-many/many-to-one links.
+For example if table A contains a link to table B, you'll obtain 
+ClassA.getB() but not ClassB.getAs(). "*" wildcards are allowed implying 
+"any" (see examples below)
+
+<pre>	
+	&lt;disableBackLinks&gt;
+		&lt;nobacklink from="schemaA.*" to="schemaB.*" from-field="*" /&gt;
+		&lt;nobacklink from="*.*" to="*.country" from-field="*" /&gt;
+		&lt;nobacklink from="schemaA.sometable" to="schemaB.linkedtable" from-field="somefield" /&gt;
+	&lt;/disableBackLinks&gt;
+</pre>
+
+<h1>Data pool factory backlinks</h1>
+	
+Set disableBackLinksInDataPoolFactory to true to prevent the datapool
+	factory from returning objects with backlinks. The default is to make
+	calls such as obj.addXXX(B) rather than b.setXXX(obj) 
+
+Example:
+<pre>
+	&lt;disableBackLinksInDataPoolFactory&gt;false&lt;/disableBackLinksInDataPoolFactory&gt;
+
+</div>
+
+
+<div id="configuration-annotations" style="display:none">
+<h1>Custom Annotations and Custom Code</h1>
+You can opt to add any custom annotations to properties, classes, method getters or method setters. Simply specify the class, your annotations and the location where you wish your annotation to reside. You 
+may also "paste in" additional code in the generated classes. For example you might have:
+
+<pre>
+public void setName(String name) {
+	this.Name = name;
+}
+</pre>
+
+changed to
+
+<pre>
+public void setName(String name) {
+	if (name.equals("")) throw new IllegalArgumentException(...);
+	this.Name = name;
+}
+</pre>
+
+You may also add any code you wish at the end of any generated class, add additional
+imports or make your class implement any number of interfaces. 
+You may also use wildcards in the classname definition eg *.yourclass, yourschema.* or *.* 
+
+<p>
+<pre>
+&lt;annotations&gt;
+	&lt;class name="someClassName"&gt;
+	&lt;imports&gt;
+		&lt;import&gt;your.custom.import&lt;/import&gt;
+		&lt;import&gt;your.custom.import2&lt;/import&gt;
+	&lt;/imports&gt;
+	&lt;implements&gt;
+		&lt;interface&gt;someInterface&lt;/interface&gt;
+		&lt;interface&gt;someOtherInterface&lt;/interface&gt;
+	&lt;/implements&gt;
+	&lt;classAnnotation&gt;&lt;![CDATA[@yourcustomAnnotation]]&gt;&lt;/classAnnotation&gt;
+	&lt;customClassCode>
+				<![CDATA[ extra custom class code pasted at the end]]>
+	&lt;/customClassCode>
+		&lt;property name="Amount"&gt;
+			&lt;annotation type="property"&gt;foo on prop&lt;/annotation&gt;
+			&lt;annotation type="getter"&gt;bar on getter&lt;/annotation&gt;
+			&lt;annotation type="setter"&gt;blah on setter&lt;/annotation&gt;
+			&lt;annotation type="getterprecondition"&gt;&lt;![CDATA[ logger.debug("About to enter getter method"); ]]&gt;&lt;/annotation&gt;
+			&lt;annotation type="setterprecondition"&gt;
+					&lt;![CDATA[ 
+						if (foo.equals("")) throw new IllegalArgumentException(); 
+					]]&gt;
+			&lt;/annotation&gt;
+			&lt;annotation type="getterpostcondition"&gt;&lt;![CDATA[ logger.debug("Exiting getter method"); ]]&gt;&lt;/annotation&gt;
+			&lt;annotation type="setterpostcondition"&gt;&lt;![CDATA[ logger.debug("Exiting method"); ]]&gt;&lt;/annotation&gt;
+		&lt;/property&gt;
+	&lt;/class&gt;
+&lt;/annotations&gt;
+</pre>
+</div>
+
+<div id="configuration-nooutput" style="display:none">
+<h1>Output suppression</h1>
+
+Sometimes you may wish to package your code in such a way so as to import classes
+of a schema from somewhere else. The &lt;noOutputForSchema&gt; section specifies that, 
+though everything should be processed as usual, no files for the schemas listed 
+below should be generated. This is especially useful in conjunction with &lt;disableBackLinks&gt;.
+
+<pre>
+	&lt;noOutputForSchema&gt;
+		&lt;ignore&gt;someSchema&lt;/ignore&gt;
+	&lt;/noOutputForSchema&gt;
+</pre>
+</div>
+
+
+
+
+<div id="configuration-packagenaming" style="display:none">
+<h1>Package Naming</h1>
+
+By default the generator will opt for a certain package style as follows:<p>
+<pre>
+com.yourcompany.yourProjectName.model.obj.SchemaName
+</pre>
+
+You may opt to change this pattern to your liking by using the &lt;dbPackageMap&gt; configuration section as in the following example:<p>
+<pre>
+&lt;dbPackageMap&gt;
+	&lt;map schema="DEFAULT"&gt;
+		&lt;!--  Location of hibernate objects. --&gt;
+		&lt;objectPackage&gt;${topLevel}.${projectName}.model.obj.${DB}&lt;/objectPackage&gt;
+		&lt;!--  Location of interface for hibernate objects. --&gt;
+		&lt;objectPackageInterface&gt;${topLevel}.${projectName}.model.obj.${DB}&lt;/objectPackageInterface&gt;
+		&lt;!--  Location of hibernate DAO objects.  --&gt;
+		&lt;daoPackage&gt;${topLevel}.${projectName}.model.dao.${DB}&lt;/daoPackage&gt;
+		&lt;daoPackageImpl&gt;${topLevel}.${projectName}.model.dao.impl.${DB}&lt;/daoPackageImpl&gt;
+		&lt;!--  Location of hibernate enum objects. --&gt;
+		&lt;enumPackage&gt;${topLevel}.${projectName}.enums.db.${DB}&lt;/enumPackage&gt;
+		&lt;!--  Location of hibernate factory objects.  --&gt;
+		&lt;factoryPackage&gt;${topLevel}.${projectName}.factories.${DB}&lt;/factoryPackage&gt;
+		&lt;!--  Location of data layer objects.  --&gt;
+		&lt;dataPackage&gt;${topLevel}.${projectName}.services.data&lt;/dataPackage&gt;
+	&lt;/map&gt;
+
+	&lt;map schema="yourschema"&gt;
+		&lt;objectPackage&gt;${topLevel}.yourschema.model&lt;/objectPackage&gt;
+		&lt;objectPackageInterface&gt;${topLevel}.yourschema.model&lt;/objectPackageInterface&gt;
+		&lt;daoPackage&gt;${topLevel}.yourschema.model.dao&lt;/daoPackage&gt;
+		&lt;daoPackageImpl&gt;${topLevel}.yourschema.model.dao.impl&lt;/daoPackageImpl&gt;
+		&lt;enumPackage&gt;${topLevel}.yourschema.enums.db&lt;/enumPackage&gt;
+		&lt;factoryPackage&gt;${topLevel}.yourschema.factories&lt;/factoryPackage&gt;
+		&lt;dataPackage&gt;${topLevel}.yourschema.services.data&lt;/dataPackage&gt;
+	&lt;/map&gt;
+&lt;/dbPackageMap&gt;
+</pre>
+
+This specifies that for the schema named "yourschema", the objects, dao (and others) are pushed out to something like:<p>
+<pre>com.yourcompany.yourschema.model</pre><p>
+
+while for all other schemas not defined, the default package naming should apply.
+
+<h1>Target folders</h1>
+
+The default top level folder for the main sources is "src" to match with a typical
+eclipse project. You may opt to change this by using the &lt;sourceFolderName&gt; option. 
+For example, when using maven, you would add the following in your config file:
+
+<pre>
+	&lt;sourceFolderName&gt;src/main/java&lt;/sourceFolderName&gt;
+</pre>
+
+Similarly, you may change the the location of your unit tests and location
+of your applicationContext filename as listed below (typical maven setups below):
+
+<pre>
+	&lt;testFolderName>src/test/java&lt;/testFolderName&gt;
+	&lt;applicationContextFilename>src/main/resources/applicationContext.xml&lt;/applicationContextFilename&gt;
+</pre>
+
+	
+</div>
+
+
+<div id="configuration-enums" style="display:none">
+<h1>Enum Configuration</h1>
+Normally enums are handled completely automatically for you. You do have two configuration options at your disposal.
+Firstly, some enums can be common across multiple tables and you might wish to collapse the enums into one. To
+do this simply list the enums you want coalesced as follows:<p>
+<pre>
+&lt;coalesceEnums&gt;
+		&lt;schema name="yourschema"&gt;
+			&lt;enum name="YourEnumName"&gt;
+				&lt;field&gt;table1.fieldname1&lt;/field&gt;
+				&lt;field&gt;table2.fieldname5&lt;/field&gt;
+			&lt;/enum&gt;
+		&lt;/schema&gt;
+&lt;/coalesceEnums&gt;
+</pre>
+
+Under MySQL and possibly under other databases, altering an enum definition for an existing table is an expensive
+operation leading to unacceptable downtime in some circumstances. As a workaround to this problem, you can
+define a table to contain your enum values and instruct the generator to treat that table as a source of
+enum values. Therefore while from a programming point of view you would still be dealing with an enum class,
+internally the values would have been obtained from the external table. 
+Use keyColumnName/valueColumnName to specify the exact rows you want otherwise columns 1 and 2 are used.  
+	
+You may also specify additional columns to map into an enum by the "otherColumnNames". For
+example you may have rows like: 1, "Full Match", 100 representing column names ID, Enum name, Weight. 
+This would then generate appropriate reverse lookup maps for easy access to the enum. 
+	
+If you want this, create a table
+containing at least two columns (an id and the value to use) and specify your requirements using the following 
+configuration:
+
+<pre>
+&lt;treatLinkAsEnum&gt;
+	&lt;schema name="yourschema"&gt;
+		&lt;field src="tablename.fieldName" dstTable="tableContainingEnums" /&gt;
+	&lt;/schema&gt;
+&lt;/treatLinkAsEnum&gt;
+</pre>
+</div>	
+	
+<div id="configuration-ignoring" style="display:none">
+<h1>Ignoring tables</h1>
+
+If you want to completely ignore generating code for particular tables, use the &lt;ignore&gt; section to specify one or more tables to skip parsing as follows:<p>
+<pre>
+&lt;ignore&gt;
+	&lt;table&gt;*.authLog&lt;/table&gt;
+	&lt;table&gt;myschema.mytable&lt;/table&gt;
+&lt;/ignore&gt;
+</pre>
+<p>
+This specifies that the authLog table, found in any schema, and <i>mytable</i> found in <i>myschema</i> are to be skipped.
+
+</div>
+
+<div id="configuration-onetoone" style="display:none">
+<h1>OneToOne mappings</h1>
+
+Use the &lt;oneToOne&gt; section to specify fields that are to be treated as one-to-one mappings rather than many-to-one mappings:<p>
+<pre>
+&lt;oneToOne&gt;
+	&lt;table name="someschema.sometable" field="someFieldName" /&gt;
+&lt;/oneToOne&gt;
+</pre>
+<p>
+
+</div>
+
+<div id="contact" style="display:none">
+	<h1>Contact</h1>
+	For feature requests and support, please use the provided <a href="http://sourceforge.net/forum/?group_id=212493"  target="_">SourceForge forums</a>. Kindly direct any hibernate-related queries directly to the <a href="http://forum.hibernate.org/"  target="_">hibernate forums</a>.<h1>&nbsp;</h1><p><h2><b>Patches are very welcome!</b></h2>
+</div>
+
+<div id="license" style="display:none">
+	<h1>License</h1>
+	This project is licensed under LGPLv3 or any later version. For more information, redirect your browser to <a href="http://www.gnu.org/licenses/lgpl.html"  target="_">here</a>
+</div>
+
+<div id="configuration-link" style="display:none">
+<h1>Join (a.k.a Link) tables</h1>
+
+Tables intended as link tables cannot be automatically determined simply by looking at the database metadata. Specifying them in the configuration file will make the generator produce alternate code. When you specify link tables, different code is produced depending on whether your link table contains additional fields apart from those mandatory to link two tables together.<p>
+
+If there are only two fields present in the link table, (+ an optional primary key), the generator will use annotations to specify the link table on both ends of the link, therefore you will not have direct access to the link table. Hibernate will completely handle the link table for you.<p>
+
+If additional fields are present in the link table, apart from the usual ManyToOne and OneToMany annotations from each side of the link, the generator will also create additional code to allow each side to map directly to the other link side without having to deal with the intermediate link table.<p>
+
+A link table is defined as follows:<p>
+<pre>
+&lt;linktables&gt;
+	&lt;table name="yourcatalog.UserBillingMap"&gt;
+		&lt;link srcField="userId" dstField="billingId"/&gt;
+	&lt;/table&gt;
+&lt;/linktables&gt;
+</pre>
+Switching the srcField with the dstField parameter only changes which side is markesd as "inverse". See the hibernate documentation for more details.
+
+</div>
+<div id="configuration-cleanup" style="display:none">
+
+<h1>Preventing Cleaning of tables</h1>
+
+The generated testcode contains routines to clear out all the database of the generated code prior to commencing tests. Some tables, for example, a table containing a list of countries, are intended to be read-only and pre-populated by your DBA. Specifying the &lt;preventclean&gt; section will prevent the generator from attempting to delete the specified tables during a test run.<p>
+<pre>
+&lt;preventclean&gt;
+	&lt;table&gt;yourschema.currencyCodes&lt;/table&gt;
+&lt;/preventclean&gt;
+</pre>
+
+Additionally, you may instruct the generator to omit test code that normally clears out a database during the
+unit tests as follows:<p><pre>
+&lt;disableCleanTables&gt;true&lt;/disableCleanTables&gt;</p>
+</pre>
+
+Each unit test automatically rolls back at the end of each table test. You may prevent this as follows:
+<p><pre>
+&lt;disableTestRollback&gt;true&lt;/disableTestRollback&gt;</p>
+</pre>
+
+</div>
+
+
+<div id="configuration-custom" style="display:none">
+<h1>Executing custom statements</h1>
+
+Suppose you select to use the restricted schema strategy.  Deleting a table might fail should external dependencies exist. The preexec section allows you to execute any custom SQL statements right before a clean takes place in the test cases.<p>
+<pre>
+&lt;preexec&gt;
+	&lt;connections&gt;
+		&lt;connection&gt;jdbc:mysql://localhost/service&lt;/connection&gt;
+		&lt;driver&gt;com.mysql.jdbc.Driver&lt;/driver&gt;
+		&lt;connectionUsername&gt;root&lt;/connectionUsername&gt;
+		&lt;connectionPassword&gt;abcdefgh&lt;/connectionPassword&gt;
+		&lt;statements&gt;
+			&lt;statement&gt;truncate serviceconfig&lt;/statement&gt;
+		&lt;/statements&gt;
+	&lt;/connections&gt;
+&lt;/preexec&gt;
+</pre>
+
+You might also wish to execute custom statements after a clean takes place. For this purpose, use the prepopulateDB section:
+<p>
+<pre>
+&lt;prepopulateDB&gt;
+	&lt;connections&gt;
+		&lt;connection&gt;jdbc:mysql://localhost/SomeSchema &lt;/connection&gt;
+		&lt;driver&gt;com.mysql.jdbc.Driver&lt;/driver&gt;
+		&lt;connectionUsername&gt;root&lt;/connectionUsername&gt;
+		&lt;connectionPassword&gt;abcdefgh&lt;/connectionPassword&gt;
+		&lt;statements&gt;
+			&lt;statement&gt;insert into aTable(aTableId) values(1)&lt;/statement&gt;
+		&lt;/statements&gt;
+	&lt;/connections&gt;
+&lt;/prepopulateDB&gt;
+</pre>
+
+
+Both these options are typically only used in the restricted schema strategy.
+</div>
+
+<div id="configuration-testcase" style="display:none">
+
+<h1>Overriding test case factories</h1>
+
+Each test case makes a call to a generated data pool factory class to provide an object pre-filled with random data. You may override this random data with anything you want (a constant, a call to a custom method, etc). This is mostly useful for the restricted schema strategy whereby you would typically need to specify all the external dependencies yourself.<p>
+<pre>
+&lt;testValues&gt;
+	&lt;tables&gt;
+		&lt;table&gt;
+			&lt;name&gt;yourSchema.Country&lt;/name&gt;
+			&lt;fields&gt;
+				&lt;name&gt;countryId&lt;/name&gt;
+				&lt;value&gt;1L&lt;/value&gt;
+			&lt;/fields&gt;
+			&lt;fields&gt;
+				&lt;name&gt;currencyCodeId &lt;/name&gt;
+				&lt;value&gt;com.foobar.getCurrencyCode()&lt;/value&gt;
+			&lt;/fields&gt;
+		&lt;/table&gt;
+	&lt;/tables&gt;
+&lt;/testValues&gt;
+</pre>
+</div>
+<div id="configuration-natkeys" style="display:none">
+
+<h1>Natural Keys</h1>
+
+Although considered bad database design by some, the generator is able to deal with tables containing natural keys (that is, tables without a primary key). The generator needs to be told about any natural keys present in a schema in the following manner:
+
+<pre>
+&lt;naturalKeys&gt;
+	&lt;table name="schemaName.tableName"&gt;
+			&lt;key field="natKey1" /&gt;
+			&lt;key field="natKey2 " /&gt;
+	&lt;/table&gt;
+&lt;/naturalKeys&gt;
+</pre>
+
+This declares table <i>tableName</i> in schema <i>schemaName</i> to contain a composite natural key made up of two fields named natKey1 and natKey2.
+</div>
+
+<div id="configuration-generators" style="display:none">
+
+<h1>Generated Values config</h1>
+
+Most tables contain a primary key, usually set to a numeric number that auto-increments on each record. Hibernate
+supports this behaviour but also supports using a different generator such as a globally-unique identifier generated by the database
+or by hibernate itself. You may use the &lt;generatedId&gt; section so as to specify which generator you
+wish to use. The following sample illustrates how this may be done:
+
+
+<pre>
+&lt;generatedId&gt;
+	&lt;default idpattern="${DB}_id" generator="UUID" /&gt;
+	&lt;map schema="yourschema"&gt; 
+		&lt;table name="country" field="country_id" generator="auto" /&gt;
+		&lt;table name="currency" field="currency_id" generator="auto" /&gt;
+	&lt;/map&gt;
+&lt;/generatedId&gt;
+</pre>
+
+This specifies that:
+<ul>
+<li> Field <i>country_id</i> in table <i>country</i> in schema <i>yourschema</i> should have the generated value set to AUTO
+<li> Field <i>currency_id</i> in table <i>currency</i> in schema <i>yourschema</i> should have the generated value set to AUTO
+<li> Any other field matching the pattern <i>databasename_id</i> in any schema and any table will have the generator set to UUID.
+</ul>
+
+The valid generator options so far are: auto, guid, uuid and custom. Custom will use the class defined in 
+the skeleton template folder (currently calling java.util.UUID.randomUUID()).  Please refer to the hibernate documentation for
+more details about the other options. 
+
+</div>
+
+<div id="configuration-equality" style="display:none">
+
+You may specify any fields to ignore in the equality method of each generated class.
+Wildcards are acceptable as in other sections of the config.
+
+
+<pre>
+	&lt;equalityExcludes&gt;
+		&lt;field&gt;*.*.audit_created_by&lt;/field&gt;
+	&lt;/equalityExcludes&gt;
+</pre> 
+	
+</div>
+<div id="configuration-other" style="display:none">
+
+<ul>
+<li>Database design may impose cyclic dependencies on tables through their foreign keys.  If these
+are set to NOT NULL, the generator will not be able to resolve the dependencies.  In order to
+resolve this, tables may be tagged as part of the cyclicTableExclusionList.  The user needs to define
+the table in question, the FK, as well a replacement table to load data from through the Data Pool Factory.
+
+In general, this is rarely necessary and indeed the only way to use the tables
+involves temporarily switching off constraints, inserting bootstrap data and
+switching on the constraints again.
+
+<li> You might wish to use the parsing logic of the generator for an external application. For example, a side-project has built an application
+that uses a domain specific language to populate a database. Rather than parsing the database, type &lt;enableStateSave&gt;true&lt;/enableStateSave&gt; 
+in the config file and the generator's state will be serialized to disk, ready for use. 
+
+<li> Normally, dao tests are set to rollback at the end of each unit test. Set the option:
+&lt;disableTestRollback&gt;true&lt;/disableTestRollback&gt; to disable this behaviour.
+
+<li> Set &lt;enableHibernateValidator&gt; to true to add @NotNull and @Length annotations where appropriate. 
+
+<li> Use the &lt;sessionFactory&gt; configuration to add any custom bean definitions to the sessionFactory bean in spring's configuration file.
+<li> Use the &lt;transactionManagerItems&gt; configuration to add any custom bean definitions to the transactionManager bean in spring's configuration file.
+<li> Use the &lt;additionalContextItems&gt; configuration to add any custom bean definitions to the spring's configuration file.
+<li> Use the &lt;enableJodaSupport&gt; option to use Joda-Time support (use org.joda.time.DateTime in place of java.util.Date).
+</ul>
+
+Have a look at sample.xml for even more options!
+
+
+</div>
+		
+<div id="configuration-abstract" style="display:none">
+
+<h1>Abstract Classes config</h1>
+
+Hibernate POJO Generator supports the generation of abstract classes. This feature can be useful when one wishes to auto-generate
+a superclass that should never be instantiated.  Tagging a table as an abstractTable in the config file will result in its
+corresponding auto-generated class to be of type abstract. The following sample illustrates how this may be done:
+
+<pre>
+&lt;abstractTables&gt;
+	&lt;table&gt;db_name.table1&lt;/table&gt;
+	&lt;table&gt;db_name.table2&lt;/table&gt;
+	&lt;table&gt;db_name.table3&lt;/table&gt;
+&lt;/abstractTables&gt;
+</pre>
+
+This specifies that table1, table2 and table3 will have their corresponding classes generated as abstract.  Since abstract classes
+cannot be instantiated, the generated DaoFactory will not contain any method referring to the abstract class.  Also, the generated
+DataPoolFactory cannot create a randomly populated instance of the class.  Instead the DataPoolFactory will search through the generated 
+classes for a valid subclass to our abstract class and instantiate that instead.
+</div>
+
+<div id="configuration-english" style="display:none">
+
+<h1>Disabling English plurals</h1>
+
+Normally, the generator will rename ManyToMany and OneToMany method names for better English-sounding names, for example naming a method getFactories() instead of getFactory().<h1>&nbsp;</h1>
+
+Setting this option to true will disable this behaviour.
+</div>
+
+
+<div id="scripting" style="display:none">
+<h1>Scripting</h1>
+
+
+In an environment where DB changes are frequent and there exists a need to regenerate a model,
+you may wish to streamline your process. You may opt for a process that works like this:
+
+<ul>
+<li> Using apache, setup a WebDav-enabled folder pointing to somewhere on your server
+<li> Let your Windows/Mac/Linux users mount that folder using My Network Places or whichever mechanism your OS supports
+<li> On the server, you setup an inotify watch waiting on that webdav folder. 
+<li> Run a script to wake up when inotify tells it to, run the generator and deploy your output via Maven or some other mechanism.
+<li> Your clients need merely drag the Hibernate Pojo Generator's config file to the WebDav folder for a new model to be generated and deployed. 
+</ul>
+
+Since it uses the inotify mechanism, it will not consume
+any resources until someone actually copies over a file. Using <a href="http://maven.apache.org">Maven</a>, your clients' IDE will automatically download the new model on the next 
+build (if they set the version to SNAPSHOT) or manually (if they set the generators' config file to deploy a release artifact instead).<p>
+<p>
+You will need:
+<ul>
+<li> Apache server with a folder that is writable and WebDav enabled. This usually means just adding the following to your apache config:
+<pre>
+&lt;Location /generator&gt;
+    Dav On
+&lt;/Location&gt;
+</pre>
+<li> A recent kernel supporting the inotify mechanism (anything over 2.6.13-rc3)
+<li> <a href="http://inotify-tools.sourceforge.net">Inotify-tools</a> - A collection of command line utilities that exposes the inotify kernel ABI to user-land.
+<li> This script that you may get <a href="build_model.sh">here</a> 
+</ul>
+
+Note that this script is currently pointing to <a href="http://archiva.apache.org">Archiva</a> as our Maven repository store and fetches the generator executable from the latest build obtained from <a href="http://cruisecontrol.sourceforge.net/">CruiseControl</a>.
+   
+</div>
+
+<div id="configuration-cascading" style="display:none">
+<h1>Controlling cascading</h1>
+
+By default, the synchronizer generates code in a way that all one-to-many, many-to-one, many-to-many and one-to-one will have 
+the appropriate annotations so as to make Hibernate cascade saves; such as automatically saving all
+child tables linked to a parent table.<p>
+
+This section allows you to enable/disable cascading.<p>
+
+Set the default for each category (one-to-many, many-to-one, etc). Then override any properties
+by using the &lt;except&gt; tags. Wildcards ("*") are accepted in a limited way. <p>
+
+Examples: <p> 
+<pre>
+	&lt;cascading&gt;
+		&lt;one-to-many default="true"&gt;
+			&lt;except package="*" class="yourclass" property="*" /&gt;
+		&lt;/one-to-many&gt;
+	&lt;/cascading&gt;
+</pre>
+
+	For one-to-many entries, in any package, and class named "yourclass" and any property contained
+	in it, don't add Cascade=All.
+	
+	<pre>
+	  &lt;except package="util" class="*" property="*" /&gt;
+	</pre>
+	
+	Any property of any class in package util will/will not (depending on default) have Cascade=All 
+	suppressed. <p>
+	
+<p>	
+Notes: Do not give the full package name in the "package" section. If your schema in the db is named
+"some_schema" and the resultant code is placed as "someSchema/someClass" you would put in "someSchema"
+only and not something like: com.yourcompany.someSchema.
+  
+</div>		
+
+
+<div id="configuration-fetchtype" style="display:none">
+<h1>Controlling Fetch Type</h1>
+
+By default, the synchronizer generates code in a way that all one-to-many, many-to-one, many-to-many and one-to-one will have 
+the appropriate annotations so as to make Hibernate behave in a lazy fashion (by loading data only when a collection is 
+accessed). 
+
+This section allows you to control this behaviour.<p>
+
+Set the default for each category (one-to-many, many-to-one, etc). Then override any properties
+by using the &lt;except&gt; tags. Wildcards ("*") are accepted in a limited way. <p>
+
+Examples: <p> 
+<pre>
+	&lt;fetchtype&gt;
+		&lt;one-to-many defaultlazy="true"&gt;
+			&lt;except package="*" class="yourclass" property="*" /&gt;
+		&lt;/one-to-many&gt;
+	&lt;/fetchtype&gt;
+</pre>
+
+	For one-to-many entries, in any package, and class named "yourclass" and any property contained
+	in it, don't add Cascade=All.
+	
+	<pre>
+	  &lt;except package="util" class="*" property="*" /&gt;
+	</pre>
+	
+	Any property of any class in package util will/will not (depending on default) have Cascade=All 
+	suppressed. <p>
+	
+<p>	
+Notes: Do not give the full package name in the "package" section. If your schema in the db is named
+"some_schema" and the resultant code is placed as "someSchema/someClass" you would put in "someSchema"
+only and not something like: com.yourcompany.someSchema.
+  
+</div>		
+
+
+
+<div id="configuration-underscore" style="display:none">
+
+<h1>Disabling Underscore conversions</h1>
+
+Normally, table and schema names will be converted to suitable Java conventions for example <b>underscore_schema.underscore_table</b> is changed to <b>userscoreSchema.userscoreTable</b>. <h1>&nbsp;</h1>Setting this option to true disables this behaviour.
+
+
+</div>
+<div id="configuration-schemas" style="display:none">
+<h1>Multiple Schema Support</h1>
+
+Hibernate Pojo Generator provides full support for handling multiple schemas, that is, tables linked by foreign keys to other tables which are not in the same schema.
+
+<h3>Schema Strategy</h3>
+
+The schema strategy configuration parameter controls how the generator is to behave in the presence of multiple schemas. There are 4 settings you may use:
+
+<h4>Restricted</h4>
+
+In this mode, the generator starts off from the database catalog you specify (the databaseCatalog configuration setting). Whenever it encounters a link to an external schema, it will not follow it and leave the field set to the field type equivalent. For example if you have the following schema with the Order table being in a different schema to the Item table: 
+<p>
+<pre>
+<u>Order Table</u>
+OrderId - Integer 
+DateOfOrder - Date
+<p>
+
+<u>Item Table</u>
+ItemId - Integer
+OrderId - Integer
+Description - VarChar(200)
+</pre>
+<p>
+The generated code for the Item table, Item.java, will have:<p>
+
+<b>private Integer orderId;</b><p>
+
+
+Under this mode, it will therefore not be possible to call Item.getOrders(). Of course, if the order table is moved to the same schema as the Item table, the code generator changes to:
+<p>
+<b>private Order order; </b><p>
+
+
+Use this mode whenever you want to completely isolate your code from accessing external schemas. Note that using this strategy will mean you will need to take care of all external links yourself as cascading across schemas will not be possible. For the same reason, should you wish to make use of the generated test case code, you will need to provide additional configuration details for each external link.
+
+
+<h4>Partial</h4>
+
+This mode relaxes the restricted mode condition of not following external referenced schemas - code is also generated for the external schema tables referenced by your main schema. However the generator will only generate external schema code directly referenced by your main catalog.
+
+Use this option if you want to give your developers all the objects necessary to access their own schema together with a minimal set of objects from any other referenced schema. 
+
+<h4>Full</h4>
+
+This mode is similar to the partial schema strategy described above, differing only in the number of tables imported when an external referenced schema is encountered. While the partial strategy imports only those tables directly referenced by the primary schema, the full schema strategy will import all the tables of the schema that are referenced from the main schema.
+
+Use this option whenever you want to give your developers all objects of all schemas related to the project.
+
+<h4>All</h4>
+
+In this strategy, the databaseCatalog configuration setting is ignored and code is generated for all schemas present in the specified database.
+
+This option is useful if you want to generate a central repository of all the classes required to access all the available database schemas.
+
+
+</div>	
+<div id="Menu">
+<h2>Main</h2>
+
+<ul class="subnav">
+<li><a href="javascript:loadpage('main');">About</a></li>
+<li><a href="javascript:loadpage('requirements');">Requirements</a></li>
+<li><a href="javascript:loadpage('news');">News/Releases</a></li>
+<li><a href="javascript:loadpage('howitworks');">How it works</a></li>
+<li><a href="javascript:loadpage('usageexample');">Usage example</a></li>
+<li><a href="javascript:loadpage('sampleoutput');">Sample output</a></li>
+</ul>
+
+<h2>Configuration</h2>
+
+<ul class="subnav">
+<li><a href="javascript:loadpage('configuration')">Configuration Options</a></li>
+<ul><li><a href="javascript:loadpage('configuration-link')">Link Tables</a></li>
+<li><a href="javascript:loadpage('configuration-ignoring')">Ignoring tables</a></li>
+<li><a href="javascript:loadpage('configuration-cleanup')">Preventing cleanup</a></li>
+<li><a href="javascript:loadpage('configuration-onetoone')">OneToOne Mappings</a></li>
+<li><a href="javascript:loadpage('configuration-custom')">Custom statements</a></li>
+<li><a href="javascript:loadpage('configuration-testcase')">Overriding test cases</a></li>
+<li><a href="javascript:loadpage('configuration-natkeys')">Natural Keys</a></li>
+<li><a href="javascript:loadpage('configuration-english')">English plurals</a></li>
+<li><a href="javascript:loadpage('configuration-underscore')">Underscore conventions</a></li>
+<li><a href="javascript:loadpage('configuration-schemas')">Multiple Schemas</a></li>
+<li><a href="javascript:loadpage('configuration-annotations')">Custom annotations/code</a></li>
+<li><a href="javascript:loadpage('configuration-enums')">Enum customization</a></li>
+<li><a href="javascript:loadpage('configuration-packagenaming')">Package naming</a></li>
+<li><a href="javascript:loadpage('configuration-cascading')">Controlling Cascading</a></li>
+<li><a href="javascript:loadpage('configuration-generators')">Generated Values</a></li>
+<li><a href="javascript:loadpage('configuration-abstract')">Abstract Classes</a></li>
+<li><a href="javascript:loadpage('configuration-disablebacklinks')">Disabling Backlinks</a></li>
+<li><a href="javascript:loadpage('configuration-nooutput')">Preventing output</a></li>
+<li><a href="javascript:loadpage('configuration-fetchtype')">Controlling Collections</a></li>
+<li><a href="javascript:loadpage('configuration-versioncheck')">Performing Version Checking</a></li>
+<li><a href="javascript:loadpage('configuration-equality')">Equality excludes</a></li>
+<li><a href="javascript:loadpage('configuration-maven')">Maven support</a></li>
+<li><a href="javascript:loadpage('configuration-other')">Other options</a></li>
+</ul>
+
+
+</ul>
+<h2>Links</h2>
+
+<ul class="subnav">
+<li><a href="http://sourceforge.net/project/showfiles.php?group_id=212493">Download</a></li>
+<li><a href="http://www.hibernate.org" target="_">Hibernate</a></li>
+<li><a href="http://www.springframework.org" target="_">Spring Framework</a></li>
+<li><a href="http://velocity.apache.org" target="_">Apache Velocity</a></li>
+
+</ul>
+<h2>Other</h2>
+
+<ul class="subnav">
+<li><a href="javascript:loadpage('scripting')">Scripting</a></li>
+<li><a href="javascript:loadpage('contact')">Contact</a></li>
+<li><a href="javascript:loadpage('license')">License</a></li>
+<li><a href="javascript:loadpage('knownissues')">Known Issues</a></li>
+<li><a href="javascript:loadpage('thanks')">Thanks</a></li>
+
+</ul>
+</div>
+</div>
+
+<div class="spacer">&nbsp;</div>
+</body>
+
+</html>

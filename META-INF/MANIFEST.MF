@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: hbnpojogen
+Bundle-SymbolicName: hbnpojogen
+Bundle-Version: 1.0.0
+Export-Package: com.felees.hbnpojogen,
+ com.felees.hbnpojogen.db,
+ com.felees.hbnpojogen.obj,
+ com.felees.hbnpojogen.persistence,
+ com.felees.hbnpojogen.persistence.impl,
+ com.felees.hbnpojogen.persistence.validator,
+ com.felees.hbnpojogen.randomlib.data,
+ com.felees.hbnpojogen.randomlib.data.dataGeneration

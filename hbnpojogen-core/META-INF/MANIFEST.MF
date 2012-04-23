@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin Plug-in
+Bundle-SymbolicName: com.felees.hbnpojogen.plugin.synchronizer;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Main-Class: com.felees.hbnpojogen.HbnPojoGen
+Export-Package: com.felees.hbnpojogen,
+ com.felees.hbnpojogen.db,
+ com.felees.hbnpojogen.obj
+

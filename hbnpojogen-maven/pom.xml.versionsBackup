@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>hbnpojogen</artifactId>
+    <groupId>com.felees</groupId>
+    <version>1.4.4</version>
+  </parent>
+  <groupId>com.felees</groupId>
+  <artifactId>hbnpojogen-maven-plugin</artifactId>
+  <version>1.4.4</version>
+  <packaging>maven-plugin</packaging>
+  <name>Hibernate Synchronizer Maven Plugin</name>
+  <description>Hibernate Synchronizer Maven Plugin</description>
+  
+  
+  
+	<properties>
+		<maven.version>2.2.1</maven.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>${maven.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>${maven.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact</artifactId>
+			<version>${maven.version}</version>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>com.felees</groupId>
+			<artifactId>hbnpojogen-core</artifactId>
+			<version>1.4.4</version>
+		</dependency>
+  </dependencies>
+</project>

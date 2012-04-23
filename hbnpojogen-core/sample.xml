@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<appconfig>
+	<!--  Valid recognised options so far: MYSQL, MSSQL. Unknown options will be treated as "MySQL" -->
+	<dbType>MYSQL</dbType>
+	<!-- Which jdbc driver to use. Make sure the jar driver is in the classpath -->
+	<driver>com.mysql.jdbc.Driver</driver>
+	<!--  This is used to determine the JDBC connection string to use -->
+	<jdbcConnectionString>
+		jdbc:mysql://127.0.0.1/util
+	</jdbcConnectionString>
+	<!-- Database location (this ends in applicationContext.xml) -->
+	<databaseIP>localhost</databaseIP>
+	<!-- Database name -->
+	<databaseCatalog>hbnPojoTest</databaseCatalog>
+	<!-- Username with access to view meta data -->
+	<databaseUsername>root</databaseUsername>
+	<!-- Password for the given username -->
+	<databasePassword>abcdefgh</databasePassword>
+	<!-- Target where source files are to be written (overwriting files on name conflicts!) -->
+	<sourceTarget>D:/yourcompany</sourceTarget>
+	<!--  Specify the subfolder, relative to "sourceTarget", where support jars such as hibernate.jar are to
+		be placed -->
+	<libPath>libs</libPath>
+	<!-- Name of project. Package names might be named <toplevel>.<projectName>
+	This is also used to calculate the serializationUID key.  -->
+	<projectName>sams</projectName>
+	<!-- Toplevel package name -->
+	<topLevel>com.yourcompany</topLevel>
+	<!-- Schema strategy options: 
+		RESTRICT: Restrict to given schema - links to foreign schemas will be left as "Long", "integer", etc.  
+		PARTIAL: Import given schema + as little as possible from other schemas
+		FULL: Import given schema + complete schemas of any FK links from the given schema)
+		ALL: Fetch all schemas in the DB, regardless of which one is specified by <databaseCatalog>
+	-->
+	<schemaStrategy>PARTIAL</schemaStrategy>
+
+	<!-- EVERYTHING beneath this line is OPTIONAL -->
+	
+	<!-- Enable this to use Joda dateTime instead of java.util.Date -->
+	<enableJodaSupport>false</enableJodaSupport>
+	
+	<!--  Enable this to add @NotNull and @Length annotations where appropriate. 
+	Requires hibernate validator jar to be in your classpath. -->
+	<enableHibernateValidator>false</enableHibernateValidator>
+	
+	<!-- Default folder name under sourceTarget. Default is "src" (or src/main/java if maven is enabled) -->
+	<sourceFolderName>src/main/java</sourceFolderName>
+	
+	<!-- Default folder name for test unit under sourceTarget. 
+	Default is "test/unit" or (src/test/java if maven is enabled) -->
+	<testFolderName>src/test/java</testFolderName>
+	
+	<!-- Only used to store state, normally more relevant for your application.  -->
+	<resourceFolder>src/main/resources</resourceFolder>
+	
+	<!-- Used to store log4j.properties. -->
+	<testResourceFolder>src/test/resources</testResourceFolder>
+	
+	<!--  Target name for spring context file. -->
+	<applicationContextFilename>applicationContext.xml</applicationContextFilename>
+	
+	<!--  Any custom entries to insert in the sessionFactory bean definition of
+	the generated application context. Useful when you add interceptors and so on.
+	Eg:  <property name="entityInterceptor">
+			<bean class="com.foo.persistence.impl.UUIDInterceptor" />
+		</property>
+	-->
+	<sessionFactory><![CDATA[]]></sessionFactory>
+	<!--  Any custom entries to insert in the transactionManager bean definition of
+	the generated application context. 
+	-->
+	<transactionManagerItems><![CDATA[]]></transactionManagerItems>
+	<!--  Any custom entries to insert in spring's context file
+	-->
+	<additionalContextItems><![CDATA[]]></additionalContextItems>
+
+
+	<!--  Select the connection pool to use. Valid options are: C3P0, BoneCP, JNDI. Set useLDAP to true if you want
+	LDAP support. Set useLDAPImport if you plan on doing a spring import instead of wanting the appropriate beans being generated. 
+	enableDynamicLdapDataSource set to true will bounce the datasource off DynamicDataSourceProxy too. Other ldap properties are
+	optional for non-ldap configs. -->
+	<connectionPool enableDynamicLdapDataSource="true" 
+			useLDAP="false" 
+			useLDAPImport="false"
+			ldapServer="ldap://10.239.32.63:10389"
+			ldapBase="dc=dev,dc=foo,dc=com"
+			ldapCn="cn=YOUR-CN-HERE">C3P0</connectionPool>
+	
+	
+	<!--  Define the location of all the objects. map schema="default" will be used whenever there's no definition
+		set. You can leave out the default section too, it will be filled in programatically. 
+		You may use ${XXX} to refer to any other property in this file. ${DB} has special meaning: it will be replaced
+		by the schema under processing. -->
+	<dbPackageMap>
+		<map schema="DEFAULT">
+			<!--  Location of hibernate objects. 
+				${DB} will be replaced by the schema under operation dynamically.  -->
+			<objectPackage>
+				${topLevel}.${projectName}.model.obj.${DB}
+			</objectPackage>
+			<objectInterfacePackage>
+				${topLevel}.${projectName}.model.obj.${DB}.iface
+			</objectInterfacePackage>
+			<!--  Location of hibernate DAO objects.  -->
+			<daoPackage>
+				${topLevel}.${projectName}.model.dao.${DB}
+			</daoPackage>
+			<!--  Location of hibernate DAO Implementation objects.  -->
+			<daoImplPackage>
+				${topLevel}.${projectName}.model.dao.${DB}.impl
+			</daoImplPackage>
+			
+			<!--  Location of hibernate enum objects. -->
+			<enumPackage>
+				${topLevel}.${projectName}.enums.db.${DB}
+			</enumPackage>
+			
+			<!--  Location of class subtype enum objects. -->
+			<enumSubtypePackage>
+				${topLevel}.${projectName}.enums.subtype.${DB}
+			</enumSubtypePackage>
+			
+			<!--  Location of hibernate factory objects.  -->
+			<factoryPackage>
+				${topLevel}.${projectName}.factories.${DB}
+			</factoryPackage>
+			<!--  Location of data layer objects.  -->
+			<dataPackage>
+				${topLevel}.${projectName}.services.data
+			</dataPackage>
+		</map>
+
+		<map schema="yourschema">
+			<objectInterfacePackage>${topLevel}.yourschema.model.iface</objectInterfacePackage>
+			<objectPackage>${topLevel}.yourschema.model</objectPackage>
+			<daoPackage>${topLevel}.yourschema.model.dao</daoPackage>
+			<enumPackage>${topLevel}.yourschema.enums.db</enumPackage>
+			<daoImplPackage>${topLevel}.yourschema.model.dao.impl</daoImplPackage>
+			<enumSubtypePackage>
+				${topLevel}.yourschema.enums.subtype
+			</enumSubtypePackage>
+			<factoryPackage>
+				${topLevel}.yourschema.factories
+			</factoryPackage>
+			<dataPackage>
+				${topLevel}.yourschema.services.data
+			</dataPackage>
+		</map>
+	</dbPackageMap>
+
+	<!--  Enable/disable the generation of enums for class subtypes. These enums allow you to perform
+	a switch..case on the parent object handle eg switch(someObj.getSubclassType()) {...}. Default=generate enums. -->
+	<disableSubtypeEnumGeneration>false</disableSubtypeEnumGeneration>
+	
+	<!--  Use the coalesceEnums section to specify enums that are shared across multiple tables in order
+		to collapse them into one enum defintion -->
+<!-- 
+	<coalesceEnums>
+		<schema name="yourschema">
+			<enum name="DaysOfWeek">
+				<field>delivery.deliveryDay</field>
+				<field>weather.dayOfWeather</field>
+			</enum>
+		</schema>
+	</coalesceEnums>
+-->
+
+	<!-- Property renaming. Use the inverseName for cases where you have
+	ManyToOne and you want to rename the OneToMany end too. -->
+	<renaming>
+		<schema name="yourschema">
+			<field srcName="tablename.fieldName" dstName="someFieldName" inverseName="Foo" />
+		</schema>
+	</renaming>
+	
+	<!--  Under MySQL and possibly under other databases, altering an enum definition for an existing 
+	table is an expensive operation leading to unacceptable downtime in some circumstances. As a workaround 
+	to this problem, you can define a table to contain your enum values and instruct the generator to treat 
+	that table as a source of enum values. Therefore while from a programming point of view you would still 
+	be dealing with an enum class, internally the values would have been obtained from the external table. 
+	If you want this, create a table containing at least two columns (an id and the value to use) 
+	and specify your requirements using the treatLinkAsEnum configuration setting.
+	Use keyColumnName/valueColumnName to specify the exact rows you want
+	otherwise columns 1 and 2 are used.  
+	
+	You may also specify additional columns to map into an enum by the "otherColumnNames". For
+	example you may have rows like: 1, "Full Match", 100 representing column names ID, Enum name, Weight. 
+	This would then generate appropriate reverse lookup maps for easy access to the enum. 
+	 --> 
+<!-- 
+	<treatLinkAsEnum>
+		<schema name="yourschema">
+			<field src="tablename.fieldName" dstTable="tableContainingEnums" keyColumnName="someColName" valueColumnName="someValColumn" otherColumnNames="description,foo_bar" />
+		</schema>
+	</treatLinkAsEnum>
+-->
+
+<!-- If this is set to true, the state of all generated objects is serialized to disk
+	and the relevant hibernate generator class files are copied over to the target folder. This
+	allows for integration with other tools. -->
+	<enableStateSave>true</enableStateSave>
+	
+	
+	
+	<!-- If true, the resultant unit test will not contain code to delete all the tables prior to each test -->
+	<disableCleanTables>true</disableCleanTables>
+
+	<!-- If true, the generator will make no attempt at pluralizing ManyToMany/OneToMany method names 
+		e.g. normally getFactory() will be named getFactories(). -->
+	<disableEnglishPlural>false</disableEnglishPlural>
+
+	<!-- Additional rules to pass to the pluralization rule engine. -->
+	<!-- The following sample rule makes getTransactionMO become getTransactionMOs 
+	instead of getTransactionMOes -->
+	<!-- 
+	<customPluralization>
+		<rule regexmatch="(?i)(.*)MO" regexreplace="$1MOs" /> 
+	</customPluralization>
+	 -->
+	 
+	<!-- Normally, table and schema names will be converted to better Java representations e.g.
+		underscore_schema.underscore_table will become userscoreSchema.userscoreTable. Set this option to true
+		to disable this behaviour -->
+	<disableUnderscoreConversion>false</disableUnderscoreConversion>
+	
+	<!-- Normally, dao tests are set to rollback at the end of each unit test. Set this option to true
+		to disable this behaviour -->
+	<disableTestRollback>false</disableTestRollback>
+
+	<!--  OneToOne db mappings cannot be automatically determined simply by looking at the metadata. Use the
+		oneToOne section to list the fields in each table that should be treated as OneToOne links -->
+	<oneToOne>
+		<table name="someschema.sometable" field="someFieldName" />
+	</oneToOne>
+
+
+	
+<!-- 
+	List of tables/fields that should be skipped. You'll have to handle any table links yourself.
+	Use *.tablename to skip that table for all schemas. yourschema.* skips all tables in yourschema.
+	Use <everything-except> to signal "ignore all tables/fields except the ones
+	listed". You may also add "except-for" to the field ignore list to mean: ignore all those
+	fields except for the ones matching schema.tablename (wildcards accepted, CSV for multiple values)
+-->
+<!-- 
+	<ignore>
+		<table>*.somekindoftable</table>
+		<field>someschema.sometable.somefieldname</field>
+		<field except-for="*.sometable,someschema.sometable">someschema.sometable.somefieldname</field>
+		
+		<everything-except>
+			<table>*.atable</table
+		</everything-except>
+	</ignore>
+-->
+
+	<!-- 
+	Setup your custom annotations using the <annotations> section
+	classname eg: mycompany.Foo (don't use com.xon.mycompany.Foo, just use
+	the schemaname in camelcase without underscores followed by your classname).
+	You may also use wildcards in the classname definition eg *.yourclass, yourschema.* or *.* 
+	-->
+<!--
+ 	<annotations>
+		<class name="yourPackage.yourClass">
+			<imports>
+				<import>your.custom.import</import>
+				<import>your.custom.import2</import>
+			</imports>
+			<implements>
+				<interface>someInterface</interface>
+				<interface>someOtherInterface</interface>
+			</implements>
+			<extends>
+				<extend>someClass</extend>
+			</extends>
+			<classAnnotation>
+				<![CDATA[
+					@yourcustomAnnotation
+				]]>
+			</classAnnotation>
+			<customClassCode>
+					<![CDATA[ extra custom class code pasted at the end]]>
+			</customClassCode>
+			<customClassCodeFields>
+					<![CDATA[ extra custom class code pasted at the start of the field list]]>
+			</customClassCodeFields>
+			<property name="Amount">
+				<annotation type="property">foo on prop</annotation>
+				<annotation type="getter">bar on getter</annotation>
+				<annotation type="setter">blah on setter</annotation>
+				<annotation type="getterprecondition"><![CDATA[ logger.debug("About to enter getter method"); ]]></annotation>
+				<annotation type="setterprecondition">
+					<![CDATA[ 
+						if (foo.equals("")) throw new IllegalArgumentException(); 
+					]]>
+				</annotation>
+				<annotation type="getterpostcondition"><![CDATA[ logger.debug("Exiting getter method"); ]]></annotation>
+				<annotation type="setterpostcondition"><![CDATA[ logger.debug("Exiting method"); ]]></annotation>
+			</property>
+		</class>
+	</annotations>
+-->
+
+<!--  
+Tables intended as link tables cannot be automatically determined simply by looking at the database 
+metadata. Specifying them in the configuration file will make the generator produce alternate code. 
+When you specify link tables, different code is produced depending on whether your link table contains 
+additional fields apart from those mandatory to link two tables together.
+
+If there are only two fields present in the link table, (+ an optional primary key), 
+the generator will use annotations to specify the link table on both ends of the link, 
+therefore you will not have direct access to the link table. 
+Hibernate will completely handle the link table for you.
+
+If additional fields are present in the link table, apart from the usual ManyToOne 
+and OneToMany annotations from each side of the link, the generator will also create additional 
+code to allow each side to map directly to the other link side without having to deal 
+with the intermediate link table.
+-->
+
+<!-- 
+	<linktables>
+		<table name="yourcatalog.UserBillingMap">
+			<link srcField="userId" dstField="billingId" />
+		</table>
+	</linktables>
+-->
+
+	<!-- Use this section to override the generator to use for your primary keys. Normally "AUTO" is what 
+		you need for auto-incrementing primary keys but other valid options for the generator are GUID, UUID, 
+		CUSTOM and IDAWARE.  CUSTOM will use CustomGeneratedId class found in the skeleton directory. IDAWARE uses 
+		the IdPresentAwareGenerator class found in the skeleton directory and behaves like AUTO except that
+		if you set an ID of a class, it will use that rather than ignoring the value and
+		fetching a new one from the DB. -->
+	<!--  
+	<generatedId>
+		<default idpattern="${DB}_id" generator="AUTO" />
+		<map schema="yourschema">
+			<table name="country" field="currency_code"
+				generator="UUID" />
+			<table name="currency_country" field="currency_country_id"
+				generator="CUSTOM" />
+		</map>
+	</generatedId>
+-->
+
+
+<!--  
+The generated testcode contains routines to clear out all the database of the generated code 
+prior to commencing tests. Some tables, for example, a table containing a list of countries, are intended 
+to be read-only and pre-populated by your DBA. Specifying the <preventclean> section will prevent the 
+generator from attempting to delete the specified tables during a test run. 
+-->
+<!-- 
+	<preventclean>
+		<table>yourschema.currencyCodes</table>
+	</preventclean>
+-->
+
+<!--  
+Use this section to flag the fields of those tables that do not contain a primary key
+and instead rely on natural keys. Normally this is bad database design but you might need to deal
+with certain legacy databases. For composite natural keys, list multiple key entries under the same
+table section 
+-->
+<!-- 
+	<naturalKeys>
+		<table name="hbnPojoTest.NaturalKeyParent">
+			<key field="natKeyId" />
+		</table>
+		<table name="hbnPojoTest.NatKeyCompositeParent">
+			<key field="natKeyCompParentId" />
+			<key field="secondId" />
+		</table>
+	</naturalKeys>
+-->
+
+	<!--  Suppose you select to use the restricted schema strategy. Deleting a table might fail should 
+		external dependencies exist. The preexec section allows you to execute any custom SQL statements 
+		right before a clean takes place in the test cases. -->
+<!-- 
+	<preexec>
+		<connections>
+			<connection>jdbc:mysql://localhost/yourschema</connection>
+			<driver>com.mysql.jdbc.Driver</driver>
+			<connectionUsername>root</connectionUsername>
+			<connectionPassword>abcdefgh</connectionPassword>
+			<statements>
+				<statement>truncate yourtable</statement>
+			</statements>
+		</connections>
+	</preexec>
+-->
+
+	<!--  You might also wish to execute custom statements after a clean takes place. For this purpose, 
+		use the prepopulateDB section -->
+<!-- 
+	<prepopulateDB>
+		<connections>
+			<connection>jdbc:mysql://localhost/SomeSchema</connection>
+			<driver>com.mysql.jdbc.Driver</driver>
+			<connectionUsername>root</connectionUsername>
+			<connectionPassword>abcdefgh</connectionPassword>
+			<statements>
+				<statement>
+					insert into aTable(aTableId) values(1)
+				</statement>
+			</statements>
+		</connections>
+	</prepopulateDB>
+-->
+	<!-- Each test case makes a call to a generated data pool factory class to provide an object pre-filled 
+		with random data. You may override this random data with anything you want (a constant, 
+		a call to a custom method, etc). This is mostly useful for the restricted schema strategy 
+		whereby you would typically need to specify all the external dependencies yourself. 
+		If target is set, system will use the given datapool instead. 
+		-->
+
+<!-- 
+	<testValues>
+			<target schema="util" datapool="com.foo" />
+		<tables>
+			<table>
+				<name>yourSchema.Country</name>
+				<fields>
+					<name>countryId</name>
+					<value>1L</value>
+				</fields>
+				<fields>
+					<name>currencyCodeId</name>
+					<value>com.foobar.getCurrencyCode()</value>
+				</fields>
+			</table>
+		</tables>
+	</testValues>
+-->
+
+	<!-- Tagging a table as immutable will make hibernate skip dirty checking etc. 
+	Wildcards are supported. The optional generate-static-test="true" indicates 
+	that the table/s in question should result in the datapool factory creating
+	static random objects instead of reading items off the database. -->
+ 
+	<immutableTables>
+		<table generate-static-test="false">someschema.*</table>
+	</immutableTables>
+
+
+	<!-- Tagging a table as abstract will result in its corresponding auto-generated class to be
+		of type abstract. -->
+ 
+	<abstractTables>
+		<table>db_name.table_name</table>
+	</abstractTables>
+	
+	<!-- Database design may impose cyclic dependencies on tables through their foreign keys.  If these
+		are set to NOT NULL, the POJO generator will not be able to resolve the dependencies.  In order to
+		resolve this tables may be tagged as part of the cyclicTableExclusionList.  The user needs to define
+		the table in question, the FK, as well a replacement table to load data from through the Data Pool Factory
+		-->
+	<cyclicTableExclusionList>
+		<table name="someschema.sometable" field="someFieldName" replacement="someschema.sometable" />
+	</cyclicTableExclusionList>
+
+	<!--  Use the disableBackLinks section to specify that the generator
+	should not generate inverse links in the case of one-to-many/many-to-one links.
+	For example if table A contains a link to table B, you'll obtain ClassA.getB() but
+	not ClassB.getAs(). * wildcards are allowed implying "any" (see examples) -->	
+	<disableBackLinks>
+		<nobacklink from="schemaA.*" to="schemaB.*" from-field="*" />
+		<nobacklink from="*.*" to="*.country" from-field="*" />
+		<nobacklink from="schemaA.sometable" to="schemaB.linkedtable" from-field="somefield" />
+	</disableBackLinks>
+	
+	<!--  In rare cases you might wish to instruct the generator
+	to leave a FK as an integer (that is, don't follow the object just
+	as in the restrict case across multiple schemas. The following 
+	achieves this. The defined names are table-centric eg: "country_foo" not "CountryFoo"
+	You probably will also need to set the testValues option to allow for proper
+	datapoolfactory generation.
+	 -->
+	<noFollowLinks>
+		<nofollow from="schemaA.*" to="schemaB.*" from-field="*" />
+		<nofollow from="*.*" to="*.country" from-field="*" />
+		<nofollow from="schemaA.sometable" to="schemaB.someOtherTable" from-field="somefield" />
+	</noFollowLinks>
+	
+		<!-- You can opt to remove foreign keys in the DB but force the generator to pretend they're 
+	still there. This is not usually recommended and is only supported for high performance reasons. Pattern is a regex expression
+	so .*_id will match foo_id, bar_id, etc. Replace can use $n for capturing groups as per Java string replace method. -->
+	<fakeFK enabled="true" pattern="(.*)_id" replacePattern="$1">
+			<except table="someschema.sometable" enabled="false" pattern=""  replacePattern="" />
+	</fakeFK>
+	
+	<!-- Use the unique fields section to specify the fields that are marked as unique
+	in the database. Fields you specify here will make the datapool factory attempt
+	to generate unique random values to reduce the possibility of a database duplicate key
+	collision. This is basically only useful for unit testing and has no effect on the actual
+	model -->
+	<uniqueKeys>
+		<unique schema="schemaA" table="tablename" field="fieldname" />
+	</uniqueKeys>
+	
+	<!-- Spring version to target. Recognised options are 2 and 3. Default: 2 -->
+	<springVersion>3</springVersion>
+	
+	<!--  This section specifies that, though everything should be processed
+	as usual, no files for the schemas listed below should be generated. This
+	is useful in the case where some schemas are to be imported in a 3rd party
+	fashion (especially useful in conjunction with <disableBackLinks>) -->
+	<noOutputForSchema>
+		<ignore>someSchema</ignore>
+		<!-- whitelist instead. -->
+		<ignoreAllExcept>someSchema1</ignoreAllExcept>
+		<ignoreAllExcept>someSchema2</ignoreAllExcept>
+	</noOutputForSchema>
+	
+	<!--  This section allows you to enable/disable cascading.
+	Set the default for each category (one-to-many, many-to-one, etc). Then override any properties
+	by using the <except> tags. Wildcards ("*") are accepted in a limited way. You
+	may also use to-package as exceptions
+	Examples: 
+	1. 
+		<one-to-many default="true">
+			<except package="*" class="yourclass" property="*" />
+		</one-to-many>
+	
+	For one-to-many entries, in any package, and class named "yourclass" and any property contained
+	in it, don't add Cascade=All.
+	
+	2. 	<except package="util" class="*" property="*" />
+	
+	Any property of any class in package util will/will not (depending on default) have Cascade=All 
+	suppressed.
+	
+	3. 	<except to-package="util" to-class="*" to-property="*" />
+	
+	Any property pointing to schema util will be suppressed.
+	
+	
+	Notes: Do not give the full package name in the "package" section. If your schema in the db is named
+	"some_schema" and the resultant code is placed as "someSchema/someClass" you would put in "someSchema"
+	only and not something like: com.yourcompany.someSchema.  
+		
+	 -->
+	<cascading>
+		<one-to-many default="true" defaultCascade="SAVE_UPDATE">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+			<except package="*" class="yourclass" property="yourproperty" cascade="LOCK" enabled="true"/>
+			<except package="yourpackage2" class="yourclass2" property="yourproperty2" />
+		</one-to-many>
+		<many-to-one default="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</many-to-one>
+		<many-to-many default="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</many-to-many>
+		<one-to-one default="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</one-to-one>
+	</cascading>
+	
+	<!-- Override fetchtype of N-to-M  (lazy or eager fetching) -->
+	<fetchtype>
+		<one-to-many defaultlazy="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</one-to-many>
+		<many-to-one defaultlazy="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</many-to-one>
+		<many-to-many defaultlazy="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</many-to-many>
+		<one-to-one defaultlazy="true">
+			<except package="yourpackage" class="yourclass" property="yourproperty" />
+		</one-to-one>
+	</fetchtype>
+
+	<!-- Specify any fields to ignore in the equality method of each generated
+	class. -->
+	<equalityExcludes>
+		<field>*.*.audit_created_by</field>
+	</equalityExcludes>	
+	
+	<!-- Specify any fields to mark as being transient. Transient fields
+	aren't saved and are ignored in tests. This is useful for marking
+	up fields that are derived in the DB eg by means of a stored procedure
+	or trigger. Wildcards are accepted. -->
+	<transientFields>
+		<field>schema.table.field</field>
+		<field>*.table.field</field>
+	</transientFields>	
+	
+	<!-- Set disableBackLinksInDataPoolFactory to true to prevent the datapool
+	factory from returning objects with backlinks. The default is to make
+	calls such as obj.addXXX(B) rather than b.setXXX(obj) --> 
+	<disableBackLinksInDataPoolFactory>false</disableBackLinksInDataPoolFactory>
+	
+	<!--  By default, the spring context file is setup to use lazy connections, that
+	is, using an @Transactional will only open a connection to the database
+	when a statement is actually sent to the DB. This improves performance but
+	you may revert back to the default Spring implementation by setting the
+	following flag to true -->
+	<disableLazyConnections>false</disableLazyConnections>
+	
+	<!--  Set the following flag to true to enable the use of spring's PropertyPlaceholderConfigurer. Setting to false will make use of
+	  PropertyOverrideConfigurer instead. Setting to true has the effect of forcing the end user of creating the override file rather 
+	  than relying on defaults. -->
+	<enablePropertyPlaceholderConfigurer>false</enablePropertyPlaceholderConfigurer>
+	
+	
+	<!-- Enable database version check. This will enable both the hibernate
+	table check as per Hibernate documentation as well as add a custom check
+	during startup to make sure that the database we're running is the same one
+	as what was seen during code generation time. Comment out this section
+	to completely ignore db version checking. 
+	
+	defaultEnabled = enable/disable all version checking for all schemas. Default: true
+	defaultTable = table Name to use for each schema so you can have schema1.db_version, schema2.db_version
+	defaultFields = comma-separated list of fields to use during version check. 
+	whereClause = anything to append to the SELECT clause to obtain the value	 
+	orderBy = anything to pass on to the ORDER BY clause to fix a sorting order 
+	Except section: Override the default values. Eg: Enable all checks for all
+	schemas (defaultEnable=true) except schema someSchema.
+	
+	Prefix fields with ">=" to signify version must be greater or equal to the values found. 
+	-->
+	<versionCheck defaultEnabled="true" defaultTable="db_version" defaultFields="branch, alter_no, system, >=minor" whereClause="system='SOMESYSTEM'" orderBy="somefield">
+	 	<except schema="someSchema" table="db_version" fields="branch, alter_no" enabled="false" whereClause="system='SOMETHINGELSE'" orderBy="somefield"/>
+	</versionCheck>
+
+
+	<!-- If you prefer, you can add a suffix to each of the generated classes. 
+	This is useful if you deal with Business Objects instead and would like 
+	YourClass to refer to your BO and YourClassMO to reflect your (generated)
+	model object. Wildcard "*" accepted. Default: no suffix -->
+	<!-- 
+	<suffix default="MO">
+			<except package="yourpackage" class="yourclass" suffix="MO" />
+	</suffix>
+	 -->
+
+<!-- The maven section affects the generated pom.xml. Note: You'll need
+to set enabled=true for any of this to take. If noArtifactVersions is set to true, the artifact references will not include a version so
+you will need to include these in your parent poms instead.
+noDeps=true will suppress all dependencies
+useExternalLib=true will use the external hibernate pom.
+enablePomGeneration=true will create a pom.xml
+ -->
+	<maven enabled="true" enablePomGeneration="true" artifactId="some-artifact" groupId="com.yourgroupid" version="1.3" name="Some friendly name" noArtifactVersions="false" noDeps="false" useExternalLib="false">
+
+	<!--  Anything else you'd like to add to your pom (eg parent tags) -->
+	<additionalPomEntries>
+			<![CDATA[ ]]>
+	</additionalPomEntries>
+					
+	<!-- Anything in this section is copied verbatim to the resultant 
+	dependencies list -->
+		<dependencies><![CDATA[
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>3.2.6</version>
+		</dependency>]]>
+		</dependencies>
+		
+		<!-- Distribution Management section is also copied in the config -->
+		<distributionManagement>
+				<![CDATA[
+						<repository>
+							<id>someid</id>
+							<name>somename</name>
+							<url>http://some.url.here/archiva/repository/</url>
+						</repository>
+				]]>
+		</distributionManagement>
+	</maven>
+	
+
+</appconfig>
