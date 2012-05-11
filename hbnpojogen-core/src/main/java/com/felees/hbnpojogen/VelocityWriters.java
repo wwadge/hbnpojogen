@@ -1406,7 +1406,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
                     context.put(CATALOG, catalog);
                     context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.SUBTYPE_ENUM));
 
-                    if (!Core.skipSchemaWrite(catalog)) {
+                    if (!Core.skipSchemaWrite(entry.getValue().getDbCat())) {
                         enumTemplate.merge(context, enumWriter);
                     }
                     enumWriter.close();
