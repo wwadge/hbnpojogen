@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <appconfig>
-	<!--  Valid recognised options so far: MYSQL, MSSQL. Unknown options will be treated as "MySQL" -->
+	<!--  Valid recognised options so far: MYSQL, MSSQL (and untested: PostgreSQL). Unknown options will be treated as "MySQL" -->
 	<dbType>MYSQL</dbType>
 	<!-- Which jdbc driver to use. Make sure the jar driver is in the classpath -->
 	<driver>com.mysql.jdbc.Driver</driver>

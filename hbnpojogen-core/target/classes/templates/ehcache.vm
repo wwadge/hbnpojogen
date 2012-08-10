@@ -27,7 +27,6 @@
             overflowToDisk="false"
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="300"
-            memoryStoreEvictionPolicy="LRU"
             />
 
 
