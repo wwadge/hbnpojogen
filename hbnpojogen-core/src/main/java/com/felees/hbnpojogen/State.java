@@ -150,7 +150,7 @@ implements Serializable {
 	public boolean disableTestRollback = false;
 	/** If true, hibernate pojo gen state will be dumped to disk. */
 	public boolean enableStateSave = false;
-	/** 0=MySQL, 1=MSSQL */
+	/** 0=MySQL, 1=MSSQL, 2=POSTGRESQL */
 	public int dbMode = 0;
 	/** Inner handle. */
 	private String applicationContextFilename;

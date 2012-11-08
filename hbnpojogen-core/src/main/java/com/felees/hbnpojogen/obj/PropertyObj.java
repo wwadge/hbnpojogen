@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.SystemUtils;
+
 import com.felees.hbnpojogen.CascadeState;
 import com.felees.hbnpojogen.State;
 import com.felees.hbnpojogen.SyncUtils;
@@ -104,6 +106,9 @@ implements Serializable {
 	private TreeSet<String> methodLevelSettersPostcondition = new TreeSet<String>();
 	/** Java snippets to add on top of each method where this is referenced */
 	private TreeSet<String> methodLevelGettersPostcondition = new TreeSet<String>();
+	/** For postgresql ID fields, defines the sequence generator controlling this field. */
+	private String sequenceName;
+	
 
 	/**
 	 * If true, the javaname/propertyname have been changed because we had multiple oneToMany on this field
@@ -125,6 +130,8 @@ implements Serializable {
 	private boolean oneToNBackLinkDisabled;
 	/** If true, property has a @Valid annotation. */
 	private boolean validatorAnnotated;
+	/** The reference used internally within hibernate. */
+	private String sequenceHibernateRef;
 
 	/**
 	 * Gets
@@ -1002,15 +1009,15 @@ implements Serializable {
 
 			if (!this.oneToMany &&  !this.manyToOne &&  !this.manyToMany && !this.isPFK() && !this.isOneToOne()){
 				if (!this.isNullable()) {
-					result.add("@Mandatory");
+					result.add("@NotEmpty");
 				}
 
 				if (this.hasLength()) {
-					result.add("@Length(max="+this.length+")");
+					result.add("@Size(max="+this.length+")");
 				}
 			} else if (!this.isPFK()) {
 				validatorAnnotated = true;
-				result.add("@Valid");
+				result.add("// @Valid");
 			}
 		}
 
@@ -1054,7 +1061,22 @@ implements Serializable {
 				sb.insert(0, "@Column( ");
 				sb.append(" )");
 			}
+			
+
 		}
+		return sb.toString().trim();
+	}
+
+	public final String getSequenceAnnotation() {
+		LinkedList<String> annotation = new LinkedList<String>();
+		StringBuffer sb = new StringBuffer();
+		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() && 
+			(!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0)) {
+			sb.append(String.format("@SequenceGenerator(name=\"%s\", sequenceName=\"%s\")", this.sequenceHibernateRef, this.sequenceName) );
+			sb.append("\n");
+			
+				}
+
 		return sb.toString().trim();
 	}
 
@@ -1179,6 +1201,13 @@ implements Serializable {
 		return GeneratorEnum.AUTO.equals(this.generatorType);
 	}
 
+
+	/**
+	 * @return getter
+	 */
+	public boolean isGeneratedValueSequence() {
+		return GeneratorEnum.SEQUENCE.equals(this.generatorType);
+	}
 
 
 	/**
@@ -1624,5 +1653,25 @@ implements Serializable {
 	    TreeSet<String> fields = State.getInstance().getUniqueKeys().get(table);
 	    return fields != null && fields.contains(this.fieldObj.getName());
 	    
+	}
+
+
+	public String getSequenceName() {
+		return sequenceName;
+	}
+
+
+	public void setSequenceName(String sequenceName) {
+		this.sequenceName = sequenceName;
+	}
+
+
+	public String getSequenceHibernateRef() {
+		return sequenceHibernateRef;
+	}
+
+
+	public void setSequenceHibernateRef(String sequenceHibernateRef) {
+		this.sequenceHibernateRef = sequenceHibernateRef;
 	}
 }

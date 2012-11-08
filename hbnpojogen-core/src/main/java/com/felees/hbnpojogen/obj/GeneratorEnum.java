@@ -19,6 +19,7 @@ public enum GeneratorEnum implements Serializable {
     CUSTOM,
     /** Constant. */
     PKS,
+    SEQUENCE,
     /** Constant. */
     IDAWARE;
 }

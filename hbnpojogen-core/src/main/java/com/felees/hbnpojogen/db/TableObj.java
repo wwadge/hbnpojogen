@@ -2,6 +2,7 @@ package com.felees.hbnpojogen.db;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -33,6 +34,9 @@ public class TableObj implements Serializable {
 	private TreeMap<String, KeyObj> importedKeys = new TreeMap<String, KeyObj>(new CaseInsensitiveComparator());
     /** List of the primary keys */
     private TreeSet<String> primaryKeys = new TreeSet<String>(new CaseInsensitiveComparator());
+    /** Map of sequences linked to keys */
+    private Map<String, String> primaryKeySequences = new TreeMap<String, String>(new CaseInsensitiveComparator());
+
     /** List of the natural keys (assigned from config file) */
     private TreeMap<String, FieldObj> naturalKeys = new TreeMap<String, FieldObj>(new CaseInsensitiveComparator());
     /** database catalogue */
@@ -221,6 +225,14 @@ public class TableObj implements Serializable {
 	 */
 	public void setViewTable(boolean viewTable) {
 		this.viewTable = viewTable;
+	}
+
+	public Map<String, String> getPrimaryKeySequences() {
+		return primaryKeySequences;
+	}
+
+	public void setPrimaryKeySequences(Map<String, String> primaryKeySequences) {
+		this.primaryKeySequences = primaryKeySequences;
 	}
     
     

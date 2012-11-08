@@ -5,7 +5,7 @@
 
 	<groupId>com.felees</groupId>
 	<artifactId>hbnpojogen</artifactId>
-	<version>1.4.31</version>
+	<version>1.4.32</version>
 	<packaging>pom</packaging>
 
 	<name>Hibernate POJO Generator</name>
@@ -85,6 +85,12 @@
 				<scope>runtime</scope>
 				<optional>true</optional>
 			</dependency>
+
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
 
 			<dependency>
 				<groupId>org.apache.velocity</groupId>

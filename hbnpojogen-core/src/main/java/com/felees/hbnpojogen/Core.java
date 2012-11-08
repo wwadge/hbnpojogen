@@ -85,7 +85,13 @@ public class Core {
 			TreeSet<String> natKeys = State.getInstance().naturalKeys.get(tableObj.getFullTableName());
 			ResultSet indexes = dbmd.getPrimaryKeys(SyncUtils.getTableCatalog(tableName), null, SyncUtils.getTableName(tableName));
 			while (indexes.next()) {
-				tableObj.getPrimaryKeys().add(indexes.getString(Constants.COLUMN_NAME));
+				String col = indexes.getString(Constants.COLUMN_NAME);
+				tableObj.getPrimaryKeys().add(col);
+				ResultSet seqs = dbmd.getTables(connection.getCatalog(), null, SyncUtils.getTableName(tableName)+"_"+col+"_seq", new String[] { "SEQUENCE" });
+				while (seqs.next()){
+					String sequenceName = seqs.getString("table_name");
+					tableObj.getPrimaryKeySequences().put(col, connection.getCatalog()+"."+sequenceName);
+				}
 			}
 			if (State.getInstance().linkTables.get(tableName) != null) {
 				// this is a link table
@@ -100,10 +106,14 @@ public class Core {
 			String tmpTableName = tableName;
 
 			String rsQuery = String.format("SELECT * FROM `%s`.`%s` WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), SyncUtils.getTableName(tmpTableName));
-			if (State.getInstance().dbMode == 1 || State.getInstance().dbMode == 2) {
+			if (State.getInstance().dbMode == 1) {
 				tmpTableName = SyncUtils.getTableName(tmpTableName);
 				rsQuery = String.format("SELECT * FROM %s  WHERE 1=2 ", tmpTableName);
 			}
+			if (State.getInstance().dbMode == 2){ // postgresql
+				rsQuery = String.format("SELECT * FROM %s.%s WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), SyncUtils.getTableName(tmpTableName));
+			}
+	
 			ResultSet rs;
 			rs = dbmd.getConnection().createStatement().executeQuery(rsQuery);
 
@@ -291,9 +301,15 @@ public class Core {
 				relItem.setPkColumnName(importedKeys.getString(Constants.PKCOLUMN_NAME));
 				relItem.setFkName(importedKeys.getString(Constants.FK_NAME));
 				relItem.setCatalog(importedKeys.getString(Constants.PKTABLE_CAT));
+				if (relItem.getCatalog() == null){
+					relItem.setCatalog(tableObj.getDbCat()); // postgres
+				}
 				relItem.setTableName(importedKeys.getString(Constants.PKTABLE_NAME));
 				relItem.setKeySeq(Integer.parseInt(importedKeys.getString(Constants.KEY_SEQ))); // for composite key
 				relItem.setFkCatalog(importedKeys.getString(Constants.FKTABLE_CAT));
+				if (relItem.getFkCatalog() == null){
+					relItem.setFkCatalog(tableObj.getDbCat()); // postgres
+				}
 				relItem.setFkTableName(importedKeys.getString(Constants.FKTABLE_NAME));
 				relList.add(relItem);
 			}
@@ -312,7 +328,7 @@ public class Core {
 				// key
 				String pkFullTableName = pkTableCat + "." + pkTableName;
 
-				if ((!pkTableCat.equalsIgnoreCase(dbCatalog)  && (State.getInstance().schemaRestrict == 0)) ||
+				if ((pkTableCat != null && !dbCatalog.equalsIgnoreCase(pkTableCat)  && (State.getInstance().schemaRestrict == 0)) ||
 						(State.getInstance().ignoreTableList.contains(pkTableCat + "." + pkTableName)) ||
 						(State.getInstance().ignoreTableList.contains(pkTableCat + ".*")) ||
 						(State.getInstance().ignoreTableList.contains(pkTableName)) ||
@@ -827,7 +843,17 @@ public class Core {
 							property.setGeneratorType(defaultGeneratorType);
 						}
 						else {
-							property.setGeneratorType(GeneratorEnum.AUTO);
+							String seq = property.getClazz().getTableObj().getPrimaryKeySequences().get(property.getFieldObj().getName());
+
+							if (State.getInstance().dbMode == 2 && seq != null){
+								property.setGeneratorType(GeneratorEnum.SEQUENCE);
+								property.setSequenceName(seq);
+								property.setSequenceHibernateRef(property.getClazz().getClassPropertyName()+SyncUtils.upfirstChar(property.getFieldObj().getName())+"Generator");
+								co.getImports().add("javax.persistence.SequenceGenerator");
+								co.getImports().add("javax.persistence.GenerationType");
+							} else {
+								property.setGeneratorType(GeneratorEnum.AUTO);
+							}
 						}
 						property.setGeneratedValue(true);
 

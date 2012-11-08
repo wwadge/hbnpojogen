@@ -9,7 +9,7 @@
 	<parent>
 		<artifactId>hbnpojogen</artifactId>
 		<groupId>com.felees</groupId>
-		<version>1.4.31</version>
+		<version>1.4.32</version>
 	</parent>
 
 	<name>Hibernate POJO Generator Core</name>
@@ -25,6 +25,13 @@
 			<groupId>net.sourceforge.jtds</groupId>
 			<artifactId>jtds</artifactId>
 		</dependency>
+
+
+<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>commons-io</groupId>

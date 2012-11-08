@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>hbnpojogen</artifactId>
 		<groupId>com.felees</groupId>
-		<version>1.4.31</version>
+		<version>1.4.32</version>
 	</parent>
 
 	<artifactId>hbnpojogen-maven-plugin</artifactId>

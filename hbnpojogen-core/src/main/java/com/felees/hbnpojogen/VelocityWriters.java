@@ -94,6 +94,9 @@ public class VelocityWriters {
         notForInterfaceImports.add("javax.persistence.Column");
         notForInterfaceImports.add("javax.persistence.Entity");
         notForInterfaceImports.add("javax.persistence.GeneratedValue");
+        notForInterfaceImports.add("javax.persistence.SequenceGenerator");
+        notForInterfaceImports.add("javax.persistence.Basic");
+        
         notForInterfaceImports.add("javax.persistence.Id");
         notForInterfaceImports.add("javax.persistence.ManyToMany");
         notForInterfaceImports.add("javax.persistence.OneToMany");
@@ -116,8 +119,9 @@ public class VelocityWriters {
         notForInterfaceImports.add("javax.persistence.Enumerated");
         notForInterfaceImports.add("javax.persistence.GenerationType");
         notForInterfaceImports.add("java.util.Arrays");
-        notForInterfaceImports.add("org.hibernate.validator.Length");
+        notForInterfaceImports.add("org.hibernate.validator.Size");
         notForInterfaceImports.add("org.hibernate.validator.NotNull");
+        notForInterfaceImports.add("org.hibernate.validator.NotEmpty");
         notForInterfaceImports.add("org.hibernate.validator.Valid");
         notForInterfaceImports.add("com.ecs.persistence.validator.Mandatory");
         notForInterfaceImports.add("org.hibernate.proxy.HibernateProxy");
@@ -981,19 +985,32 @@ public class VelocityWriters {
         <property name="acquireIncrement" value="${db.connection_pool.acquire_increment}"/>    
         */
         boolean propOverride = !State.getInstance().isEnablePropertyPlaceholderConfigurer();
-        String dialect = "org.hibernate.dialect.MySQLDialect";
+        String dialect;
+        switch( State.getInstance().dbMode){
+        case 1 : dialect = "org.hibernate.dialect.SQLServerDialect"; break; 
+        case 2:  dialect = "org.hibernate.dialect.PostgreSQLDialect"; break;
+        default:
+        	dialect = "org.hibernate.dialect.MySQLDialect"; break;
+        }
+       
         context.put("dialect", State.getInstance().dbMode == 1  ? "org.hibernate.dialect.SQLServerDialect" : dialect);
         context.put("restrictCatalog", State.getInstance().dbMode == 1);
         
-        String db = State.getInstance().dbMode == 1 ? "jdbc:jtds:sqlserver" : "jdbc:mysql";
+        String db;
+        switch( State.getInstance().dbMode){
+        case 1 : db = "jdbc:jtds:sqlserver"; break; 
+        case 2:  db = "jdbc:postgresql"; break;
+        default:
+        	db = "jdbc:mysql"; break;
+        }
         context.put("dbUrl", propOverride ? db + "://"+State.getInstance().getDbIP()+"/"+State.getInstance().getDbCatalog() : "${db.connection.url}");
         context.put("dbUsername", propOverride ? State.getInstance().dbUsername : "${db.connection.username}");
         context.put("dbPassword", propOverride ? State.getInstance().dbPassword : "${db.connection.password}");
         context.put("dbIdleConnectionTestPeriod", propOverride ? 60 : "${db.connection_pool.idle_connection_test_period}");
         context.put("dbMaxIdle", propOverride ? 240 : "${db.connection_pool.max_idle_time}");
-        context.put("dbMaxPool", propOverride ? 30 : "${db.connection_pool.max_pool}");
+        context.put("dbMaxPool", propOverride ? 20 : "${db.connection_pool.max_pool}");
         context.put("dbMinPool", propOverride ? 10 : "${db.connection_pool.min_pool}");
-        context.put("dbPartitions", propOverride ? 3 : "${db.connection_pool.partition_count}");
+        context.put("dbPartitions", propOverride ? 1 : "${db.connection_pool.partition_count}");
         context.put("dbInitPool", propOverride ? 10 : "${db.connection_pool.initial_pool_size}");
         context.put("dbMaxStatements", propOverride ? 100 : "${db.connection_pool.max_statements}");
         context.put("dbAcquireIncrement", propOverride ? 3 : "${db.connection_pool.acquire_increment}");
@@ -1290,8 +1307,9 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         context.put("additionalPom", State.getInstance().getMavenAdditionalPomEntries());
         context.put("mavenVersion", State.getInstance().getMavenVersion());
         context.put("artifactId", State.getInstance().getMavenArtifactId());
-        context.put("mavenName", State.getInstance().getMavenName());
         context.put("noDeps", State.getInstance().isMavenNoDeps());
+        context.put("mavenName", State.getInstance().getMavenName());
+        context.put("validator", State.getInstance().enableHibernateValidator);
         context.put("v2SpringVersion", State.getInstance().getSpringVersion()==2);
         context.put("useExternalLib", State.getInstance().isMavenUseExternalLib());
         context.put("useDynamicLdapDataSource", State.getInstance().isUseDynamicLDAPDataSource());
@@ -1307,6 +1325,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         context.put("srcDir", State.getInstance().getSrcFolder());
         context.put("testDir", State.getInstance().getTestFolder());
         context.put("syncVersion", State.getInstance().getSynchronizerVersion());
+        context.put("dbMode", State.getInstance().dbMode);
 
         PrintWriter pomWriter = new PrintWriter(new BufferedWriter(new FileWriter(targetFolder + "/pom.xml", false)));
 
