@@ -1227,6 +1227,14 @@ implements Serializable {
 	}
 
 
+	/**
+	 * @return getter
+	 */
+	public boolean isGeneratedValueUUIDWithoutDashes() {
+		return GeneratorEnum.UUIDWithoutDashes.equals(this.generatorType);
+	}
+	
+	
     /**
      * @return getter
      */

@@ -44,6 +44,9 @@ package ${packagename};
 #if ( $property.isGeneratedValueUUID() )
 	@GeneratedValue(generator = "hibernate-uuid")
 #end
+#if ( $property.isGeneratedValueUUIDWithoutDashes() )
+	@GeneratedValue(generator = "hibernate-uuid")
+#end
 #if ( $property.isGeneratedValueIdAware() )
 	@GeneratedValue(generator = "hibernate-idaware")
 #end
@@ -173,6 +176,12 @@ $classAnnotation
 	 parameters = {
       	  @Parameter(name = "separator", value = "-")
 	    }
+)
+#end
+#if ( (${class.isGeneratedValueUUIDWithoutDashes()} == true))
+@org.hibernate.annotations.GenericGenerator(
+	name = "hibernate-uuid",
+	strategy = "uuid"
 )
 #end
 #if ( (${class.isGeneratedValueGUID()} == true))

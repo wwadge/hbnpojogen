@@ -53,6 +53,9 @@ package ${packagename};
 #if ( $property.isGeneratedValuePKS() )
 	@GeneratedValue(generator = "hibernate-pks")
 #end
+#if ( $property.isGeneratedValueSequence() )
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "$property.sequenceHibernateRef")
+#end
 #end	
 #if ( $property.OneToMany && (!( $class.embeddable || $class.isCompositePrimaryKey() )))
 #oneToManyAnnotation($property)
@@ -367,6 +370,9 @@ $classCustomCodeFields
 #if (!$property.getColumnAnnotation().isEmpty())
 	@Basic( optional = $property.isNullable() )
 	$property.getColumnAnnotation()
+#if (!$property.getSequenceAnnotation().isEmpty())
+	$property.getSequenceAnnotation()
+#end	
 #end
 #end
 #foreach ($annotation in $property.methodLevelAnnotationsOnGetters)

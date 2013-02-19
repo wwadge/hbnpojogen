@@ -1701,6 +1701,10 @@ public class Core {
 						clazz.getImports().add("javax.persistence.GeneratedValue");
 						clazz.getImports().add("org.hibernate.annotations.Parameter");
 						break;
+					case UUIDWithoutDashes:
+						clazz.setGeneratedValueUUIDWithoutDashes(true);
+						clazz.getImports().add("javax.persistence.GeneratedValue");
+						break;
 					default:
 						break;
 					}

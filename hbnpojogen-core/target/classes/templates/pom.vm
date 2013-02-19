@@ -42,6 +42,14 @@
 #end
 </dependency>
 
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-validator</artifactId>
+#if ($doPomVersion)			
+	<version>4.3.0.Final</version>
+#end
+</dependency>
+
 
   <dependency>
                 <groupId>org.hibernate</groupId>
@@ -99,7 +107,7 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
 #if ($doPomVersion)
-                <version>r09</version>
+                <version>13.0.1</version>
 #end			
             </dependency>
 
@@ -151,6 +159,18 @@
 			<scope>test</scope>
 		</dependency>
 
+#if ($dbMode == 2)
+<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+#if ($doPomVersion)			
+			<version>9.1-901-1.jdbc4</version>
+#end			
+			<scope>runtime</scope>
+		</dependency>
+#end
+
+#if ($dbMode == 0)
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -159,6 +179,7 @@
 #end			
 			<scope>runtime</scope>
 		</dependency>
+#end
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -335,6 +356,7 @@
 		
 		 <plugin>
         	<artifactId>maven-jar-plugin</artifactId>
+		<version>2.4</version>
         	<configuration>
           		<excludes>
             		<exclude>**/ehcache.xml</exclude>
@@ -346,8 +368,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 

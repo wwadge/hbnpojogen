@@ -12,6 +12,8 @@ public enum GeneratorEnum implements Serializable {
 	/** Constant */
 	UUID,
 	/** Constant */
+	UUIDWithoutDashes,
+	/** Constant */
 	GUID,
 	/** Constant */
 	NONE,

@@ -1266,6 +1266,15 @@ implements Serializable, Comparable<Clazz> {
     public boolean isGeneratedValueUUID() {
         return this.generatorEnumSupport.get(GeneratorEnum.UUID.ordinal());
     }
+    
+    
+    
+    /**
+     * @return true if generated enum = uuid
+     */
+    public boolean isGeneratedValueUUIDWithoutDashes() {
+    	return this.generatorEnumSupport.get(GeneratorEnum.UUIDWithoutDashes.ordinal());
+    }
 
 
 
@@ -1341,6 +1350,13 @@ implements Serializable, Comparable<Clazz> {
      */
     public void setGeneratedValueUUID(boolean enabled) {
         this.generatorEnumSupport.set(GeneratorEnum.UUID.ordinal(), enabled);
+    }
+
+    /**
+     * @param enabled
+     */
+    public void setGeneratedValueUUIDWithoutDashes(boolean enabled) {
+    	this.generatorEnumSupport.set(GeneratorEnum.UUIDWithoutDashes.ordinal(), enabled);
     }
 
 
