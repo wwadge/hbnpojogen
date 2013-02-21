@@ -12,6 +12,8 @@
 	<databaseIP>localhost</databaseIP>
 	<!-- Database name -->
 	<databaseCatalog>hbnPojoTest</databaseCatalog>
+	<!-- Schema name (pgsql only.) Default: public -->
+	<databaseSchema>public</databaseSchema>
 	<!-- Username with access to view meta data -->
 	<databaseUsername>root</databaseUsername>
 	<!-- Password for the given username -->

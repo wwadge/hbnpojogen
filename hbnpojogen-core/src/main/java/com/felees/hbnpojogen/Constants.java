@@ -45,6 +45,8 @@ public class Constants {
 	/** Constant */
 	static final String DATABASE_CATALOG = "databaseCatalog";
 	/** Constant */
+	static final String DATABASE_SCHEMA = "databaseSchema";
+	/** Constant */
 	static final String ALL = "ALL";
 	/** Constant */
 	static final String FULL = "FULL";

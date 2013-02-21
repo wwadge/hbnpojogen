@@ -1215,6 +1215,7 @@ implements Serializable {
 	public static String getTableCatalog(String dottedInput) {
 		return dottedInput.substring(0, dottedInput.indexOf("."));
 	}
+	
 
 	/** Find a match even inside subclasses/superclass. Used in DFS
 	 * @param match

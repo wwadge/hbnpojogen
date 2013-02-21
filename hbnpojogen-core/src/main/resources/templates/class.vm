@@ -167,7 +167,7 @@ $classAnnotation
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
-@Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat"#end)
+@Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
 #if ( (${class.isGeneratedValueUUID()} == true))
 @org.hibernate.annotations.GenericGenerator(

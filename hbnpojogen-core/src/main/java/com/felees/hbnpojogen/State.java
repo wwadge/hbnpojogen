@@ -47,6 +47,8 @@ implements Serializable {
 	/** config */
 	public String dbCatalog;
 	/** config */
+	public String dbSchema;
+	/** config */
 	public String dbUsername;
 	/** config */
 	public String dbPassword;

@@ -41,6 +41,7 @@ public class TableObj implements Serializable {
     private TreeMap<String, FieldObj> naturalKeys = new TreeMap<String, FieldObj>(new CaseInsensitiveComparator());
     /** database catalogue */
 	private String dbCat; 
+	private String dbSchema; 
 	/** We had to fudge and scrub to make enums into our enums */
 	private boolean containsScrubbedEnum;
 	/** We have enum links */
@@ -233,6 +234,14 @@ public class TableObj implements Serializable {
 
 	public void setPrimaryKeySequences(Map<String, String> primaryKeySequences) {
 		this.primaryKeySequences = primaryKeySequences;
+	}
+
+	public String getDbSchema() {
+		return dbSchema;
+	}
+
+	public void setDbSchema(String dbSchema) {
+		this.dbSchema = dbSchema;
 	}
     
     

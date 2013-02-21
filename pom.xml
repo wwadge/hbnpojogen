@@ -165,18 +165,5 @@
       <url>https://repository.jboss.org/nexus/content/groups/public</url>
     </repository>  
 </repositories>
-	<distributionManagement>
-		<repository>
-			<id>ccbill</id>
-			<name>CCBill Release Artifacts</name>
-			<url>http://ci:8089/artifactory/ccbill-releases</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>ccbill-snapshot</id>
-			<name>CCBill Snapshot Artifacts</name>
-			<url>http://ci:8089/artifactory/ccbill-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>

@@ -188,6 +188,14 @@
 			<version>${springVersion}</version>
 #end			
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+#if ($doPomVersion)			
+			<version>${springVersion}</version>
+#end			
+		</dependency>
 
 	<dependency>
 			<groupId>org.springframework</groupId>
@@ -319,6 +327,7 @@
 		<testSourceDirectory>$testDir</testSourceDirectory>
 
 		<plugins>
+<!--
 			<plugin>
       		<artifactId>maven-surefire-plugin</artifactId>
       		<configuration>
@@ -353,6 +362,7 @@
         		</execution>
       		</executions>
     	</plugin>
+-->
 		
 		 <plugin>
         	<artifactId>maven-jar-plugin</artifactId>

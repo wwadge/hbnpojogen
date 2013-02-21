@@ -589,6 +589,10 @@ public class Config {
         }
         State.getInstance().dbIP = Config.config.getString(Constants.DATABASE_IP);
         State.getInstance().dbCatalog = Config.config.getString(Constants.DATABASE_CATALOG);
+        State.getInstance().dbSchema = Config.config.getString(Constants.DATABASE_SCHEMA);
+        if (State.getInstance().dbSchema == null){
+        	State.getInstance().dbSchema = "public";
+        }
         State.getInstance().dbUsername = Config.config.getString(Constants.DATABASE_USERNAME);
         State.getInstance().dbPassword = Config.config.getString(Constants.DATABASE_PASSWORD);
         String path = Config.config.getString(Constants.SOURCE_TARGET);

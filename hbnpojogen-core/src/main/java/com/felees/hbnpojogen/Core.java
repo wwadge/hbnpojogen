@@ -72,6 +72,7 @@ public class Core {
 			TableObj tableObj = State.getInstance().tables.get(tableName);
 			tableObj.setDbName(SyncUtils.getTableName(tableName));
 			tableObj.setDbCat(SyncUtils.getTableCatalog(tableName));
+			tableObj.setDbSchema(State.getInstance().dbSchema);
 			tableObj.setName(SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)));
 			tableObj.setTestHandle(SyncUtils.getTableName(tableName));
 			tableObj.setViewTable(SyncUtils.getViewSet().contains(tableName));
@@ -90,7 +91,7 @@ public class Core {
 				ResultSet seqs = dbmd.getTables(connection.getCatalog(), null, SyncUtils.getTableName(tableName)+"_"+col+"_seq", new String[] { "SEQUENCE" });
 				while (seqs.next()){
 					String sequenceName = seqs.getString("table_name");
-					tableObj.getPrimaryKeySequences().put(col, connection.getCatalog()+"."+sequenceName);
+					tableObj.getPrimaryKeySequences().put(col, connection.getCatalog()+"."+State.getInstance().dbSchema+"."+sequenceName);
 				}
 			}
 			if (State.getInstance().linkTables.get(tableName) != null) {
@@ -111,7 +112,7 @@ public class Core {
 				rsQuery = String.format("SELECT * FROM %s  WHERE 1=2 ", tmpTableName);
 			}
 			if (State.getInstance().dbMode == 2){ // postgresql
-				rsQuery = String.format("SELECT * FROM %s.%s WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), SyncUtils.getTableName(tmpTableName));
+				rsQuery = String.format("SELECT * FROM %s.%s.%s WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), State.getInstance().dbSchema, SyncUtils.getTableName(tmpTableName));
 			}
 	
 			ResultSet rs;
