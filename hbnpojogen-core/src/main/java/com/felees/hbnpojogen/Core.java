@@ -6,6 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -124,6 +125,7 @@ public class Core {
 
 			for (int i = 1; i <= numberOfColumns; i++) {
 				String typeName = "";
+				int sqlType = 0;
 
 				String defaultValue = null;
 				if (State.getInstance().dbMode == 0) {
@@ -133,7 +135,8 @@ public class Core {
 					defaultValue = fieldNames.getString("COLUMN_DEF");
 				}
 				else {
-					typeName = rsmd.getColumnTypeName(i).toUpperCase();
+					typeName = rsmd.getColumnTypeName(i);
+					sqlType = rsmd.getColumnType(i);
 				}
 				String colName = rsmd.getColumnName(i).toLowerCase();
 				if (State.getInstance().ignoreFieldList.containsKey("*.*." + colName) || State.getInstance().ignoreFieldList.containsKey(tableName + ".*") ||
@@ -181,6 +184,7 @@ public class Core {
 				fo.setPrecision(rsmd.getPrecision(i));
 				fo.setScale(rsmd.getScale(i));
 
+				fo.setFieldColumnType(rsmd.getColumnTypeName(i));
 				fo.setFieldTypeUnsigned(!rsmd.isSigned(i));
 				fo.setNullable(rsmd.isNullable(i) == ResultSetMetaData.columnNullable);
 				fo.setAutoInc(rsmd.isAutoIncrement(i));
@@ -218,7 +222,9 @@ public class Core {
 						;
 					fakeEnum = (dstTableMap != null);
 				}
-				if (Constants.ENUM.equals(typeName) || fakeEnum) {
+				if (!typeName.toUpperCase().equals("UUID") && (Constants.ENUM.equals(typeName.toUpperCase()) 
+						|| sqlType == Types.OTHER // eg pgsql enum type
+						|| fakeEnum)) {
 					// if it's an enum, generate all the enum files and parse
 					// the metadata to
 					// extract all
@@ -250,7 +256,7 @@ public class Core {
 						commitOrderCleanup.add(tmp);
 					}
 					else {
-						fo.setEnumValues(SyncUtils.getEnumValues(connection, tableName, colName, enumsScrubbed));
+						fo.setEnumValues(SyncUtils.getEnumValues(connection, tableName, State.getInstance().dbMode == 2 ? typeName : colName, enumsScrubbed));
 					}
 
 					tableObj.setContainsScrubbedEnum(enumsScrubbed[0] || tableObj.isContainsScrubbedEnum());
@@ -843,19 +849,19 @@ public class Core {
 						if (property.getFieldObj().getName().equalsIgnoreCase(defaultPattern)) {
 							property.setGeneratorType(defaultGeneratorType);
 						}
-						else {
-							String seq = property.getClazz().getTableObj().getPrimaryKeySequences().get(property.getFieldObj().getName());
+						String seq = property.getClazz().getTableObj().getPrimaryKeySequences().get(property.getFieldObj().getName());
 
-							if (State.getInstance().dbMode == 2 && seq != null){
-								property.setGeneratorType(GeneratorEnum.SEQUENCE);
-								property.setSequenceName(seq);
-								property.setSequenceHibernateRef(property.getClazz().getClassPropertyName()+SyncUtils.upfirstChar(property.getFieldObj().getName())+"Generator");
-								co.getImports().add("javax.persistence.SequenceGenerator");
-								co.getImports().add("javax.persistence.GenerationType");
-							} else {
+						if (State.getInstance().dbMode == 2 && seq != null){
+							property.setGeneratorType(GeneratorEnum.SEQUENCE);
+							property.setSequenceName(seq);
+							property.setSequenceHibernateRef(property.getClazz().getClassPropertyName()+SyncUtils.upfirstChar(property.getFieldObj().getName())+"Generator");
+							co.getImports().add("javax.persistence.SequenceGenerator");
+							co.getImports().add("javax.persistence.GenerationType");
+						} 
+
+						else {
 								property.setGeneratorType(GeneratorEnum.AUTO);
 							}
-						}
 						property.setGeneratedValue(true);
 
 					}

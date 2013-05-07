@@ -55,10 +55,10 @@ public class StringValuedEnumReflect {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Enum & StringValuedEnum> String 
-            getNameFromValue(Class<T> enumClass, String value) {
+            getNameFromValue(Class<T> enumClass, Object value) {
         T[] values = getValues(enumClass);
         for (int i = 0; i < values.length; i++) {
-            if (values[i].getValue().compareTo(value) == 0) {
+            if (values[i].getValue().toString().equals(value.toString())) {
                 return values[i].name();
             }
         }

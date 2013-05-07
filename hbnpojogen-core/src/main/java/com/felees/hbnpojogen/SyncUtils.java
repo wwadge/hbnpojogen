@@ -529,7 +529,8 @@ implements Serializable {
 		try {
 			String[] enumText = {};
 			stat = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-			if (!fakeEnum) {
+			if (!fakeEnum && State.getInstance().dbMode != 2){ // pgsql
+			
 				rs = stat.executeQuery(String.format("SHOW COLUMNS FROM %s LIKE '%s'", tblName, fieldName));
 
 				rs.next();
@@ -548,7 +549,14 @@ implements Serializable {
 			}
 			else {
 				LinkedHashSet<String> tmp = new LinkedHashSet<String>();
-				rs = stat.executeQuery(String.format("select * from %s", tblName));
+				if (State.getInstance().dbMode != 2){
+					rs = stat.executeQuery(String.format("select * from %s", tblName));
+				} else {
+					wasScrubbed[0] = true;
+				rs = stat.executeQuery(String.format("SELECT pg_enum.enumlabel, pg_enum.enumlabel AS enumlabel FROM pg_type JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid"+
+						" where pg_type.typname='%s'",  fieldName));
+				}					
+			
 				while (rs.next()) { // process results one row at a time
 					String key = keyCol == null ? rs.getString(2).toUpperCase() : rs.getString(keyCol).toUpperCase();
 
@@ -718,6 +726,13 @@ implements Serializable {
 		case java.sql.Types.BLOB:
 			result = "Byte[]";
 			break;
+		case java.sql.Types.OTHER:
+			if (fieldObj.getFieldColumnType().equalsIgnoreCase("UUID")){
+				result = "java.util.UUID";
+			} else {
+				result = "Object"; 
+			}
+			break;
 		case java.sql.Types.DATE:
 		case java.sql.Types.TIME:
 		case java.sql.Types.TIMESTAMP:
@@ -731,13 +746,12 @@ implements Serializable {
 		case java.sql.Types.NCLOB:
 		case java.sql.Types.SQLXML:
 		case java.sql.Types.NULL:
-		case java.sql.Types.OTHER:
-		case java.sql.Types.JAVA_OBJECT:
 		case java.sql.Types.DISTINCT:
 		case java.sql.Types.STRUCT:
 		case java.sql.Types.ARRAY:
 		case java.sql.Types.CLOB:
 		case java.sql.Types.REF:
+		case java.sql.Types.JAVA_OBJECT:
 		case java.sql.Types.DATALINK:
 			result = "Object";
 			break;

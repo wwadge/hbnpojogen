@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Built-By: wwadge
+Build-Jdk: 1.7.0_09
+Created-By: Maven Integration for Eclipse
+Bundle-ManifestVersion: 2
+Bundle-Name: HbnPojoGen Persistence Plug-in
+Bundle-SymbolicName: com.felees.hbnpojogen.plugin.persistence;singleto
+ n:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Main-Class: com.felees.hbnpojogen.HbnPojoGen
+Export-Package: com.felees.hbnpojogen.persistence,com.felees.hbnpojoge
+ n.persistence.impl,com.felees.hbnpojogen.persistence.validator,com.fe
+ lees.hbnpojogen.randomlib.data,com.felees.hbnpojogen.randomlib.data.d
+ ataGeneration
+Eclipse-BuddyPolicy: registered
+

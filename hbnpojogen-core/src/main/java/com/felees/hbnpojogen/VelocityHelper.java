@@ -78,6 +78,7 @@ public class VelocityHelper {
     public String getHibernateBugWorkaround(PropertyObj property) {
         String returnValue;
         int fieldtype = property.getFieldObj().getFieldType();
+        String fieldColumnType = property.getFieldObj().getFieldColumnType();
 
         switch (fieldtype) {
             case java.sql.Types.BOOLEAN:
@@ -101,6 +102,13 @@ public class VelocityHelper {
                 }
                 break;
 
+            case java.sql.Types.OTHER:
+            	if (fieldColumnType.equalsIgnoreCase("UUID")){
+            		returnValue= java.util.UUID.randomUUID().toString(); 
+            	} else {
+            		returnValue= "new Object();";
+            	}
+            	break;
             case java.sql.Types.BIGINT:
                 returnValue = "0L";
                 break;
@@ -141,7 +149,6 @@ public class VelocityHelper {
             case java.sql.Types.NCLOB:
             case java.sql.Types.SQLXML:
             case java.sql.Types.NULL:
-            case java.sql.Types.OTHER:
             case java.sql.Types.JAVA_OBJECT:
             case java.sql.Types.DISTINCT:
             case java.sql.Types.STRUCT:
@@ -526,7 +533,8 @@ public class VelocityHelper {
         try {
             String tableName = property.getClazz().getTableObj().getFullTableName();
             int fieldtype = property.getFieldObj().getFieldType();
-            String propertyName = property.getPropertyName();
+            String fieldColumntype = property.getFieldObj().getFieldColumnType();
+               String propertyName = property.getPropertyName();
 
             // if we have a default value for a particular field set in the config
             // file, return it
@@ -693,12 +701,18 @@ public class VelocityHelper {
                             returnValue = "BasicDataGenerator.generateRandomBinary(" + property.getFieldObj().getLength() + ")";
                         }
                         break;
-
+                    case java.sql.Types.OTHER:
+                     	if (fieldColumntype.equalsIgnoreCase("UUID")){
+                    		returnValue= "java.util.UUID.randomUUID()"; 
+                    	} else {
+                    		returnValue= "new Object();";
+                    	}
+           
+                    	break;
                     case java.sql.Types.ROWID:
                     case java.sql.Types.NCLOB:
                     case java.sql.Types.SQLXML:
                     case java.sql.Types.NULL:
-                    case java.sql.Types.OTHER:
                     case java.sql.Types.JAVA_OBJECT:
                     case java.sql.Types.DISTINCT:
                     case java.sql.Types.STRUCT:
@@ -865,6 +879,10 @@ public class VelocityHelper {
     public static boolean isBacklinksDisabled() {
         return State.getInstance().disableBackLinksInDataPoolFactory;
     }
+    public static boolean isPGSQL() {
+        return State.getInstance().dbMode == 2;
+    }
+    
     
 
     public static String getClassName(String name){

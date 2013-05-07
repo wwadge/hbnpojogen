@@ -17,7 +17,7 @@ import java.util.Map;
 import com.felees.hbnpojogen.persistence.GenericDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.SessionFactory;
 import org.hibernate.proxy.HibernateProxy;
 #end
@@ -227,7 +227,7 @@ public class DataLayer${catalog}Impl implements DataLayer${catalog} {
 	* @param persistentObject a class, which is persistent, or has persistent subclasses 
 	* @return Criteria instance
 	*/
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	#if (!$interface)public #{end}Criteria createCriteria(Class persistentObject)#if ($interface);#else {
         return this.sessionFactory.getCurrentSession().createCriteria(persistentObject);
     }#end
@@ -327,7 +327,7 @@ public class DataLayer${catalog}Impl implements DataLayer${catalog} {
 	 */
 	#if (!$interface)public #{end}void reattachEntityWithNoLock(IPojoGenEntity entity)#if ($interface);#else {
 		if (entity != null) {
-        		this.sessionFactory.getCurrentSession().lock(entity, LockMode.NONE);
+            		this.sessionFactory.getCurrentSession().buildLockRequest(LockOptions.NONE).lock(entity);
     		}
 	}#end
 
@@ -339,7 +339,7 @@ public class DataLayer${catalog}Impl implements DataLayer${catalog} {
 	#if (!$interface)public #{end}void reattachEntitiesWithNoLock(Collection<? extends IPojoGenEntity> entities)#if ($interface);#else {
    		if (entities != null) {
 		       for (IPojoGenEntity entity : entities) {
-            		this.sessionFactory.getCurrentSession().lock(entity, LockMode.NONE);
+            		this.sessionFactory.getCurrentSession().buildLockRequest(LockOptions.NONE).lock(entity);
         		 }
     		}
 	}#end

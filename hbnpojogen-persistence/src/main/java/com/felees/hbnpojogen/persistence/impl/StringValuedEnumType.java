@@ -37,6 +37,7 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
      * Enum class for this particular user type.
      */
     private Class<T> enumClass;
+    private boolean pgEnum;
     /** ClassLoader to use. */
 	private static ClassLoader classLoader;
 
@@ -60,9 +61,11 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
     */
     public void setParameterValues(Properties parameters) {
         String enumClassName = parameters.getProperty("enum");
+        String enumPostgres = parameters.getProperty("forPgSQL");
         try {
             this.enumClass = (Class<T>) Class.forName(enumClassName, true, StringValuedEnumType.classLoader).asSubclass(Enum.class)
                     .asSubclass(StringValuedEnum.class); //Validates the class but does not eliminate the cast
+            this.pgEnum = "true".equalsIgnoreCase(enumPostgres);
         } catch (ClassNotFoundException cnfe) {
             throw new HibernateException("Enum class not found", cnfe);
         }
@@ -119,6 +122,22 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
     @SuppressWarnings("all")
     public Object nullSafeGet(ResultSet rs, String[] names, Object owner)
             throws HibernateException, SQLException {
+    	
+    	if (pgEnum){
+	    	Object object = rs.getObject(names[0]);
+	        if (rs.wasNull()) {
+	        	 object = getDefaultValue();
+	             if (object == null) { //no default value
+	                 return null;
+	             } 
+	        }
+	 
+	        String name = getNameFromValue(enumClass, object);
+	        Object res = rs.wasNull() ? null : Enum.valueOf(enumClass, name);
+
+	        return res;
+    	} 
+    	
         String value = rs.getString( names[0] );
         if (value == null) {
             value = getDefaultValue();
@@ -149,7 +168,11 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
         if (value == null) {
             st.setNull(index, Types.CHAR);
         } else {
-            st.setString( index, ((T) value).getValue() );
+        	if (pgEnum){
+                st.setObject( index, ((T) value).getValue(), 1111 ); // 1111 = java.sql.Types "OTHER"
+        	} else {
+        		st.setString( index, ((T) value).getValue() );
+        	}
         }
     }
     

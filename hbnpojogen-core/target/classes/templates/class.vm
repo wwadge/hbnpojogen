@@ -44,6 +44,9 @@ package ${packagename};
 #if ( $property.isGeneratedValueUUID() )
 	@GeneratedValue(generator = "hibernate-uuid")
 #end
+#if ( $property.isGeneratedValueUUIDWithoutDashes() )
+	@GeneratedValue(generator = "hibernate-uuid")
+#end
 #if ( $property.isGeneratedValueIdAware() )
 	@GeneratedValue(generator = "hibernate-idaware")
 #end
@@ -73,7 +76,7 @@ package ${packagename};
 #end
 #if($property.enumType)
 #if ($class.TableObj.ContainsScrubbedEnum == true)
-	@Type(type = "enumType", parameters = {@Parameter(name = "enum", value = "${this.getEnumPackagePath($class)}.${fullType}")})
+	@Type(type = "enumType", parameters = {@Parameter(name = "enum", value = "${this.getEnumPackagePath($class)}.${fullType}"), @Parameter(name = "forPgSQL", value = "${this.isPGSQL()}")})
 #else
 	@Enumerated(EnumType.STRING)
 #end	
@@ -164,7 +167,7 @@ $classAnnotation
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
-@Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat"#end)
+@Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
 #if ( (${class.isGeneratedValueUUID()} == true))
 @org.hibernate.annotations.GenericGenerator(
@@ -173,6 +176,12 @@ $classAnnotation
 	 parameters = {
       	  @Parameter(name = "separator", value = "-")
 	    }
+)
+#end
+#if ( (${class.isGeneratedValueUUIDWithoutDashes()} == true))
+@org.hibernate.annotations.GenericGenerator(
+	name = "hibernate-uuid",
+	strategy = "uuid"
 )
 #end
 #if ( (${class.isGeneratedValueGUID()} == true))

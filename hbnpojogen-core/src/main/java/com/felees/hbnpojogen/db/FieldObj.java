@@ -62,6 +62,8 @@ public class FieldObj implements Serializable {
 	private FieldObj foreignColumn;
 	/** link to the target object (convenience). */
 	private PropertyObj property;
+	/** what's being reported by getColumnType **/
+	private String fieldColumnType;
 
 	public boolean isAliased(){
 		return this.alias != null;
@@ -433,6 +435,18 @@ public class FieldObj implements Serializable {
     public void setEnumOtherCols(Map<String, Object> enumOtherCols) {
         this.enumOtherCols = enumOtherCols;
     }
+	/**
+	 * @return the fieldColumnType
+	 */
+	public String getFieldColumnType() {
+		return fieldColumnType;
+	}
+	/**
+	 * @param fieldColumnType the fieldColumnType to set
+	 */
+	public void setFieldColumnType(String fieldColumnType) {
+		this.fieldColumnType = fieldColumnType;
+	}
 
 
 

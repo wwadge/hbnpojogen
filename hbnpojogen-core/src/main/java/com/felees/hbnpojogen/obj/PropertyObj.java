@@ -1064,6 +1064,11 @@ implements Serializable {
 			
 
 		}
+		
+		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
+			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
+			
+		}
 		return sb.toString().trim();
 	}
 
@@ -1071,7 +1076,7 @@ implements Serializable {
 		LinkedList<String> annotation = new LinkedList<String>();
 		StringBuffer sb = new StringBuffer();
 		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() && 
-			(!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0)) {
+			((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0))) {
 			sb.append(String.format("@SequenceGenerator(name=\"%s\", sequenceName=\"%s\")", this.sequenceHibernateRef, this.sequenceName) );
 			sb.append("\n");
 			

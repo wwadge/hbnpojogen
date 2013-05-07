@@ -82,14 +82,14 @@
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
 				<version>5.1.6</version>
-				<scope>runtime</scope>
-				<optional>true</optional>
 			</dependency>
 
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 			<dependency>

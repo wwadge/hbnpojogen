@@ -113,7 +113,7 @@
 
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
+			<artifactId>ehcache-core</artifactId>
 #if ($doPomVersion)			
 			<version>1.6.0</version>
 #end			
