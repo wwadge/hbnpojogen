@@ -1934,6 +1934,20 @@ public class Core {
 
 			TreeMap<String, CustomAnnotations> annotation =
 				State.getInstance().customAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
+			if (annotation == null){
+				annotation = State.getInstance().customAnnotations.get("*." + clazz.getClassName());
+				
+				if (annotation == null){
+					annotation = State.getInstance().customAnnotations.get(clazz.getClassPackage() + ".*");
+					
+					if (annotation == null){
+						annotation = State.getInstance().customAnnotations.get("*.*");
+					}
+
+				}
+				
+			}
+			
 			if (annotation != null) { // we have some custom annotation
 				for (Entry<String, PropertyObj> property : clazz.getProperties().entrySet()) {
 					CustomAnnotations settings = annotation.get(property.getValue().getJavaName());
