@@ -75,7 +75,7 @@
 			<dependency>
 				<groupId>net.java.dev.inflector</groupId>
 				<artifactId>inflector</artifactId>
-				<version>0.7.0-patched</version>
+				<version>0.7.0</version>
 			</dependency>
 
 			<dependency>
