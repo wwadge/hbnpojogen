@@ -125,8 +125,12 @@ public class VelocityHelper {
                 break;
 
             case java.sql.Types.CHAR:
-                returnValue = "'A'";
-                break;
+            	if (property.getJavaType().equals("String")){
+            		returnValue = "new String(\"hbnBugWorkaround\")";
+            	} else {
+            		returnValue = "'A'";
+            	}
+            		break;
 
             case java.sql.Types.VARCHAR:
             case java.sql.Types.LONGVARCHAR:
@@ -645,6 +649,7 @@ public class VelocityHelper {
                         break;
                         // Removed from the lower group since mediumIn returns a decimal
                     case java.sql.Types.DECIMAL:
+                    case java.sql.Types.NUMERIC:
                         returnValue =
                             "BasicDataGenerator.generateRandomDecimal(" + property.getFieldObj().getPrecision() + ", " +
                             property.getFieldObj().getScale() + ")";
@@ -658,7 +663,6 @@ public class VelocityHelper {
                         break;
 
                     case java.sql.Types.REAL:
-                    case java.sql.Types.NUMERIC:
                         returnValue = "BasicDataGenerator.generateRandomDouble("+unique+")";
                         break;
 

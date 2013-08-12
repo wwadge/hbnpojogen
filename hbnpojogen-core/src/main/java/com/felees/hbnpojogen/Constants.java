@@ -68,6 +68,10 @@ public class Constants {
 	/** Constant */
 	static final String PKTABLE_CAT = "PKTABLE_CAT";
 	/** Constant */
+	static final String PKTABLE_SCHEM = "PKTABLE_SCHEM";
+	/** Constant */
+	static final String FKTABLE_SCHEM = "FKTABLE_SCHEM";
+	/** Constant */
 	static final String ENUM = "ENUM";
 	/** Constant */
 	static final String COLUMN_NAME = "COLUMN_NAME";

@@ -14,6 +14,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -21,7 +22,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Logger;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -48,7 +48,7 @@ public class HbnPojoGen {
 	private static Log outputLogger;
 
 
-    
+    private static Set<String> errors = new HashSet<String>();
     
     public static URL[] getSkeletonURL(String source) throws IOException {
     	
@@ -406,11 +406,16 @@ public class HbnPojoGen {
     	}
     }
 
+    
     public static void logE(String s){
+    	if (!errors.contains(s)){
+    		
     	if (outputLogger == null){
     		System.err.println(s);
     	} else {
     		outputLogger.error(s);
+    	}
+    	errors.add(s);
     	}
     }
 

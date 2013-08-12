@@ -3,4 +3,8 @@
 # Package Files #
 .MySCMServerInfo
 **/*.java.rej
-**/*.orig
+*.orig
+*.reg
+*.java.reg
+*.orig.reg
+*.log

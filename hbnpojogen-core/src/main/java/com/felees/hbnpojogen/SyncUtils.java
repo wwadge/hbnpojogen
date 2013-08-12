@@ -70,12 +70,15 @@ implements Serializable {
 	private static final String FKCOLUMN_NAME = "FKCOLUMN_NAME";
 	/** Constant */
 	private static final String TABLE_CAT = "TABLE_CAT";
+	private static final String TABLE_SCHEM = "TABLE_SCHEM";
 	/** Internal constant */
 	private static final String JDBC_TABLE = "TABLE";
 	/** Internal constant */
 	private static final String JDBC_PKTABLE_NAME = "PKTABLE_NAME";
 	/** Internal constant */
 	private static final String JDBC_PKTABLE_CAT = "PKTABLE_CAT";
+	/** Internal constant */
+	private static final String JDBC_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 	/** Internal constant */
 	private static final String JDBC_TABLE_NAME = "TABLE_NAME";
 	/** For increased speed */
@@ -95,14 +98,15 @@ implements Serializable {
 	 * @return the proper case of the table
 	 * @throws SQLException
 	 */
-	private static String getTableNameInProperCase(final java.sql.DatabaseMetaData dbmd, String cat, String tableName)
+	private static String getTableNameInProperCase(final java.sql.DatabaseMetaData dbmd, String cat, String schema, String tableName)
 	throws SQLException {
-		ResultSet rs2 = dbmd.getTables(cat, null, tableName, new String[] { JDBC_TABLE, "VIEW" });
+		ResultSet rs2 = dbmd.getTables(cat, schema, tableName, new String[] { JDBC_TABLE, "VIEW" });
 		String result = "";
 		// Get the table name
 		if (rs2.next()) {
 			  String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
-			  result = catalog + "." + rs2.getString(JDBC_TABLE_NAME);
+			  String rs2Schema = rs2.getString(TABLE_SCHEM);
+			  result = catalog + "." + (rs2Schema != null ? rs2Schema+"." : "") +rs2.getString(JDBC_TABLE_NAME);
 
 		}
 		rs2.close();
@@ -110,19 +114,6 @@ implements Serializable {
 	}
 
 
-
-	/**
-	 * Convenience method
-	 *
-	 * @param dbmd
-	 * @param dbName
-	 * @return getTableNameInProperCase
-	 * @throws SQLException
-	 */
-	private static String getTableNameInProperCase(final java.sql.DatabaseMetaData dbmd, String dbName)
-	throws SQLException {
-		return getTableNameInProperCase(dbmd, SyncUtils.getTableCatalog(dbName), SyncUtils.getTableName(dbName));
-	}
 
 
 
@@ -165,7 +156,7 @@ implements Serializable {
 
 		// Specify the type of object; in this case we want tables
 		for (String dbCat : dbCatalogs) {
-			ResultSet resultSet = dbmd.getTables(dbCat, null, "%", new String[] { JDBC_TABLE });
+			ResultSet resultSet = dbmd.getTables(getTableCatalog(dbCat), getTableName(dbCat), "%", new String[] { JDBC_TABLE });
 
 			// Get the table name
 			while (resultSet.next()) {
@@ -177,7 +168,7 @@ implements Serializable {
 
 		for (String dbCat : dbCatalogs) {
 			// fetch the views
-			ResultSet resultSet = dbmd.getTables(dbCat, null, "%", new String[] { "VIEW" });
+			ResultSet resultSet = dbmd.getTables(getTableCatalog(dbCat), getTableName(dbCat), "%", new String[] { "VIEW" });
 
 			// Get the table name
 			while (resultSet.next()) {
@@ -194,13 +185,28 @@ implements Serializable {
 
 			String tmp = tables.get(tblCount);
 			String dbCatalog = tmp.substring(0, tmp.indexOf("."));
-			checkTable = tmp.substring(tmp.indexOf(".") + 1);
+			String dbSchema = tmp.substring(tmp.indexOf(".")+1);
+			if (dbSchema.indexOf(".") > -1){
+				// pgsql
+				String[] tmpSplit = tmp.split("\\.");
+				dbSchema = tmpSplit[1];
+				checkTable = tmpSplit[2];
+			} else {
+				dbSchema = null;
+				checkTable = tmp.substring(tmp.indexOf(".") + 1);
+			}
 			
 
 		//	buildFakeFKSet(dbmd, checkTable, dbCatalog);
 				
+			String checkTableFull = dbCatalog + ".";
 			
-			String checkTableFull = dbCatalog + "." + checkTable;
+			if (State.getInstance().dbMode == 2){ // postgresql
+				checkTableFull+=dbSchema+".";
+			}
+			checkTableFull += checkTable;
+			
+			
 			tableDependencies = result.getTableDeps().get(checkTableFull);
 			// uncomment to see loop deps
 			    System.out.println(tmp + ", Deps: " + tableDependencies);
@@ -211,7 +217,7 @@ implements Serializable {
 				result.getTableDepsWithPossibleCycles().put(checkTableFull, tableDepsWithPossibleCycles);
 
 
-				ResultSet importedK = dbmd.getImportedKeys(dbCatalog, null, checkTable);
+				ResultSet importedK = dbmd.getImportedKeys(dbCatalog, dbSchema, checkTable);
 				HashSet<RelationItem> relList = new HashSet<RelationItem>();
 //				State.getInstance().getFakeFKmatched().get(dbCatalog+"."+checkTable);
 //				if (relList == null){
@@ -224,6 +230,7 @@ implements Serializable {
 					 String catalog = importedK.getString(JDBC_PKTABLE_CAT) == null ? dbCatalog : importedK.getString(JDBC_PKTABLE_CAT);  //STANIMIR
 					 relItem.setCatalog(catalog);
 
+					 relItem.setSchema(importedK.getString(JDBC_PKTABLE_SCHEM));
 					relItem.setTableName(importedK.getString(JDBC_PKTABLE_NAME));
 					relItem.setFkColumnName(importedK.getString(FKCOLUMN_NAME));
 					
@@ -235,29 +242,34 @@ implements Serializable {
 						if (singleSchema && (!relItem.getCatalog().equals(dbCatalog))) {
 							continue;
 						}
-						String newDep = relItem.getCatalog() + "." + relItem.getTableName();
-
-						String cat = newDep.substring(0, newDep.indexOf("."));
+						String newDepCat = relItem.getCatalog();
+						String newDepSchema = relItem.getSchema();
+						String newDepTableName = relItem.getTableName();
+						String newDep = newDepCat + "." + (newDepSchema != null ? newDepSchema+"." : "")+newDepTableName;
+						
+						String cat = newDep.substring(0, newDep.lastIndexOf("."));
 						if (!singleSchema && !catalogs.contains(cat)) {
 
 							if (greedy) {
 								// New catalog seen. Add all tables
-								ResultSet rs2 = dbmd.getTables(cat, null, "%", new String[] { JDBC_TABLE });
+								ResultSet rs2 = dbmd.getTables(newDepCat, newDepSchema, "%", new String[] { JDBC_TABLE });
 
 								// Get the table name
 								while (rs2.next()) {
 									
 									 String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
-									 tables.add(catalog + "." + rs2.getString(JDBC_TABLE_NAME));
+									 String rs2Schema = rs2.getString(TABLE_SCHEM);
+									 tables.add(catalog + "." + (rs2Schema != null ? rs2Schema+"." : "") + rs2.getString(JDBC_TABLE_NAME));
 								}
 
 								// New catalog seen. Add all views
-								rs2 = dbmd.getTables(cat, null, "%", new String[] { "VIEW" });
+								rs2 = dbmd.getTables(newDepCat, newDepSchema, "%", new String[] { "VIEW" });
 
 								// Get the table name
 								while (rs2.next()) {
 									  String catalog = rs2.getString(TABLE_CAT) == null ? dbCatalog : rs2.getString(TABLE_CAT);  //STANIMIR
-									  String name = catalog + "." + rs2.getString(JDBC_TABLE_NAME);
+									  String rs2Schema = rs2.getString(TABLE_SCHEM);
+									  String name = catalog + "." + (rs2Schema != null ? rs2Schema+"." : "") + rs2.getString(JDBC_TABLE_NAME);
 
 									tables.add(name);
 									viewSet.add(name);
@@ -268,18 +280,20 @@ implements Serializable {
 						}
 
 						// this checks for FK links which are marked as nullable.
-						ResultSet fieldNames = dbmd.getColumns(dbCatalog, null, checkTable, relItem.getFkColumnName());
+						ResultSet fieldNames = dbmd.getColumns(dbCatalog, dbSchema, checkTable, relItem.getFkColumnName());
 						if (fieldNames.next()) {
 							if (!result.getTableDeps().get(checkTableFull).contains(newDep) && (!newDep.equalsIgnoreCase(checkTableFull.toUpperCase()))) {
 								if (!greedy) {
 									// do stupid tricks to get the proper case for mysql..
 									ResultSet resultSet =
-										dbmd.getTables(SyncUtils.getTableCatalog(newDep), null, SyncUtils.getTableName(newDep),
+										dbmd.getTables(newDepCat, newDepSchema, newDepTableName,
 												new String[] { JDBC_TABLE, "VIEW" });
 								
 									if (resultSet.next()) {
 										   String catalog = resultSet.getString(TABLE_CAT) == null ? dbCatalog : resultSet.getString(TABLE_CAT);  //STANIMIR
-										    String match = catalog + "." + resultSet.getString(JDBC_TABLE_NAME);
+										   String resultSetSchema = resultSet.getString(TABLE_SCHEM);
+											
+										   String match = catalog + "." + (resultSetSchema != null ? resultSetSchema+"." : "") + resultSet.getString(JDBC_TABLE_NAME);
 
 										boolean matched = false;
 
@@ -299,11 +313,11 @@ implements Serializable {
 								TreeMap<String, String> cyclicExclusionEntries = State.getInstance().cyclicTableExclusionListTables.get(checkTableFull);
 								if ((fieldNames.getString("IS_NULLABLE").equalsIgnoreCase("YES")) ||
 										((cyclicExclusionEntries != null) && ((cyclicExclusionEntries.containsKey(fieldNames.getString("COLUMN_NAME")))))) {
-									tableDepsWithPossibleCycles.put(getTableNameInProperCase(dbmd, newDep), true); // for record keeping
+									tableDepsWithPossibleCycles.put(getTableNameInProperCase(dbmd, newDepCat, newDepSchema, newDepTableName), true); // for record keeping
 									continue;
 								}
 
-								tableDepsWithPossibleCycles.put(getTableNameInProperCase(dbmd, newDep), false); // for record keeping
+								tableDepsWithPossibleCycles.put(getTableNameInProperCase(dbmd, newDepCat, newDepSchema, newDepTableName), false); // for record keeping
 								tableDependencies.add(newDep); // for processing with no cycles
 
 							}
@@ -418,6 +432,21 @@ implements Serializable {
 
 
 	
+	/**
+	 * @param dbmd
+	 * @param checkTableFull
+	 * @return
+	 * @throws SQLException 
+	 */
+	private static String getTableNameInProperCase(DatabaseMetaData dbmd,
+			String checkTableFull) throws SQLException {
+		return getTableNameInProperCase(dbmd, getTableCatalog(checkTableFull), getTableSchema(checkTableFull), getTableName(checkTableFull));
+	}
+
+
+
+
+
 	/** Add the tables that are in our cyclic dependency exlusion list.
 	 * @param tables
 	 * @param dbmd
@@ -431,7 +460,7 @@ implements Serializable {
 
 				String cat = SyncUtils.getTableCatalog(replacement);
 				String tName = SyncUtils.getTableName(replacement);
-				ResultSet rs2 = dbmd.getTables(cat, null, tName, new String[] { JDBC_TABLE });
+				ResultSet rs2 = dbmd.getTables(cat, tName, tName, new String[] { JDBC_TABLE });
 
 				// Get the table name
 				if (rs2.next()) {
@@ -463,6 +492,9 @@ implements Serializable {
 	throws SQLException {
 		String dbCatalog = connection.getCatalog();
 
+		if (State.getInstance().dbMode == 2){ // postgresql
+			dbCatalog = State.getInstance().dbCatalog+"."+State.getInstance().dbSchema; // 
+		}
 		DatabaseMetaData dbmd = connection.getMetaData();
 		TreeSet<String> catalogs = new TreeSet<String>(new CaseInsensitiveComparator());
 		catalogs.add(dbCatalog);
@@ -706,9 +738,9 @@ implements Serializable {
 		case java.sql.Types.FLOAT:
 		case java.sql.Types.REAL:
 		case java.sql.Types.DOUBLE:
-		case java.sql.Types.NUMERIC:
 			result = "Double";
 			break;
+		case java.sql.Types.NUMERIC:
 		case java.sql.Types.DECIMAL:
 			result = "java.math.BigDecimal";
 			break;
@@ -1215,7 +1247,7 @@ implements Serializable {
 	 * @return the tablename
 	 */
 	public static String getTableName(String dottedInput) {
-		return dottedInput.substring(dottedInput.indexOf(".") + 1);
+		return dottedInput.substring(dottedInput.lastIndexOf(".") + 1);
 	}
 
 
@@ -1332,6 +1364,20 @@ implements Serializable {
 	 */
 	public static void setViewSet(Set<String> viewSet) {
 		SyncUtils.viewSet = viewSet;
+	}
+
+
+
+	/**
+	 * @param tmpTableName
+	 * @return
+	 */
+	public static String getTableSchema(String tmpTableName) {
+		String[] tmp = tmpTableName.split("\\.");
+		if (tmp.length > 2){
+			return tmp[1];
+		}
+		return null;
 	}
 
 }

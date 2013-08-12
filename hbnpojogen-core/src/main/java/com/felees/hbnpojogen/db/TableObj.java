@@ -199,7 +199,7 @@ public class TableObj implements Serializable {
 	 * @return catalog.tablename
 	 */
 	public final String getFullTableName(){
-	    return this.dbCat+"."+this.dbName;
+	    return this.dbCat+"."+(this.dbSchema == null ? "" : this.dbSchema + ".")+this.dbName;
 	}
     /** Returns a list of natural keys 
      * @return the naturalKeys

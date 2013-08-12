@@ -2,6 +2,8 @@ package com.felees.hbnpojogen;
 
 public class RelationItem  {
 	private String catalog;
+	private String schema;
+	private String fkSchema;
 	private String tableName;
 	private String fkTableName;
 	private String fkCatalog;
@@ -63,6 +65,8 @@ public class RelationItem  {
 
 		return rel != null 
 		&& rel.catalog.equals(this.catalog) 
+		&& rel.schema.equals(this.schema)
+		&& rel.fkSchema.equals(this.fkSchema)
 		&& rel.fkName.equals(this.fkName) 
 		&& rel.fkTableName.equals(this.fkTableName)
 		&& rel.tableName.equals(this.tableName) 
@@ -84,5 +88,29 @@ public class RelationItem  {
 	}
 	public void setFkCatalog(String fkCatalog) {
 		this.fkCatalog = fkCatalog;
+	}
+	/**
+	 * @return the schema
+	 */
+	public String getSchema() {
+		return schema;
+	}
+	/**
+	 * @param schema the schema to set
+	 */
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+	/**
+	 * @return the fkSchema
+	 */
+	public String getFkSchema() {
+		return fkSchema;
+	}
+	/**
+	 * @param fkSchema the fkSchema to set
+	 */
+	public void setFkSchema(String fkSchema) {
+		this.fkSchema = fkSchema;
 	}
 }

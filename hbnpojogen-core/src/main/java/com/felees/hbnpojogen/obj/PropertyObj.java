@@ -510,7 +510,12 @@ implements Serializable {
 	 * @param propertyName the propertyName to set
 	 */
 	public final void setPropertyName(String propertyName) {
+		
 		this.propertyName = SyncUtils.removeUnderscores(propertyName);
+		if (!Character.isJavaIdentifierStart(propertyName.charAt(0))){
+			this.propertyName = "_"+propertyName;
+		}
+	
 	}
 
 

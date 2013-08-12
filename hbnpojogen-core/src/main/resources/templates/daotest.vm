@@ -260,7 +260,7 @@ public class DAOIntegrationTest {
 #set($timebit = ".toDate().getTime()")
 #end
 #end		
-		Assert.assertEquals(copy.get${property.javaName}()${bounce}$timebit / 1000, ${class.tableObj.testHandle}.get${property.javaName}()${bounce}$timebit / 1000);
+		Assert.assertTrue(copy.get${property.javaName}()${bounce}$timebit / 1000 - ${class.tableObj.testHandle}.get${property.javaName}()${bounce}$timebit / 1000 < 100);
 #end
 #else
 #if ($property.ManyToMany)

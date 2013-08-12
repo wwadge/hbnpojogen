@@ -17,6 +17,7 @@ public class KeyObj implements Serializable {
 	private static final long serialVersionUID = -5994093176012581240L;
 	/** pk table name */
 	private String pkTableName;
+	private String pkTableSchema;
 	/** pk table catalog */
 	private String pkTableCatalog;
 	/** for exported keys. */
@@ -31,7 +32,7 @@ public class KeyObj implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.pkTableCatalog + "." + this.pkTableName + ", keyLinks="
+		return this.pkTableCatalog + "." + this.pkTableSchema+"."+this.pkTableName + ", keyLinks="
 				+ this.keyLinks.toString();
 	}
 
@@ -41,10 +42,11 @@ public class KeyObj implements Serializable {
 	 * @param pkTableCatalog
 	 * @param pkColName 
 	 */
-	public KeyObj(String fkColName, String pkTableName, String pkTableCatalog,
+	public KeyObj(String fkColName, String pkTableName, String pkTableCatalog, String pkTableSchema,
 			String pkColName) {
 
 		this.pkTableName = pkTableName;
+		this.pkTableSchema = pkTableSchema;
 		this.pkTableCatalog = pkTableCatalog;
 		this.keyLinks.put(fkColName, pkColName);
 	}
@@ -70,7 +72,7 @@ public class KeyObj implements Serializable {
 	 * @return pkTablecatalog + "." + pkTableName
 	 */
 	public String getPKFullTableName() {
-		return this.pkTableCatalog + "." + this.pkTableName;
+		return this.pkTableCatalog + "." + (this.pkTableSchema == null ? "" : this.pkTableSchema+".") + this.pkTableName;
 	}
 
 	/** Return PK Table name
