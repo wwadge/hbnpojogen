@@ -62,6 +62,7 @@ implements Serializable {
 	private String sourceTarget;
 	/** Catalogs. */
 	public TreeSet<String> catalogs = new TreeSet<String>(new CaseInsensitiveComparator());
+	public TreeSet<String> schemas = new TreeSet<String>(new CaseInsensitiveComparator());
 	/** Classes will be placed here. */
 	public TreeMap<String, Clazz> classes = new TreeMap<String, Clazz>(new CaseInsensitiveComparator());
 	/** Key = classname, value=<propertyName, Annotations> */
@@ -2262,6 +2263,24 @@ implements Serializable {
 	 */
 	public void setIgnoreFieldList(TreeMap<String, List<String>> ignoreFieldList) {
 		this.ignoreFieldList = ignoreFieldList;
+	}
+
+
+
+	/**
+	 * @return the schemas
+	 */
+	public TreeSet<String> getSchemas() {
+		return schemas;
+	}
+
+
+
+	/**
+	 * @param schemas the schemas to set
+	 */
+	public void setSchemas(TreeSet<String> schemas) {
+		this.schemas = schemas;
 	}
 
 

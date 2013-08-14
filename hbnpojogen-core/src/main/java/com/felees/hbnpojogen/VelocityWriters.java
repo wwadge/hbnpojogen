@@ -935,32 +935,32 @@ public class VelocityWriters {
         context.put(TOPLEVEL, State.getInstance().topLevel);
         context.put("driverClass", HbnPojoGen.driver);
         Set<String> packages = new TreeSet<String>();
-        for (String cat : State.getInstance().getCatalogs()){
+        for (String schema : State.getInstance().getSchemas()){
         	
         	if (!State.getInstance().ignoreEverythingExceptList.isEmpty() && 
-        			!State.getInstance().ignoreEverythingExceptList.contains(cat)){
+        			!State.getInstance().ignoreEverythingExceptList.contains(schema)){
     				continue;
     			}
         	
-        	if (State.getInstance().noOutPutForSchemaList.contains(cat)){
+        	if (State.getInstance().noOutPutForSchemaList.contains(schema)){
         		continue;
         	}
     				
     			
-            String shortest = SyncUtils.getConfigPackage(cat, PackageTypeEnum.DAO);
-            String item = SyncUtils.getConfigPackage(cat, PackageTypeEnum.DAOIMPL);
+            String shortest = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAO);
+            String item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAOIMPL);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
-            item = SyncUtils.getConfigPackage(cat, PackageTypeEnum.DATA);
+            item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DATA);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
-            item = SyncUtils.getConfigPackage(cat, PackageTypeEnum.ENUM);
+            item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.ENUM);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
-            item = SyncUtils.getConfigPackage(cat, PackageTypeEnum.OBJECTINTERFACE);
+            item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECTINTERFACE);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
-            item = SyncUtils.getConfigPackage(cat, PackageTypeEnum.OBJECT);
+            item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
             shortest = StringUtils.removeEnd(shortest, ".");
@@ -1153,34 +1153,34 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
      * @throws ParseErrorException
      * @throws Exception
      */
-    public static void writeOutDataLayerHelpers(String targetFolder, TreeMap<String, Clazz> classes, TreeSet<String> catalogs)
+    public static void writeOutDataLayerHelpers(String targetFolder, TreeMap<String, Clazz> classes, TreeSet<String> schemas)
             throws ResourceNotFoundException, ParseErrorException, Exception {
         Template hbnTemplate = Velocity.getTemplate("templates/datalayer.vm");
 
 
-        for (String catalog : catalogs) {
-            if (Core.skipSchemaWrite(catalog)) {
+        for (String schema : schemas) {
+            if (Core.skipSchemaWrite(schema)) {
                 continue;
             }
-            catalog = SyncUtils.removeUnderscores(catalog);
+            schema = SyncUtils.removeUnderscores(schema);
             TreeSet<String> imports = new TreeSet<String>(new CaseInsensitiveComparator());
             imports.add("java.io.Serializable");
 
             TreeMap<String, Clazz> tmpClasses = new TreeMap<String, Clazz>(new CaseInsensitiveComparator());
             for (Entry<String, Clazz> co : classes.entrySet()) {
-                if (co.getValue().getClassPackage().equalsIgnoreCase(catalog)) {
+                if (co.getValue().getClassPackage().equalsIgnoreCase(schema)) {
                 	if (co.getValue().isEmbeddable()){
                 		imports.add(co.getValue().getFullClassName());
                 	}
                     if ((!co.getValue().isEmbeddable()) && (!co.getValue().isHiddenJoinTable())) {
                         tmpClasses.put(co.getKey(), co.getValue());
-                        imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.OBJECT) + "." + co.getValue().getClassName());
+                        imports.add(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT) + "." + co.getValue().getClassName());
                     }
-                    imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY) + ".*");
+                    imports.add(SyncUtils.getConfigPackage(schema, PackageTypeEnum.FACTORY) + ".*");
                 }
             }
 
-            String prettyCatalog = SyncUtils.upfirstChar(catalog);
+            String prettyCatalog = SyncUtils.upfirstChar(schema);
             VelocityContext context = new VelocityContext();
             context.put(PROJECTNAME, State.getInstance().projectName);
             context.put(CLASSES, tmpClasses);
@@ -1188,11 +1188,11 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             context.put(TOPLEVEL, State.getInstance().topLevel);
             context.put(IMPORTS, imports);
             context.put(CATALOG, prettyCatalog);
-            context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.DATA));
+            context.put("packagename", SyncUtils.getConfigPackage(schema, PackageTypeEnum.DATA));
             context.put("interface", false);
-            context.put("beanname", "dataLayer" + SyncUtils.upfirstChar(catalog) + "Impl");
+            context.put("beanname", "dataLayer" + SyncUtils.upfirstChar(schema) + "Impl");
 
-            String tmp = getAndCreateDataLayerHelper(catalog, targetFolder + "/" + State.getInstance().getSrcFolder() + "/", "Impl");
+            String tmp = getAndCreateDataLayerHelper(schema, targetFolder + "/" + State.getInstance().getSrcFolder() + "/", "Impl");
             PrintWriter hbnWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 
             hbnTemplate.merge(context, hbnWriter);
@@ -1201,12 +1201,12 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             // Now write the interface
             // imports.clear();
             for (Entry<String, Clazz> co : classes.entrySet()) {
-                if (co.getValue().getClassPackage().equalsIgnoreCase(catalog)) {
-                    imports.remove(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY) + ".*");
+                if (co.getValue().getClassPackage().equalsIgnoreCase(schema)) {
+                    imports.remove(SyncUtils.getConfigPackage(schema, PackageTypeEnum.FACTORY) + ".*");
                 }
             }
             context.put("interface", true);
-            tmp = getAndCreateDataLayerHelper(catalog, targetFolder + "/" + State.getInstance().getSrcFolder() + "/", "");
+            tmp = getAndCreateDataLayerHelper(schema, targetFolder + "/" + State.getInstance().getSrcFolder() + "/", "");
             hbnWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
             hbnTemplate.merge(context, hbnWriter);
             hbnWriter.close();

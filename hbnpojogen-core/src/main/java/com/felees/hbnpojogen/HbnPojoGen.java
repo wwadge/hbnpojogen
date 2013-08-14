@@ -204,6 +204,12 @@ public class HbnPojoGen {
                 ignoredTables++;
             }
             State.getInstance().catalogs.add(SyncUtils.getTableCatalog(table));
+            if (State.getInstance().dbMode == 2){ // postgresql
+            	State.getInstance().schemas.add(SyncUtils.getTableSchema(table));
+            } else {
+            	State.getInstance().schemas.add(SyncUtils.getTableCatalog(table));
+                    	
+            }
         }
 
         // Create all target folders
@@ -235,7 +241,7 @@ public class HbnPojoGen {
 
 
         log("Stage 8: Writing DAO Factory classes");
-        VelocityWriters.writeOutDaoFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().catalogs);
+        VelocityWriters.writeOutDaoFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
 
         log("Stage 9: Writing Spring, Ant and EhCache configs");
         VelocityWriters.writeSpringApplicationContext(targetFolder, State.getInstance().classes, dbCatalog);
@@ -248,10 +254,10 @@ public class HbnPojoGen {
         VelocityWriters.writeOutDaoTestClass(State.getInstance().classes, commitOrder, srcFolder);
 
         log("Stage 11: Writing Data pool Factory classes");
-        VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().catalogs);
+        VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
 
         log("Stage 12: Writing Data layer helpers");
-        VelocityWriters.writeOutDataLayerHelpers(targetFolder, State.getInstance().classes, State.getInstance().catalogs);
+        VelocityWriters.writeOutDataLayerHelpers(targetFolder, State.getInstance().classes, State.getInstance().schemas);
 
         
         if (!State.getInstance().isMavenEnabled() || !State.getInstance().isMavenPomEnabled()){

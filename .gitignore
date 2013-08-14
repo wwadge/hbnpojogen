@@ -8,3 +8,5 @@
 *.java.reg
 *.orig.reg
 *.log
+velocity.log
+velocity.log.1

@@ -745,8 +745,9 @@ public class Core {
 			}
 			String tableNameNoCat = SyncUtils.getTableName(tableName.toLowerCase());
 			String tableCat = SyncUtils.getTableCatalog(tableName.toLowerCase());
+			String tableSchema = SyncUtils.getTableSchema(tableName.toLowerCase());
 			Clazz co = classes.get(tableName);
-			co.setClassPackage(tableCat);
+			co.setClassPackage(tableSchema);
 			co.setClassName(SyncUtils.upfirstChar(tableNameNoCat));
 
 			if (State.getInstance().abstractTables.contains(tableName)) {
