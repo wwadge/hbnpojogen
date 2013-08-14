@@ -614,6 +614,9 @@ public class Core {
 	throws SQLException {
 		ObjectPair<String, Set<String>> defVerMatch = State.getInstance().getVersionCheck().get("*");
 		String verCat = tableObj.getDbCat();
+		if (State.getInstance().dbMode==2) {
+			verCat += "."+tableObj.getDbSchema();
+		}
 		if (defVerMatch != null) {
 
 			ObjectPair<String, Set<String>> verMatch = State.getInstance().getVersionCheck().get(tableObj.getDbCat());
@@ -661,8 +664,14 @@ public class Core {
 							orderBy = "ORDER BY "+orderBy;
 						}
 
-						query = String.format("SELECT %s FROM `%s`.`%s` %s %s", fieldList, verCat, verMatch.getKey(), whereClause, orderBy);
-						rs = dbmd.getConnection().createStatement().executeQuery(query);
+						if (State.getInstance().dbMode==2) {
+							
+							query = String.format("SELECT %s FROM %s.%s %s %s", fieldList, verCat, verMatch.getKey(), whereClause, orderBy);
+						} else {
+							query = String.format("SELECT %s FROM `%s`.`%s` %s %s", fieldList, verCat, verMatch.getKey(), whereClause, orderBy);
+								
+						}
+							rs = dbmd.getConnection().createStatement().executeQuery(query);
 					}
 					catch (Exception e) {
 						HbnPojoGen.logE("Error while attempting to obtain version info. Tried: " + query);

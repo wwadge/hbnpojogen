@@ -243,6 +243,8 @@ implements Serializable {
     /** Maven setting.  */
 	private String mavenVersion = "1.0";
 	/** Maven setting.  */
+	private String mavenJavaVersion = "1.7";
+	/** Maven setting.  */
 	private String mavenName = "";
 	/** Maven setting.  */
 	private String mavenDependency = "";
@@ -2281,6 +2283,24 @@ implements Serializable {
 	 */
 	public void setSchemas(TreeSet<String> schemas) {
 		this.schemas = schemas;
+	}
+
+
+
+	/**
+	 * @return the mavenJavaVersion
+	 */
+	public String getMavenJavaVersion() {
+		return mavenJavaVersion;
+	}
+
+
+
+	/**
+	 * @param mavenJavaVersion the mavenJavaVersion to set
+	 */
+	public void setMavenJavaVersion(String mavenJavaVersion) {
+		this.mavenJavaVersion = mavenJavaVersion;
 	}
 
 

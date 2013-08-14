@@ -269,7 +269,7 @@ public class HbnPojoGen {
 
         if (State.getInstance().isVersionCheckEnabled()){
         	log("Stage 14: Writing DB Version Check helpers");
-        	VelocityWriters.writeOutDBVersionCheck(targetFolder, State.getInstance().classes, State.getInstance().catalogs);
+        	VelocityWriters.writeOutDBVersionCheck(targetFolder, State.getInstance().classes, State.getInstance().schemas);
         }
         printStatistics(State.getInstance().classes, ignoredTables);
 

@@ -1224,13 +1224,13 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
      * @throws ParseErrorException
      * @throws Exception
      */
-    public static void writeOutDBVersionCheck(String targetFolder, TreeMap<String, Clazz> classes, TreeSet<String> catalogs)
+    public static void writeOutDBVersionCheck(String targetFolder, TreeMap<String, Clazz> classes, TreeSet<String> schemas)
             throws ResourceNotFoundException, ParseErrorException, Exception {
         Template hbnTemplate = Velocity.getTemplate("templates/dbVersionCheck.vm");
 
 
-        for (String catalog : catalogs) {
-            if (Core.skipSchemaWrite(catalog)) {
+        for (String schema : schemas) {
+            if (Core.skipSchemaWrite(schema)) {
                 continue;
             }
             VelocityContext context = new VelocityContext();
@@ -1238,8 +1238,11 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             
             for (Entry<String,List<String>> tmp : State.getInstance().getVersionColumnsRead().entrySet()) {
                 String cat = tmp.getKey().split("\\.")[0];
-                if (cat.equalsIgnoreCase(catalog)) {
-                    catalog = SyncUtils.removeUnderscores(catalog);
+                if (State.getInstance().dbMode == 2) {
+                	cat = tmp.getKey().split("\\.")[1];
+                }
+                if (cat.equalsIgnoreCase(schema)) {
+                	schema = SyncUtils.removeUnderscores(schema);
                     if (State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0){
                     	context.put("tableName", tmp.getKey().split("\\.")[1]);
                     } else {
@@ -1253,9 +1256,9 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             }
 
             context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
-            context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.DATA));
-            context.put("beanname", SyncUtils.removeUnderscores(SyncUtils.upfirstChar(catalog)));
-            String whereClause = State.getInstance().getVersionCheckWhereClause().get(catalog);
+            context.put("packagename", SyncUtils.getConfigPackage(schema, PackageTypeEnum.DATA));
+            context.put("beanname", SyncUtils.removeUnderscores(SyncUtils.upfirstChar(schema)));
+            String whereClause = State.getInstance().getVersionCheckWhereClause().get(schema);
             if (whereClause == null) {
                 whereClause = State.getInstance().getVersionCheckWhereClause().get("*");
             }
@@ -1267,7 +1270,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             }
             context.put("whereClause", whereClause);
             
-            String orderBy = State.getInstance().getVersionCheckOrderBy().get(catalog);
+            String orderBy = State.getInstance().getVersionCheckOrderBy().get(schema);
             if (orderBy == null) {
                 orderBy = State.getInstance().getVersionCheckOrderBy().get("*");
             }
@@ -1279,7 +1282,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             }
             context.put("orderBy", orderBy);
             
-            String tmp = getAndCreateDBVersionCheckLayerHelper(catalog, targetFolder + "/" + State.getInstance().getSrcFolder() + "/");
+            String tmp = getAndCreateDBVersionCheckLayerHelper(schema, targetFolder + "/" + State.getInstance().getSrcFolder() + "/");
             PrintWriter hbnWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 
             hbnTemplate.merge(context, hbnWriter);
@@ -1309,6 +1312,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         context.put("artifactId", State.getInstance().getMavenArtifactId());
         context.put("noDeps", State.getInstance().isMavenNoDeps());
         context.put("mavenName", State.getInstance().getMavenName());
+        context.put("javaVersion", State.getInstance().getMavenJavaVersion());
         context.put("validator", State.getInstance().enableHibernateValidator);
         context.put("v2SpringVersion", State.getInstance().getSpringVersion()==2);
         context.put("useExternalLib", State.getInstance().isMavenUseExternalLib());

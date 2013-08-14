@@ -343,6 +343,7 @@ public class Config {
 		boolean mavenEnabled = Config.config.getBoolean("maven[@enabled]", false);
 		boolean mavenPomEnabled = Config.config.getBoolean("maven[@enablePomGeneration]", true);
 		State.getInstance().setMavenVersion(Config.config.getString("maven[@version]", "1.0"));
+		State.getInstance().setMavenJavaVersion(Config.config.getString("maven[@javaVersion]", "1.7"));
 		State.getInstance().setMavenName(Config.config.getString("maven[@name]", State.getInstance().getProjectName()));
 		State.getInstance().setMavenArtifactVersionsDisabled(Config.config.getBoolean("maven[@noArtifactVersions]", false));
 		State.getInstance().setMavenEnabled(mavenEnabled);
