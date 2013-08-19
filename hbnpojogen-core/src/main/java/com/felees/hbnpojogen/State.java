@@ -184,8 +184,9 @@ implements Serializable {
     private String connectionPool;
 
 
-    /** enable validator. */
+    /** enable joda-time */
     public boolean enableJodaSupport;
+    public boolean enableSpringData;
 
 	/** enable validator. */
 	public boolean enableHibernateValidator;
@@ -2302,6 +2303,25 @@ implements Serializable {
 	public void setMavenJavaVersion(String mavenJavaVersion) {
 		this.mavenJavaVersion = mavenJavaVersion;
 	}
+
+
+
+	/**
+	 * @return the enableSpringData
+	 */
+	public boolean isEnableSpringData() {
+		return enableSpringData;
+	}
+
+
+
+	/**
+	 * @param enableSpringData the enableSpringData to set
+	 */
+	public void setEnableSpringData(boolean enableSpringData) {
+		this.enableSpringData = enableSpringData;
+	}
+
 
 
 }

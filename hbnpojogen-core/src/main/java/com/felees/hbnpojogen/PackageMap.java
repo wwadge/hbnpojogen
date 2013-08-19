@@ -19,6 +19,8 @@ public class PackageMap implements Serializable {
 	/** Inner handle */
 	private String objectInterfacePackage;
 	/** Inner handle */
+	private String objectTableRepoPackage;
+	/** Inner handle */
 	private String daoPackage;
 	/** Inner handle */
 	private String daoImplPackage;
@@ -138,5 +140,17 @@ public class PackageMap implements Serializable {
     public void setEnumSubtypePackage(String enumSubtypePackage) {
         this.enumSubtypePackage = enumSubtypePackage;
     }
+	/**
+	 * @return the objectTableRepoPackage
+	 */
+	public String getObjectTableRepoPackage() {
+		return objectTableRepoPackage;
+	}
+	/**
+	 * @param objectTableRepoPackage the objectTableRepoPackage to set
+	 */
+	public void setObjectTableRepoPackage(String objectTableRepoPackage) {
+		this.objectTableRepoPackage = objectTableRepoPackage;
+	}
 
 }

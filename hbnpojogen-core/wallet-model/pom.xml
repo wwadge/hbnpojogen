@@ -4,94 +4,44 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>$groupId</groupId>
-	<artifactId>$artifactId</artifactId>
-#if ($doPomVersion)
-	<version>$mavenVersion</version>
-#end
+	<groupId>com.nxsystems.nxpay.wallet</groupId>
+	<artifactId>wallet-model</artifactId>
 	<packaging>jar</packaging>
 
-	<name>$mavenName</name>
-	<description>A data model generated from the following schemas: $schemas. Synchronizer version: $syncVersion</description>
+	<name>Wallet :: Model</name>
+	<description>A data model generated from the following schemas: {}. Synchronizer version: 1.4.32</description>
 
-	$additionalPom
-#if ($doPomVersion)
-	<properties>
-#if ($v2SpringVersion)
-		<springVersion>2.5.6</springVersion>
-#else
-		<springVersion>3.0.5.RELEASE</springVersion>
-#end
-	</properties>
-#end
+	<parent>
+		<artifactId>parent</artifactId>
+		<groupId>com.nxsystems.nxpay.wallet</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 	<dependencies>
-#if (!$noDeps)
-#if (!$useExternalLib)
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-#if ($doPomVersion)			
-			<version>2.2</version>
-#end
 		</dependency>
 <dependency>
 	<groupId>javassist</groupId>
 	<artifactId>javassist</artifactId>
-#if ($doPomVersion)			
-	<version>3.12.1.GA</version>
-#end
-</dependency>
-
-
-<dependency>
-    <groupId>com.mysema.querydsl</groupId>
-    <artifactId>querydsl-core</artifactId>
-#if ($doPomVersion)			
-    <version>2.3.2</version>
-#end
-</dependency>
-
-<dependency>
-    <groupId>com.mysema.querydsl</groupId>
-    <artifactId>querydsl-apt</artifactId>
-#if ($doPomVersion)			
-    <version>2.3.2</version>
-#end
-</dependency>
-
-<dependency>
-    <groupId>com.mysema.querydsl</groupId>
-    <artifactId>querydsl-jpa</artifactId>
-#if ($doPomVersion)			
-    <version>2.3.2</version>
-#end
 </dependency>
 
 <dependency>
 	<groupId>org.hibernate</groupId>
 	<artifactId>hibernate-validator</artifactId>
-#if ($doPomVersion)			
-	<version>4.3.0.Final</version>
-#end
 </dependency>
 
 
   <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-#if ($doPomVersion)			
-                <version>3.6.3.Final</version>
-#end
             </dependency>
 
 
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-entitymanager</artifactId>
-    #if ($doPomVersion)	
-    <version>3.6.3.Final</version>
-    #end
-    <exclusions> 
+        <exclusions> 
         <exclusion>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -107,307 +57,159 @@
        <dependency>
  <groupId>org.springframework.data</groupId>
  <artifactId>spring-data-jpa</artifactId>
- #if ($doPomVersion)	
-    <version>1.3.4.RELEASE</version>
-  #end
-  </dependency> 
+   </dependency> 
     
     
 
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.0-api</artifactId>
-#if ($doPomVersion)			
-                <version>1.0.0.Final</version>
-#end
             </dependency>
 
 
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-#if ($doPomVersion)			
-			<version>3.2</version>
-#end
 		</dependency>
 
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-#if ($doPomVersion)			
-			<version>1.1.1</version>
-#end			
 		</dependency>
 
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-#if ($doPomVersion)			
-			<version>1.6.1</version>
-#end			
 		</dependency>
 
 		
 		<dependency>
 			<groupId>antlr</groupId>
 			<artifactId>antlr</artifactId>
-#if ($doPomVersion)
-			<version>2.7.6</version>
-#end			
 		</dependency>
 		
 
-#end
    			<dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-#if ($doPomVersion)
-                <version>13.0.1</version>
-#end			
             </dependency>
 
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
-#if ($doPomVersion)			
-			<version>2.0.0</version>
-#end			
 			<scope>runtime</scope>
 		</dependency>
 
-#if ($pool.equals("C3P0"))
-		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-#if ($doPomVersion)			
-			<version>0.9.1.2</version>
-#end
-		</dependency>
-
-#else #if ($pool.equals("BONECP"))
-		<dependency>
+ 		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
-#if ($doPomVersion)			
-			<version>0.7.1.RELEASE</version>
-#end
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp-spring</artifactId>
-#if ($doPomVersion)			
-			<version>0.7.1.RELEASE</version>
-#end			
 			<scope>runtime</scope>
 		</dependency>
 		
-#end
-#end
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-#if ($doPomVersion)			
-			<version>4.8</version>
-#end			
 			<scope>test</scope>
 		</dependency>
 
-#if ($dbMode == 2)
 <dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-#if ($doPomVersion)			
-			<version>9.1-901-1.jdbc4</version>
-#end			
 			<scope>runtime</scope>
 		</dependency>
-#end
 
-#if ($dbMode == 0)
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-#if ($doPomVersion)			
-			<version>5.1.6</version>
-#end			
-			<scope>runtime</scope>
-		</dependency>
-#end
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 		</dependency>
 
 	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 			<scope>test</scope>
 		</dependency>
 		
-#if ($v2SpringVersion)
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 
-		</dependency>
-
-#end
-
-#if (!$v2SpringVersion)
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-#if ($doPomVersion)			
-			<version>${springVersion}</version>
-#end			
 
 		</dependency>
-#end
-#if ($hasJodaSupport)
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time-hibernate</artifactId>
-#if ($doPomVersion)			
-			<version>1.3</version>
-#end			
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-#if ($doPomVersion)		  
-			<version>1.6.2</version>
-#end		  
 		</dependency>
 
-#end
 		<dependency>
 			<groupId>com.felees</groupId>
 			<artifactId>hbnpojogen-persistence</artifactId>
-#if ($doPomVersion)			
-			<version>$syncVersion</version>
-#end			
 		</dependency>
 
-#if ($useDynamicLdapDataSource)
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core</artifactId>
-#if ($doPomVersion)			
-			<version>1.3.0.RELEASE</version>
-#end			
-			<scope>runtime</scope>
-		</dependency>
-
-#end
-#end
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-#if ($doPomVersion)			
-			<version>1.6.0</version>
-#end			
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-#if ($doPomVersion)			
-			<version>1.6.0</version>
-#end			
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-#if ($doPomVersion)			
-			<version>1.2.16</version>
-#end			
 			<scope>test</scope>
 		</dependency>
  
  
-		$dependencies
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+			<scope>runtime</scope>
+		</dependency>
 		
 	</dependencies>
 
 	<build>
-		<sourceDirectory>$srcDir</sourceDirectory>
-		<testSourceDirectory>$testDir</testSourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
 
 		<plugins>
-
-
-#if ($springData)
-<!-- For queryDSL -->
-		<plugin>
-    <groupId>com.mysema.maven</groupId>
-    <artifactId>maven-apt-plugin</artifactId>
-    <version>1.0.2</version>
-    <executions>
-        <execution>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>process</goal>
-            </goals>
-            <configuration>
-                <!-- Specifies the directory in which the query types are generated -->
-                <outputDirectory>target/generated-sources</outputDirectory>
-                <!-- States that the APT code generator should look for JPA annotations -->
-                <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-#end		
-	
-		
 <!--
 			<plugin>
       		<artifactId>maven-surefire-plugin</artifactId>
@@ -459,8 +261,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<source>${javaVersion}</source>
-					<target>${javaVersion}</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 
@@ -478,9 +280,4 @@
 		</plugins>
 	</build>
 
-#if (!$distrib.equals(""))
-	<distributionManagement>
-	$distrib
-	</distributionManagement>
-#end
 </project>

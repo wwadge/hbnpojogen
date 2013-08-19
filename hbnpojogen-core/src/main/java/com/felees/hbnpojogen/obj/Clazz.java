@@ -1894,4 +1894,26 @@ implements Serializable, Comparable<Clazz> {
 	public void setTableIsAView(boolean tableIsAView) {
 		this.tableIsAView = tableIsAView;
 	}
+
+
+
+	/** for spring data
+	 * @return
+	 */
+	public String getRepositoryFullClassName() {
+		return SyncUtils.getConfigPackage(this.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO)+"."+this.className+"Repository";
+	}
+	/** for spring data
+	 * @return
+	 */
+	public String getRepositoryClassName() {
+		return this.className+"Repository";
+	}
+	/** for spring data
+	 * @return
+	 */
+	public String getRepositoryClassNamePropertyName() {
+		return this.getClassPropertyName()+"Repository";
+	}
+
 }

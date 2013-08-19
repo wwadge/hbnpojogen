@@ -15,6 +15,9 @@ public enum PackageTypeEnum implements Serializable {
 	/** Constant. */
 	OBJECTINTERFACE,
 	/** Constant. */
+	TABLE_REPO,
+
+	/** Constant. */
 	DAO,
     /** Constant. */
     ENUM,

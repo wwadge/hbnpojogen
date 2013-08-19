@@ -179,7 +179,7 @@ public class VelocityWriters {
      */
     public static void writeOutDaoClass(String projectName, String targetFolder, Clazz clazz)
             throws ResourceNotFoundException, ParseErrorException, MethodInvocationException, IOException, Exception {
-        if (!Core.skipSchemaWrite(clazz) && (!clazz.isHiddenJoinTable())) {
+        if (!State.getInstance().isEnableSpringData() && !Core.skipSchemaWrite(clazz) && (!clazz.isHiddenJoinTable())) {
             VelocityContext context = new VelocityContext();
 
             context.put(PROJECTNAME, projectName);
@@ -216,6 +216,7 @@ public class VelocityWriters {
     }
 
 
+   
 
 
     /**
@@ -235,6 +236,21 @@ public class VelocityWriters {
     }
 
 
+    /**
+     * Returns the dao path.
+     *
+     * @param targetFolder
+     * @param clazz
+     * @return a valid path
+     */
+    private static String getAndCreateRepoPath(String targetFolder, Clazz clazz) {
+
+        String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO));
+        new File(targetFolder + "/" + config).mkdirs();
+
+        String result = targetFolder + "/" + config + "/" + clazz.getClassName() + "Repository.java";
+        return result;
+    }
 
     /**
      * Returns the dao path.
@@ -461,7 +477,43 @@ public class VelocityWriters {
         }
     }
 
+    /**
+     * Writes out the class representing the table for spring data
+     *
+     * @param projectName
+     * @param clazz
+     * @param classWriter
+     * @param isInterface
+     * @throws Exception 
+     * @throws ParseErrorException 
+     * @throws ResourceNotFoundException 
+     * @throws IOException
+     */
+    public static void writeOutRepoClass(String projectName, String targetFolder, Clazz clazz) throws ResourceNotFoundException, ParseErrorException, Exception {
+        if (!Core.skipSchemaWrite(clazz)) {
 
+            if ( !Core.skipSchemaWrite(clazz) && (!clazz.isHiddenJoinTable())) {
+                VelocityContext context = new VelocityContext();
+
+                context.put(PROJECTNAME, projectName);
+                context.put(CLASSCONST, clazz);
+                context.put(TOPLEVEL, State.getInstance().topLevel);
+                
+                context.put("packagename", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO));
+                context.put("impl", clazz.getFullClassName());
+                context.put("id", clazz.getTypeOfId());
+                
+                String tmp = getAndCreateRepoPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", clazz);
+
+                if (!new File(tmp).exists()) {
+	                PrintWriter daoWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+	                Template daoTemplate = Velocity.getTemplate("templates/classRepo.vm");
+	                daoTemplate.merge(context, daoWriter);
+	                daoWriter.close();
+                }
+        }
+        }
+    }
 
     /**
      * @param property
@@ -507,6 +559,10 @@ public class VelocityWriters {
      */
     public static void writeOutDaoFactoryClass(TreeMap<String, Clazz> classes, String targetFolder, TreeSet<String> catalogs)
             throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
+
+    	if (State.getInstance().isEnableSpringData()) {
+        	return;
+        }
 
         for (String catalog : catalogs) {
             if (Core.skipSchemaWrite(catalog)) {
@@ -570,6 +626,7 @@ public class VelocityWriters {
                 // Write Class
                 VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false);
 
+                
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, false);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
@@ -580,6 +637,10 @@ public class VelocityWriters {
                 // Write out DAO class
 
                 VelocityWriters.writeOutDaoClass(State.getInstance().projectName, targetFolder, co);
+                if (State.getInstance().isEnableSpringData()) {
+                	VelocityWriters.writeOutRepoClass(State.getInstance().projectName, targetFolder, co);
+                }
+            
             }
         }
     }
@@ -620,8 +681,6 @@ public class VelocityWriters {
             }
         }
     }
-
-
 
     /**
      * Writes out the unit test
@@ -678,9 +737,13 @@ public class VelocityWriters {
                 // PackageTypeEnum.DAO) + ".*");
             }
             imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.FACTORY) + ".*");
-            imports.add(clazz.getDataLayerImplFullClassName());
-            imports.add(clazz.getDataLayerInterfaceFullClassName());
-
+            
+            if (!State.getInstance().isEnableSpringData()) {
+	            imports.add(clazz.getDataLayerImplFullClassName());
+	            imports.add(clazz.getDataLayerInterfaceFullClassName());
+            } else {
+            	 imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.TABLE_REPO) + ".*");
+            }
             // do not clean abstract classes - chrisp
             if (!State.getInstance().preventClean.contains(commit) && (!clazz.isHiddenJoinTable() && (!clazz.isAbstractClass()))) {
                 VelocityTable vt = new VelocityTable();
@@ -700,7 +763,8 @@ public class VelocityWriters {
         State.getInstance().setCleanDbTables(vtablesReverse);
 
         VelocityContext context = new VelocityContext();
-
+        context.put("springData", State.getInstance().isEnableSpringData());
+        
         context.put(PROJECTNAME, State.getInstance().projectName);
         context.put(CLASSES, tmpClasses);
         context.put(TABLES_REVERSE, vtablesReverse);
@@ -932,10 +996,13 @@ public class VelocityWriters {
         context.put(PROJECTNAME, State.getInstance().projectName);
         context.put(CLASSES, classes);
         context.put("lazyConnections", !State.getInstance().isDisableLazyConnections());
+        
         context.put(TOPLEVEL, State.getInstance().topLevel);
         context.put("driverClass", HbnPojoGen.driver);
+        context.put("springData", State.getInstance().isEnableSpringData());
         Set<String> packages = new TreeSet<String>();
-        for (String schema : State.getInstance().getSchemas()){
+        Set<String> repoPackages = new TreeSet<String>();
+         for (String schema : State.getInstance().getSchemas()){
         	
         	if (!State.getInstance().ignoreEverythingExceptList.isEmpty() && 
         			!State.getInstance().ignoreEverythingExceptList.contains(schema)){
@@ -966,7 +1033,13 @@ public class VelocityWriters {
             shortest = StringUtils.removeEnd(shortest, ".");
             packages.add(shortest);
         }
+        
+        
+        for (String schema : State.getInstance().getSchemas()){
+        	repoPackages.add(SyncUtils.getConfigPackage(schema, PackageTypeEnum.TABLE_REPO));
+        }
         context.put("packages", packages);
+        context.put("repoPackages", repoPackages);
         context.put(DAO_FACTORIES, daoFactories);
         context.put("dbIP", State.getInstance().dbIP);
         context.put("dbCatalog", dbCatalog);
@@ -1071,7 +1144,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         out.println("db.connection_pool.max_statements=100");
         out.println("db.connection_pool.acquire_increment=3" );
 } else {
-	   out.println("sessionFactory.hibernateProperties[hibernate.cache.use_second_level_cache]=false");
+	   out.println("mainDataSource.logStatementsEnabled=true");
 	      
 }
         
@@ -1155,7 +1228,13 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
      */
     public static void writeOutDataLayerHelpers(String targetFolder, TreeMap<String, Clazz> classes, TreeSet<String> schemas)
             throws ResourceNotFoundException, ParseErrorException, Exception {
-        Template hbnTemplate = Velocity.getTemplate("templates/datalayer.vm");
+
+    	if (State.getInstance().isEnableSpringData()) {
+        	return;
+        }
+
+    	
+    	Template hbnTemplate = Velocity.getTemplate("templates/datalayer.vm");
 
 
         for (String schema : schemas) {
@@ -1313,7 +1392,8 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         context.put("noDeps", State.getInstance().isMavenNoDeps());
         context.put("mavenName", State.getInstance().getMavenName());
         context.put("javaVersion", State.getInstance().getMavenJavaVersion());
-        context.put("validator", State.getInstance().enableHibernateValidator);
+        context.put("springData", State.getInstance().enableSpringData);
+           context.put("validator", State.getInstance().enableHibernateValidator);
         context.put("v2SpringVersion", State.getInstance().getSpringVersion()==2);
         context.put("useExternalLib", State.getInstance().isMavenUseExternalLib());
         context.put("useDynamicLdapDataSource", State.getInstance().isUseDynamicLDAPDataSource());

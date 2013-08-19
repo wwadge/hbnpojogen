@@ -1185,6 +1185,12 @@ implements Serializable {
 				result = defaultPackageMap.getObjectInterfacePackage();
 			}
 			break;
+		case TABLE_REPO:
+			result = packageMap.getObjectTableRepoPackage();
+			if (result == null) {
+				result = defaultPackageMap.getObjectTableRepoPackage();
+			}
+			break;
 		case DAO:
 			result = packageMap.getDaoPackage();
 			if (result == null) {

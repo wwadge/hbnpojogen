@@ -12,6 +12,9 @@
     xmlns:tx="http://www.springframework.org/schema/tx"
 
     xmlns:util="http://www.springframework.org/schema/util"
+#if ($springData)
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+#end	
     xsi:schemaLocation="http://www.springframework.org/schema/beans
               http://www.springframework.org/schema/beans/spring-beans-${springVersion}.xsd
               http://www.springframework.org/schema/aop
@@ -20,9 +23,10 @@
               http://www.springframework.org/schema/context/spring-context-${springVersion}.xsd
               http://www.springframework.org/schema/jee
               http://www.springframework.org/schema/jee/spring-jee-${springVersion}.xsd
-
+#if ($springData)
+			  http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+#end
               http://www.springframework.org/schema/jms
-
               http://www.springframework.org/schema/jms/spring-jms-${springVersion}.xsd
               http://www.springframework.org/schema/lang
               http://www.springframework.org/schema/lang/spring-lang-${springVersion}.xsd
@@ -30,6 +34,11 @@
               http://www.springframework.org/schema/tx/spring-tx-${springVersion}.xsd
               http://www.springframework.org/schema/util
               http://www.springframework.org/schema/util/spring-util-${springVersion}.xsd">
+#if ($springData)
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+	    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+#else
 
 #if ($lazyConnections)
    	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire="#if ($v2SpringVersion)autodetect#{else}byType#end">
@@ -43,6 +52,7 @@
      <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire="#if ($v2SpringVersion)autodetect#{else}byType#end">
 				$transactionManagerItems
 	</bean>
+#end
 #end
     <bean id="persistenceManager" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
     
@@ -136,6 +146,7 @@
        <property name="maxConnectionsPerPartition" value="$dbMaxPool"/>
        <property name="minConnectionsPerPartition" value="$dbMinPool"/>
        <property name="partitionCount" value="$dbPartitions"/>
+        <property name="logStatementsEnabled" value="false"/>
        <!-- The following are marked as optional in the LDAP dbConnection object.  
        <property name="idleConnectionTestPeriodInMinutes" value="$dbIdleConnectionTestPeriod"/>
        <property name="idleMaxAgeInMinutes" value="$dbMaxIdle"/>      
@@ -174,7 +185,51 @@
 	</bean>
 #end	
 	
+#if ($springData)
+
+#foreach ($level in $repoPackages)
+		<jpa:repositories base-package="$level"/>
+#end
+	
     <!-- Hibernate SessionFactory -->
+    <bean name="sessionFactory" factory-bean="entityManagerFactory" factory-method="getSessionFactory" />
+    
+    	<bean id="entityManagerFactory"
+    class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="puName" />
+    <property name="dataSource" ref="dataSource" />
+        <property name="jpaProperties">
+    <props>
+    				<prop key="hibernate.dialect">$dialect</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			    <prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</prop>
+       </props>
+    </property>
+    
+    		<property name="packagesToScan">
+			<list>
+#foreach ($level in $packages)
+				<value>$level.**.*</value>
+#end
+			</list>
+		</property>
+    <property name="jpaVendorAdapter">
+        <bean 
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+            <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
+			
+			 
+        </bean>
+    </property>
+</bean>
+    
+    
+#else
+    
+    
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" #if ($v2SpringVersion)autowire="autodetect"#end>
 #if ($lazyConnections)	
 		<property name="dataSource" ref="dataSource" />
@@ -223,6 +278,7 @@
 			</props>
 		</property>
 	</bean>
+#end  
 
 	<!-- Switch on transactions -->
 	<tx:annotation-driven />

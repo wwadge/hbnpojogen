@@ -39,6 +39,8 @@ public class Config {
     public static Template template;
     /** config */
     public static Template interfaceTemplate;
+    /** config */
+    public static Template repoTemplate;
 
 
 
@@ -72,6 +74,7 @@ public class Config {
 
         template = Velocity.getTemplate("templates/class.vm");
         interfaceTemplate = Velocity.getTemplate("templates/classIface.vm");
+        repoTemplate = Velocity.getTemplate("templates/classRepo.vm");
 
         fillMaven();
         String path = fillBasicEntries();
@@ -614,6 +617,7 @@ public class Config {
         State.getInstance().enableStateSave = Config.config.getString("enableStateSave", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setEnableJodaSupport(Config.config.getString("enableJodaSupport", "false").equalsIgnoreCase("TRUE"));
+        State.getInstance().setEnableSpringData(Config.config.getString("enableSpringData", "true").equalsIgnoreCase("TRUE"));
         State.getInstance().disableBackLinksInDataPoolFactory = Config.config.getString("disableBackLinksInDataPoolFactory", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setDisableLazyConnections(Config.config.getString("disableLazyConnections", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnablePropertyPlaceholderConfigurer(Config.config.getString("enablePropertyPlaceholderConfigurer", "false").equalsIgnoreCase("TRUE"));
@@ -972,7 +976,8 @@ public class Config {
             packageMap.setFactoryPackage(Config.config.getString(String.format("dbPackageMap.map(%d).factoryPackage", i)));
             packageMap.setObjectPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectPackage", i)));
             packageMap.setObjectInterfacePackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectInterfacePackage", i)));
-            State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
+            packageMap.setObjectTableRepoPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectTableRepoPackage", i)));
+             State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
         }
 
         // test for default packagemap. Make sure there's always *something* to work upon
@@ -990,6 +995,9 @@ public class Config {
         }
         if (packageMap.getObjectInterfacePackage() == null) {
             packageMap.setObjectInterfacePackage(String.format("%s.%s.model.obj.${DB}.iface", State.getInstance().topLevel, State.getInstance().projectName));
+        }
+        if (packageMap.getObjectTableRepoPackage() == null) {
+            packageMap.setObjectTableRepoPackage(String.format("%s.%s.model.obj.${DB}.repository", State.getInstance().topLevel, State.getInstance().projectName));
         }
         if (packageMap.getDataPackage() == null) {
             packageMap.setDataPackage(String.format("%s.%s.services.data", State.getInstance().topLevel, State.getInstance().projectName));

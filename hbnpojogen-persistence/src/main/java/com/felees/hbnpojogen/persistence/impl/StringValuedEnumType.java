@@ -36,7 +36,7 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
     /**
      * Enum class for this particular user type.
      */
-    private Class<T> enumClass;
+	private Class<T> enumClass;
     private boolean pgEnum;
     /** ClassLoader to use. */
 	private static ClassLoader classLoader;

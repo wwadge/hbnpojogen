@@ -10,6 +10,9 @@ import java.sql.*;
 #foreach ($import in $imports)
 import $import;
 #end
+#if ($springData)
+import org.springframework.beans.factory.annotation.Autowired;
+#end
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.runner.RunWith;
@@ -26,6 +29,16 @@ import org.springframework.test.annotation.Rollback;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DAOIntegrationTest {
 		
+#if ($springData)
+#foreach ( $class in $classes )
+#if (! $class.isEmbeddable() && !$class.isHiddenJoinTable() && (!$class.isAbstractClass()) && (!$class.isTableIsAView()) )
+
+	@Autowired
+	$class.getRepositoryClassName() $class.getRepositoryClassNamePropertyName();
+#end
+#end
+#end
+
 #macro(doprefix)
 #if ( $property.isBooleanField() )is#{else}get#end
 #end
@@ -205,21 +218,30 @@ public class DAOIntegrationTest {
 ##
 ##Hibernate Factory getter
 ##
+#if (!$springData)
 	 	$class.getDataLayerInterfaceClassName() $class.getDataLayerInterfaceClassNameProperty() = ${class.getDataLayerImplClassName()}.getInstance();
+#else
+#end
 		${class.getMaybeExpandClassName()} ${class.tableObj.testHandle} = ${class.getDataPoolFactory()}.get${class.className}();
 #foreach ($item in $this.getUncascaded($class, ${class.tableObj.testHandle}))
 		// Cascading on this property was switched off from config (or requires hbn bug workaround). Performing manual cascade.
 		$item;
 #end
+#if (!$springData)
 		${class.getDataLayerInterfaceClassNameProperty()}.saveOrUpdate(${class.tableObj.testHandle});
-
+#else
+		${class.tableObj.testHandle} = ${class.getRepositoryClassNamePropertyName()}.saveAndFlush(${class.tableObj.testHandle});
+#end
 		${class.getTypeOfId()} ${class.tableObj.testHandle}Id = ${class.tableObj.testHandle}.getId();
 		${class.getMaybeExpandClassName()} copy = ${class.tableObj.testHandle}.clone();
+#if (!$springData)
 		${class.getDataLayerInterfaceClassNameProperty()}.flushSession(); // flush+evict from cache to make sure we hit the DB next 
 		${class.getDataLayerInterfaceClassNameProperty()}.evict(${class.tableObj.testHandle}); 		 
-
 		${class.tableObj.testHandle} = ${class.getDataLayerInterfaceClassNameProperty()}.get${class.className}(${class.tableObj.testHandle}Id); 	// load it again
-
+#else
+		${class.tableObj.testHandle} = ${class.getRepositoryClassNamePropertyName()}.findOne(${class.tableObj.testHandle}Id); 	// load it again
+#end
+	
 
 		// Validity checks
 ##
