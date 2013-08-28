@@ -353,6 +353,7 @@
 			<version>1.6.0</version>
 #end			
 		</dependency>
+<!-- Add these in the maven config if you care about them
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -371,7 +372,7 @@
 #end			
 			<scope>test</scope>
 		</dependency>
- 
+ -->
  
 		$dependencies
 		
