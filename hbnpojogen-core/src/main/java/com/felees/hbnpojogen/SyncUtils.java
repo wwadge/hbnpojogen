@@ -14,15 +14,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.IOUtils;
@@ -1039,6 +1041,7 @@ implements Serializable {
 		/** the db cycle list */
 		private TreeMap<String, LinkedList<String>> cycleList = new TreeMap<String, LinkedList<String>>(new CaseInsensitiveComparator());
 
+		private Map<String, String> commentMap =  new HashMap<String, String>();
 
 
 		/**

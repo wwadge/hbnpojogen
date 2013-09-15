@@ -77,7 +77,14 @@ public class Core {
 			tableObj.setName(SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)));
 			tableObj.setTestHandle(SyncUtils.getTableName(tableName));
 			tableObj.setViewTable(SyncUtils.getViewSet().contains(tableName));
-
+		
+			ResultSet table = dbmd.getTables(tableObj.getDbCat(), tableObj.getDbSchema(), SyncUtils.getTableName(tableName), new String[] { "TABLE" });
+			if (table.next()) {
+				String remarks = table.getString("REMARKS");
+				tableObj.setComment(remarks == null ? "" : remarks);
+			}
+			table.close();
+			
 			if (State.getInstance().isVersionCheckEnabled() && !skipSchemaWrite(SyncUtils.getTableCatalog(tableName))) {
 				extractVersionInfo(dbmd, tableObj);
 			}
@@ -131,6 +138,7 @@ public class Core {
 				int sqlType = 0;
 
 				String defaultValue = null;
+				String remarks = "";
 				fieldNames.next();
 				if (State.getInstance().dbMode == 0) {
 					// mysql fails to return ENUM using getColumnTypeName
@@ -141,6 +149,7 @@ public class Core {
 					sqlType = rsmd.getColumnType(i);
 				}
 				defaultValue = fieldNames.getString("COLUMN_DEF");
+				remarks = fieldNames.getString("REMARKS");
 				
 				String colName = rsmd.getColumnName(i).toLowerCase();
 				if (!Character.isJavaIdentifierStart(colName.charAt(0))){
@@ -217,6 +226,7 @@ public class Core {
 				fo.setFieldTypeUnsigned(!rsmd.isSigned(i));
 				fo.setNullable(rsmd.isNullable(i) == ResultSetMetaData.columnNullable);
 				fo.setAutoInc(rsmd.isAutoIncrement(i));
+				fo.setComment(remarks == null ? "" : remarks);
 
 
 				// we're pretend we have a key if this is so marked in the

@@ -22,6 +22,8 @@ public class FieldObj implements Serializable {
     private String alias;
     /** Set if renamed (inverse link). */
     private String aliasInverse;
+    /** Comment stored in db metadata. */
+    private String comment;
 
 	/** If true, the field has a default value set in the database. */
 	@SuppressWarnings("unused")
@@ -446,6 +448,18 @@ public class FieldObj implements Serializable {
 	 */
 	public void setFieldColumnType(String fieldColumnType) {
 		this.fieldColumnType = fieldColumnType;
+	}
+	/**
+	 * @return the comment
+	 */
+	public String getComment() {
+		return comment;
+	}
+	/**
+	 * @param comment the comment to set
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 

@@ -24,6 +24,8 @@ public class TableObj implements Serializable {
 	private String testHandle;
 	/** the actual name retreived from the db */
 	private String dbName;
+	/** Any comment extracted from the database metadata. */
+	private String comment;
 	/** pretty table name */
 	private String name; 
 	/** Links to the fields in this table */
@@ -242,6 +244,20 @@ public class TableObj implements Serializable {
 
 	public void setDbSchema(String dbSchema) {
 		this.dbSchema = dbSchema;
+	}
+
+	/**
+	 * @return the comment
+	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * @param comment the comment to set
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
     
     

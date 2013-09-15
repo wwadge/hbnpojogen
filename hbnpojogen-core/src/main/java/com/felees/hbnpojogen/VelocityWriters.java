@@ -875,6 +875,12 @@ public class VelocityWriters {
 //                if (Core.skipSchemaWrite(cat)){
                 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.OBJECT) + ".*");
 //                }
+                
+                if (State.getInstance().isEnableSpringData()) {
+                	 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
+                }
+
+                
                 TreeMap<String, Clazz> tmpClasses = new TreeMap<String, Clazz>(new CaseInsensitiveComparator());
                 boolean hasImmutable = false;
                for (Entry<String, Clazz> co : classes.entrySet()) {
@@ -929,6 +935,7 @@ public class VelocityWriters {
                 context.put(IMPORTS, imports);
                 context.put(CATALOG, catalog);
                 context.put("hasImmutable", hasImmutable);
+                context.put("springData", State.getInstance().isEnableSpringData());
                 context.put(PRETTYCATALOG, prettyCatalog);
                 context.put("tableDeps", State.getInstance().commitResult.getTableDeps().entrySet());
                 String commitOrder = "";
