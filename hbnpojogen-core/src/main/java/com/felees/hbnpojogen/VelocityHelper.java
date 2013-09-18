@@ -315,9 +315,15 @@ public class VelocityHelper {
         LinkedList<String> result = new LinkedList<String>();
         LinkedList<ObjectPair<Clazz, String>> uncascadedOps = sortByDepth(getUncascadedInternal(clazz, testHandle, null, false));
         for (ObjectPair<Clazz, String> entry : uncascadedOps) {
-            result.add(entry.getKey().getFullHibernateDAOFactory()+".get"+entry.getKey().getClassName()+"Dao().saveOrUpdate("+
-                    entry.getValue()+")");
-        }
+        	if (State.getInstance().isEnableSpringData()) {
+        		result.add(entry.getKey().getRepositoryClassNamePropertyName()+".save("+
+        				entry.getValue()+")");
+        		
+        	} else {
+        		result.add(entry.getKey().getFullHibernateDAOFactory()+".get"+entry.getKey().getClassName()+"Dao().saveOrUpdate("+
+        				entry.getValue()+")");
+        		}
+        	}
 
         clazz.setUncascadedOps(sortByDepth(getUncascadedInternal(clazz, testHandle, null, true)));
         return result;
