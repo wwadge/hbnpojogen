@@ -698,6 +698,9 @@ $classCustomCodeFields
 #if (${class.getTypeOfId()} == "Long")						
 							newHashCode = (long) super.hashCode();
 #else
+#if (${class.getTypeOfId()} == "Integer")						
+							newHashCode = super.hashCode();
+#else
 #if (${class.getTypeOfId()} == "String")
 						newHashCode = String.valueOf(super.hashCode());
 #else
@@ -709,6 +712,7 @@ $classCustomCodeFields
 #end							
 #end							
 #end						
+#end
 #end
 
 						}
