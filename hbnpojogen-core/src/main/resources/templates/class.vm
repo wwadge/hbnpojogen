@@ -158,7 +158,7 @@ $classAnnotation
 @Entity#if($class.isNameAmbiguityPossible())(name = "${class.classPackage}.${class.className}")#end
 
 #if ($class.isImmutable())
-@org.hibernate.annotations.Entity(mutable=false)
+@org.hibernate.annotations.Immutable
 #end
 #end
 #if ( $class.subclass ) 
