@@ -55,7 +55,8 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware 
 #if (!$springData)
 		 return ${class.getHibernateDAO()}.get${class.getMaybeExpandDAO()}().load(${class.getBootstrapHelper()}); 
 #else
-		 return ((${class.getRepositoryClassName()})context.getBean("${class.getRepositoryClassNamePropertyName()}")).findOne(1); 
+
+		 return ((${class.getRepositoryClassName()})context.getBean("${class.getRepositoryClassNamePropertyName()}")).findOne(1#if ($class.getTypeOfId().equals("Long"))L#end); 
 #end
 
 	} 
