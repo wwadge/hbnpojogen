@@ -21,7 +21,7 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware 
     private static final Multimap<String, String> tableDeps = ArrayListMultimap.create();
 	/** DB commit order. */
 	private static final String[] commitOrder = new String[]{$commitOrder};
-#if ($hasImmutable) 	
+#if ($hasImmutable && !$springData) 	
 	/** DataLayer handle. */
 	private static ${classes.values().iterator().next().getDataLayerInterfaceClassName()} dataLayer;
 #end	
@@ -63,7 +63,7 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware 
 
 #end
 #end
-#if ($hasImmutable) 
+#if ($hasImmutable && !$springData) 
     /**
      * Default constructor.
      *
@@ -83,10 +83,14 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware 
      * @return ${class.className} A ${class.className} object
      */
     public static ${class.className} get${class.className}() {
+#if (!$springData)
+    
         return (${class.className}) dataLayer.createQuery("from ${class.className} where id > 0")
             .setMaxResults(1)
             .uniqueResult();
-                    
+#else
+    		 return ((${class.getRepositoryClassName()})context.getBean("${class.getRepositoryClassNamePropertyName()}")).findAll(new PageRequest(0, 1)).getContent().get(0); 
+#end                    
     }
 #end
 #else

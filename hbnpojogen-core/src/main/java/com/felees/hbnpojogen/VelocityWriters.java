@@ -898,8 +898,12 @@ public class VelocityWriters {
                 for (Entry<String, Clazz> co : classes.entrySet()) {
                     
                             
-                    if (hasImmutable){
-                        imports.add(co.getValue().getDataLayerInterfaceFullClassName());
+                    if (hasImmutable) {
+                    	if (!State.getInstance().isEnableSpringData()){
+                    		imports.add(co.getValue().getDataLayerInterfaceFullClassName());
+                    	} else {
+                    		imports.add("org.springframework.data.domain.PageRequest");
+                    	}
                     }
                     if (co.getValue().getClassPackage().equalsIgnoreCase(catalog)) {
                         tmpClasses.put(co.getKey(), co.getValue());
