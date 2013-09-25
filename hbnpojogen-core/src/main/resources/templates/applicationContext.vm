@@ -212,7 +212,7 @@
     		<property name="packagesToScan">
 			<list>
 #foreach ($level in $packages)
-				<value>$level.**.*</value>
+				<value>$level.**</value>
 #end
 			</list>
 		</property>
