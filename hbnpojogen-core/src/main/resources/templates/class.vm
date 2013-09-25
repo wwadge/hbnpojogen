@@ -278,7 +278,7 @@ $classCustomCodeFields
 ##### The bug we're talking about below is: 
 ##### See http://opensource.atlassian.com/projects/hibernate/browse/HHH-2326?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#action_25739
 #if ( ! $property.isManyToMany() )
-	private $property.javaType $property.propertyName#if ( $property.idField && $property.fieldObj.autoInc ) = $this.getHibernateBugWorkaround($property); // init for hibernate bug workaround#{else};#end
+	private $property.javaType $property.propertyName#if ( $property.idField && $property.fieldObj.autoInc && $property.composite) = $this.getHibernateBugWorkaround($property); // init for hibernate bug workaround#{else};#end
 #end
 #end
 #end
