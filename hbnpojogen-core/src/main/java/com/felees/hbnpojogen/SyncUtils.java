@@ -583,11 +583,11 @@ implements Serializable {
 			}
 			else {
 				LinkedHashSet<String> tmp = new LinkedHashSet<String>();
-				if (State.getInstance().dbMode != 2){
+				if (fakeEnum){
 					rs = stat.executeQuery(String.format("select * from %s", tblName));
-				} else {
+				} else if (State.getInstance().dbMode == 2){
 					wasScrubbed[0] = true;
-				rs = stat.executeQuery(String.format("SELECT pg_enum.enumlabel, pg_enum.enumlabel AS enumlabel FROM pg_type JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid"+
+					rs = stat.executeQuery(String.format("SELECT pg_enum.enumlabel, pg_enum.enumlabel AS enumlabel FROM pg_type JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid"+
 						" where pg_type.typname='%s'",  fieldName));
 				}					
 			

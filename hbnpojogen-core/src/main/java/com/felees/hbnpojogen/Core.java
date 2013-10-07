@@ -252,7 +252,7 @@ public class Core {
 
 				// ---------------------------------------------------------------
 
-				TreeMap<String, EnumMapping> enumLinks = State.getInstance().enumAsLinkMaps.get(SyncUtils.removeUnderscores(tableObj.getDbCat()));
+				TreeMap<String, EnumMapping> enumLinks = State.getInstance().enumAsLinkMaps.get(SyncUtils.removeUnderscores(tableObj.getDbCat()+"."+(tableObj.getDbSchema() == null ? "" : tableObj.getDbSchema())));
 				boolean fakeEnum = false;
 				EnumMapping dstTableMap = null;
 				if (enumLinks != null) {
@@ -306,7 +306,7 @@ public class Core {
 					String name = SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)) + SyncUtils.upfirstChar(colName) + "Enum";
 					fo.setEnumName(SyncUtils.removeUnderscores(name));
 					fo.setEnumFilename(SyncUtils.removeUnderscores(name));
-					TreeMap<String, String> map = State.getInstance().enumMappings.get(tableObj.getDbCat());
+					TreeMap<String, String> map = State.getInstance().enumMappings.get(tableObj.getDbCat()+"."+(tableObj.getDbSchema() == null ? "" : tableObj.getDbSchema()));
 					String tmp = tableObj.getDbName() + "." + fo.getName();
 					if ((map != null) && (map.get(tmp) != null)) {
 						fo.setEnumFilename(map.get(tmp));
@@ -1020,8 +1020,7 @@ public class Core {
 					break;
 				case ONE_TO_ONE_FIELD:
 					property.setOneToOne(true);
-					property.setManyToOne(true); // we'll switch this off
-					// later
+					property.setManyToOne(true); // we'll switch this off later
 					co.getImports().add("javax.persistence.FetchType");
 					co.getImports().add("javax.persistence.OneToOne");
 					String oname = field.getKey();
@@ -1042,6 +1041,10 @@ public class Core {
 							break; // we should only find one
 						}
 					}
+					
+					
+				
+					
 					break;
 
 				case MANY_TO_ONE_FIELD:
@@ -1173,7 +1176,7 @@ public class Core {
 		for (Clazz clazz : classes.values()) {
 			TreeMap<String, PropertyObj> seen = new TreeMap<String, PropertyObj>(new CaseInsensitiveComparator());
 			for (PropertyObj property : clazz.getProperties().values()) {
-				if (property.isOneToMany()) {
+				if (property.isOneToMany() || property.isOneToOne()) {
 					PropertyObj tmp = seen.get(property.getPropertyName());
 					if (tmp == null) {
 						seen.put(property.getPropertyName(), property);
@@ -1651,7 +1654,7 @@ public class Core {
 						property.setManyToOne(false); // toggle it off now
 
 						for (PropertyObj search : property.getManyToOneLink().getClazz().getProperties().values()) {
-							if (search.isOneToOne() && (search.getOneToOneLink() == null) &&
+							if (search.isOneToOne() /* && (search.getOneToOneLink() == null) */ &&
 									search.getJavaType().equalsIgnoreCase(property.getClazz().getClassName()) &&
 									search.getFieldObj().getName().equalsIgnoreCase(searchField)) {
 								search.setOneToOneLink(property);
@@ -2227,6 +2230,12 @@ public class Core {
 		for (PropertyObj property : clash.getProperties().values()) {
 			if (property.isOneToMany()) {
 				if (property.getOneToManyLink().getClazz().equals(clazz)) {
+					property.setJavaType(clazz.getFullClassName());
+				}
+			}
+
+			if (property.isOneToOne()) {
+				if (property.getOneToOneLink().getClazz().equals(clazz)) {
 					property.setJavaType(clazz.getFullClassName());
 				}
 			}
