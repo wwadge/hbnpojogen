@@ -292,6 +292,7 @@
 			<customClassCodeFields>
 					<![CDATA[ extra custom class code pasted at the start of the field list]]>
 			</customClassCodeFields>
+			<!-- Always use the singular tense to use amount and not amounts even if it appears in plural form in the resulting code -->
 			<property name="Amount">
 				<annotation type="property">foo on prop</annotation>
 				<annotation type="getter">bar on getter</annotation>
