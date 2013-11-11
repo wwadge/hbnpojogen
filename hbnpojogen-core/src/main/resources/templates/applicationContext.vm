@@ -188,7 +188,7 @@
 #if ($springData)
 
 #foreach ($level in $repoPackages)
-		<jpa:repositories base-package="$level"/>
+		<jpa:repositories base-package="$level" $factoryClass />
 #end
 	
     <!-- Hibernate SessionFactory -->

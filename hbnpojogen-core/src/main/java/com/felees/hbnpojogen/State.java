@@ -187,7 +187,9 @@ implements Serializable {
     /** enable joda-time */
     public boolean enableJodaSupport;
     public boolean enableSpringData;
-
+    public String springDataFactoryClass="";
+    public String springDataRepoInterface=" org.springframework.data.jpa.repository.JpaRepository";
+    
 	/** enable validator. */
 	public boolean enableHibernateValidator;
 	/** disable backlinks in data pool factory */
@@ -2320,6 +2322,42 @@ implements Serializable {
 	 */
 	public void setEnableSpringData(boolean enableSpringData) {
 		this.enableSpringData = enableSpringData;
+	}
+
+
+
+	/**
+	 * @return the springDataFactoryClass
+	 */
+	protected String getSpringDataFactoryClass() {
+		return springDataFactoryClass;
+	}
+
+
+
+	/**
+	 * @param springDataFactoryClass the springDataFactoryClass to set
+	 */
+	protected void setSpringDataFactoryClass(String springDataFactoryClass) {
+		this.springDataFactoryClass = springDataFactoryClass;
+	}
+
+
+
+	/**
+	 * @return the springDataRepoInterface
+	 */
+	protected String getSpringDataRepoInterface() {
+		return springDataRepoInterface;
+	}
+
+
+
+	/**
+	 * @param springDataRepoInterface the springDataRepoInterface to set
+	 */
+	protected void setSpringDataRepoInterface(String springDataRepoInterface) {
+		this.springDataRepoInterface = springDataRepoInterface;
 	}
 
 

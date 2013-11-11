@@ -206,8 +206,14 @@
 	allows for integration with other tools. -->
 	<enableStateSave>true</enableStateSave>
 	
-	<!--  If enabled, we make use of spring jpa instead of our custom code.  -->
-	<enableSpringData>true</enableSpringData>
+	<!--  If enabled, we make use of spring jpa instead of our custom code.  
+	pass in factoryClass="com.some.factory.class.BeanName" as an attribute if you wish to
+	override the default spring factory.
+	Pass in repoInterface to override the default Spring repo interface from 
+	 org.springframework.data.jpa.repository.JpaRepository to something else. Eg:
+	 repoInterface="com.my.CustomRepository"
+	-->
+	<enableSpringData factoryClass="com.som.factory.class.BeanName">true</enableSpringData>
 	
 	<!-- If true, the resultant unit test will not contain code to delete all the tables prior to each test -->
 	<disableCleanTables>true</disableCleanTables>

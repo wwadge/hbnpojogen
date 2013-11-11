@@ -488,7 +488,7 @@ public class VelocityWriters {
      * @throws ParseErrorException 
      * @throws ResourceNotFoundException 
      * @throws IOException
-     */
+     */ 
     public static void writeOutRepoClass(String projectName, String targetFolder, Clazz clazz) throws ResourceNotFoundException, ParseErrorException, Exception {
         if (!Core.skipSchemaWrite(clazz)) {
 
@@ -502,7 +502,9 @@ public class VelocityWriters {
                 context.put("packagename", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO));
                 context.put("impl", clazz.getFullClassName());
                 context.put("id", clazz.getTypeOfId());
-                
+                String repo = State.getInstance().getSpringDataRepoInterface();
+                context.put("springRepoShort", repo.substring(repo.lastIndexOf(".")+1));
+                context.put("springRepo", State.getInstance().getSpringDataRepoInterface());
                 String tmp = getAndCreateRepoPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", clazz);
 
                 if (!new File(tmp).exists()) {
@@ -1011,6 +1013,7 @@ public class VelocityWriters {
         context.put(TOPLEVEL, State.getInstance().topLevel);
         context.put("driverClass", HbnPojoGen.driver);
         context.put("springData", State.getInstance().isEnableSpringData());
+        context.put("factoryClass", State.getInstance().getSpringDataFactoryClass().equals("") ? "": "factory-class=\""+State.getInstance().getSpringDataFactoryClass()+"\"");
         Set<String> packages = new TreeSet<String>();
         Set<String> repoPackages = new TreeSet<String>();
          for (String schema : State.getInstance().getSchemas()){

@@ -618,6 +618,9 @@ public class Config {
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setEnableJodaSupport(Config.config.getString("enableJodaSupport", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnableSpringData(Config.config.getString("enableSpringData", "true").equalsIgnoreCase("TRUE"));
+		State.getInstance().setSpringDataFactoryClass(Config.config.getString("enableSpringData[@factoryClass]", ""));
+		State.getInstance().setSpringDataRepoInterface(Config.config.getString("enableSpringData[@repoInterface]", " org.springframework.data.jpa.repository.JpaRepository"));
+
         State.getInstance().disableBackLinksInDataPoolFactory = Config.config.getString("disableBackLinksInDataPoolFactory", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setDisableLazyConnections(Config.config.getString("disableLazyConnections", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnablePropertyPlaceholderConfigurer(Config.config.getString("enablePropertyPlaceholderConfigurer", "false").equalsIgnoreCase("TRUE"));
