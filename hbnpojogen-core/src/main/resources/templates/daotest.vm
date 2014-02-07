@@ -31,7 +31,7 @@ public class DAOIntegrationTest {
 		
 #if ($springData)
 #foreach ( $class in $classes )
-#if (! $class.isEmbeddable() && !$class.isHiddenJoinTable() && (!$class.isAbstractClass()) && (!$class.isTableIsAView()) )
+#if (! $class.isEmbeddable() && !$class.isHiddenJoinTable()  && (!$class.isTableIsAView()) )
 
 	@Autowired
 	$class.getRepositoryClassName() $class.getRepositoryClassNamePropertyName();
