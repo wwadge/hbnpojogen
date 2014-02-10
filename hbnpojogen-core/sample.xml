@@ -130,6 +130,11 @@
 			<factoryPackage>
 				${topLevel}.${projectName}.factories.${DB}
 			</factoryPackage>
+			<!-- Location of assorted classes -->
+			<utilPackage>
+				${topLevel}.${projectName}.util
+			</utilPackage>
+			
 			<!--  Location of data layer objects.  -->
 			<dataPackage>
 				${topLevel}.${projectName}.services.data
@@ -298,7 +303,7 @@
 			<customClassCodeFields>
 					<![CDATA[ extra custom class code pasted at the start of the field list]]>
 			</customClassCodeFields>
-			<!-- Always use the singular tense to use amount and not amounts even if it appears in plural form in the resulting code -->
+			 Always use the singular tense to use amount and not amounts even if it appears in plural form in the resulting code 
 			<property name="Amount">
 				<annotation type="property">foo on prop</annotation>
 				<annotation type="getter">bar on getter</annotation>
@@ -653,6 +658,7 @@ table section
 			<except package="yourpackage" class="yourclass" suffix="MO" />
 	</suffix>
 	 -->
+
 
 <!-- The maven section affects the generated pom.xml. Note: You'll need
 to set enabled=true for any of this to take. If noArtifactVersions is set to true, the artifact references will not include a version so

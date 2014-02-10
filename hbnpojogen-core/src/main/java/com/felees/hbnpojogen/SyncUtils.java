@@ -1236,6 +1236,12 @@ implements Serializable {
 			}
 			break;
 
+		case UTIL:
+			result = packageMap.getUtilPackage();
+			if (result == null) {
+				result = defaultPackageMap.getUtilPackage();
+			}
+			break;
 
 		default:
 			assert false;

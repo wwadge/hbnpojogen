@@ -30,6 +30,8 @@ public class PackageMap implements Serializable {
     private String enumSubtypePackage;
     /** Inner handle */
 	private String factoryPackage;
+	   /** Inner handle */
+		private String utilPackage;
 	/** Inner handle */
 	private String dataPackage;
 
@@ -151,6 +153,18 @@ public class PackageMap implements Serializable {
 	 */
 	public void setObjectTableRepoPackage(String objectTableRepoPackage) {
 		this.objectTableRepoPackage = objectTableRepoPackage;
+	}
+	/**
+	 * @return the utilPackage
+	 */
+	public String getUtilPackage() {
+		return utilPackage;
+	}
+	/**
+	 * @param utilPackage the utilPackage to set
+	 */
+	public void setUtilPackage(String utilPackage) {
+		this.utilPackage = utilPackage;
 	}
 
 }

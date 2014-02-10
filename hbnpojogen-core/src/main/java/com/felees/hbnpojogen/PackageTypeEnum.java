@@ -27,6 +27,7 @@ public enum PackageTypeEnum implements Serializable {
 	FACTORY,
 	/** Constant. */
 	DATA,
+	UTIL,
 	/** Constant. */
 	DAOIMPL;
 }

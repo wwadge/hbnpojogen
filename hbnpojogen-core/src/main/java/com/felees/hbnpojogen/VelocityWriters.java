@@ -215,7 +215,6 @@ public class VelocityWriters {
         }
     }
 
-
    
 
 
@@ -338,7 +337,18 @@ public class VelocityWriters {
 
     }
 
+    /**
+     * @param targetFolder
+     * @return a valid path
+     */
+    private static String getAndCreateUtilPath(String targetFolder) {
+        String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+        new File(targetFolder + "/" + State.getInstance().getSrcFolder() +"/"+config).mkdirs();
 
+        String result = targetFolder + "/" + State.getInstance().getSrcFolder() +"/"+ config + "/";
+        return result;
+
+    }
 
     /**
      * @param catalog
@@ -686,6 +696,7 @@ public class VelocityWriters {
 
     /**
      * Writes out the unit test
+     * @param targetFolder 
      *
      * @param classes
      * @param commitOrder
@@ -696,7 +707,7 @@ public class VelocityWriters {
      * @throws MethodInvocationException
      * @throws Exception
      */
-    public static void writeOutDaoTestClass(TreeMap<String, Clazz> classes, LinkedList<String> commitOrder, String srcFolder)
+    public static void writeOutDaoTestClass(String targetFolder, TreeMap<String, Clazz> classes, LinkedList<String> commitOrder, String srcFolder)
             throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
         Template daoTestTemplate = Velocity.getTemplate("templates/daotest.vm");
 
@@ -743,7 +754,10 @@ public class VelocityWriters {
             if (!State.getInstance().isEnableSpringData()) {
 	            imports.add(clazz.getDataLayerImplFullClassName());
 	            imports.add(clazz.getDataLayerInterfaceFullClassName());
+	            
+	            imports.add("com.felees.hbnpojogen.persistence.IPojoGenEntity");
             } else {
+            	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
             	 imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.TABLE_REPO) + ".*");
             }
             // do not clean abstract classes - chrisp
@@ -880,6 +894,11 @@ public class VelocityWriters {
                 
                 if (State.getInstance().isEnableSpringData()) {
                 	 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
+                	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
+
+                } else {
+                	imports.add("com.felees.hbnpojogen.randomlib.data.dataGeneration.BasicDataGenerator");
+
                 }
 
                 
@@ -913,7 +932,16 @@ public class VelocityWriters {
                         for (PropertyObj property : co.getValue().getAllPropertiesWithoutPFK().values()) {
                             if (!property.isNullable()) {
                                 if (!property.isAutoInc()) {
-                                    imports.add("com.felees.hbnpojogen.randomlib.data.dataGeneration.*");
+                                	
+                                	 if (State.getInstance().isEnableSpringData()) {
+                                    	 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
+                                    	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
+
+                                    } else {
+                                    	imports.add("com.felees.hbnpojogen.randomlib.data.dataGeneration.BasicDataGenerator");
+
+                                    }
+
                                 }
                                 if (property.isManyToOne()) {
                                     imports.add(property.getManyToOneLink().getClazz().getFullDataPoolFactory());
@@ -1009,7 +1037,7 @@ public class VelocityWriters {
         context.put(PROJECTNAME, State.getInstance().projectName);
         context.put(CLASSES, classes);
         context.put("lazyConnections", !State.getInstance().isDisableLazyConnections());
-        
+        context.put("embedPersistence", State.getInstance().isEnableSpringData());
         context.put(TOPLEVEL, State.getInstance().topLevel);
         context.put("driverClass", HbnPojoGen.driver);
         context.put("springData", State.getInstance().isEnableSpringData());
@@ -1230,6 +1258,26 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         appContextWriter.close();
     }
 
+    public static void writeUtils(String targetFolder)
+            throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
+        
+    	String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "IPojoGenEntity", "BasicDataGenerator"};
+    	for (String s: utilClasses) {
+    	Template appContextTemplate = Velocity.getTemplate("templates/"+s+".vm");
+
+         String tmp =  getAndCreateUtilPath( targetFolder ) + s+".java";
+
+         PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+        VelocityContext context = new VelocityContext();
+        TreeSet<String> classes = new TreeSet<String>();
+        for (Clazz clazz : State.getInstance().getClasses().values()) {
+            classes.add(clazz.getFullClassName());
+        }
+        context.put("packagename", SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+        appContextTemplate.merge(context, appContextWriter);
+        appContextWriter.close();
+    	}
+    }
 
 
     /**
@@ -1403,6 +1451,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         context.put("additionalPom", State.getInstance().getMavenAdditionalPomEntries());
         context.put("mavenVersion", State.getInstance().getMavenVersion());
         context.put("artifactId", State.getInstance().getMavenArtifactId());
+        context.put("embedPersistence", State.getInstance().isEnableSpringData());
         context.put("noDeps", State.getInstance().isMavenNoDeps());
         context.put("mavenName", State.getInstance().getMavenName());
         context.put("javaVersion", State.getInstance().getMavenJavaVersion());
@@ -1473,6 +1522,12 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
                     context.put("others", field.getValue().getEnumOtherCols());
                     context.put(TOPLEVEL, State.getInstance().topLevel);
                     context.put(CATALOG, catalog);
+                    
+                    if (State.getInstance().isEnableSpringData()) {
+                    	context.put("stringValuedEnum", SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnum");
+                    } else {
+                    	context.put("stringValuedEnum", "com.felees.hbnpojogen.persistence.impl.StringValuedEnum");
+                    }
                     context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.ENUM));
                     context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
                     if (!Core.skipSchemaWrite(entry.getValue().getDbCat())) {

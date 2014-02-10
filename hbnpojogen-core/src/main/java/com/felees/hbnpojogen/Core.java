@@ -1723,7 +1723,11 @@ public class Core {
 
 			if (!clazz.isSubclass()){
 				if (!clazz.isEmbeddable()) {
-					clazz.getImports().add("com.felees.hbnpojogen.persistence.IPojoGenEntity");
+					if (State.getInstance().isEnableSpringData()) {
+						clazz.getImports().add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
+					} else {
+						clazz.getImports().add("com.felees.hbnpojogen.persistence.IPojoGenEntity");
+					}
 				}
 				clazz.getImports().add("java.io.Serializable");
 			}
@@ -1837,10 +1841,18 @@ public class Core {
 							didScrubbedEnum = true;
 							classannotation = State.getInstance().customClassAnnotations.get(tmp);
 
+
+							String valueType;
+							if (State.getInstance().isEnableSpringData()) {
+								valueType = SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnumType.class";
+							} else {
+								valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
+							}
+							
 							classannotation =
 								String
 								.format(
-										"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class)} )",
+										"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
 										classannotation);
 							State.getInstance().customClassAnnotations.put(tmp, classannotation);
 
@@ -1859,7 +1871,7 @@ public class Core {
 								classannotation =
 									String
 									.format(
-											"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class)} )",
+											"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
 											classannotation);
 
 								State.getInstance().customClassAnnotations.put(parent, classannotation);

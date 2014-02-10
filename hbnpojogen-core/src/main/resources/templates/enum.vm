@@ -1,7 +1,7 @@
 package ${packagename};
 import java.util.Map;
 import java.util.HashMap;
-import com.felees.hbnpojogen.persistence.impl.StringValuedEnum;
+import $stringValuedEnum;
 /**
  * Defines the ${enumName} enumeration.
  * 

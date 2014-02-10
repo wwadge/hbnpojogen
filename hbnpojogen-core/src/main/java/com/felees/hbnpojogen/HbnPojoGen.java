@@ -243,15 +243,16 @@ public class HbnPojoGen {
         log("Stage 8: Writing DAO Factory classes");
         VelocityWriters.writeOutDaoFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
 
-        log("Stage 9: Writing Spring, Ant and EhCache configs");
+        log("Stage 9: Writing Spring, EhCache configs, etc");
         VelocityWriters.writeSpringApplicationContext(targetFolder, State.getInstance().classes, dbCatalog);
-        VelocityWriters.writeAntBuildFile(targetFolder, dbCatalog);
+//        VelocityWriters.writeAntBuildFile(targetFolder, dbCatalog);
         VelocityWriters.writeEHCache(targetFolder);
+        VelocityWriters.writeUtils(targetFolder);
         VelocityWriters.writeSpringOverrideFile(targetFolder);
         
 
         log("Stage 10: Writing DAO Test classes");
-        VelocityWriters.writeOutDaoTestClass(State.getInstance().classes, commitOrder, srcFolder);
+        VelocityWriters.writeOutDaoTestClass(targetFolder, State.getInstance().classes, commitOrder, srcFolder);
 
         log("Stage 11: Writing Data pool Factory classes");
         VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);

@@ -325,6 +325,8 @@
 		</dependency>
 
 #end
+
+#if (!$embedPersistence)
 		<dependency>
 			<groupId>com.felees</groupId>
 			<artifactId>hbnpojogen-persistence</artifactId>
@@ -332,6 +334,7 @@
 			<version>$syncVersion</version>
 #end			
 		</dependency>
+#end
 
 #if ($useDynamicLdapDataSource)
 		<dependency>

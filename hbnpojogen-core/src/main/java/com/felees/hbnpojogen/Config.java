@@ -977,10 +977,11 @@ public class Config {
             packageMap.setEnumPackage(Config.config.getString(String.format("dbPackageMap.map(%d).enumPackage", i)));
             packageMap.setEnumSubtypePackage(Config.config.getString(String.format("dbPackageMap.map(%d).enumSubtypePackage", i)));
             packageMap.setFactoryPackage(Config.config.getString(String.format("dbPackageMap.map(%d).factoryPackage", i)));
+            packageMap.setUtilPackage(Config.config.getString(String.format("dbPackageMap.map(%d).utilPackage", i)));
             packageMap.setObjectPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectPackage", i)));
             packageMap.setObjectInterfacePackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectInterfacePackage", i)));
             packageMap.setObjectTableRepoPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectTableRepoPackage", i)));
-             State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
+            State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
         }
 
         // test for default packagemap. Make sure there's always *something* to work upon
@@ -1013,6 +1014,9 @@ public class Config {
         }
         if (packageMap.getFactoryPackage() == null) {
             packageMap.setFactoryPackage(String.format("%s.%s.factories.${DB}", State.getInstance().topLevel, State.getInstance().projectName));
+        }
+        if (packageMap.getUtilPackage() == null) {
+            packageMap.setUtilPackage(String.format("%s.%s.util", State.getInstance().topLevel, State.getInstance().projectName));
         }
         if (packageMap.getDaoImplPackage() == null) {
             packageMap.setDaoImplPackage(String.format("%s.%s.model.dao.${DB}.impl", State.getInstance().topLevel, State.getInstance().projectName));

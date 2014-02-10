@@ -10,7 +10,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import java.util.Collection;
-import com.felees.hbnpojogen.persistence.IPojoGenEntity;
 #if (!$interface)
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
