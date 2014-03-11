@@ -12,11 +12,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import com.felees.hbnpojogen.db.FieldObj;
 import com.felees.hbnpojogen.db.KeyObj;
@@ -77,14 +76,14 @@ public class Core {
 			tableObj.setName(SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)));
 			tableObj.setTestHandle(SyncUtils.getTableName(tableName));
 			tableObj.setViewTable(SyncUtils.getViewSet().contains(tableName));
-		
+
 			ResultSet table = dbmd.getTables(tableObj.getDbCat(), tableObj.getDbSchema(), SyncUtils.getTableName(tableName), new String[] { "TABLE" });
 			if (table.next()) {
 				String remarks = table.getString("REMARKS");
 				tableObj.setComment(remarks == null ? "" : remarks);
 			}
 			table.close();
-			
+
 			if (State.getInstance().isVersionCheckEnabled() && !skipSchemaWrite(SyncUtils.getTableCatalog(tableName))) {
 				extractVersionInfo(dbmd, tableObj);
 			}
@@ -95,7 +94,7 @@ public class Core {
 			int indices = 0;
 			while (indexes.next()) {
 				String col = indexes.getString(Constants.COLUMN_NAME);
-				
+
 				tableObj.getPrimaryKeys().add(col);
 				ResultSet seqs = dbmd.getTables(tableObj.getDbCat(), tableObj.getDbSchema(), tableObj.getDbName()+"_"+col+"_seq", new String[] { "SEQUENCE" });
 				while (seqs.next()){
@@ -104,7 +103,7 @@ public class Core {
 				}
 				indices++;
 			}
-			
+
 			if (State.getInstance().linkTables.get(tableName) != null) {
 				// this is a link table
 				int primaryKeysCount = tableObj.getPrimaryKeys().size();
@@ -125,7 +124,7 @@ public class Core {
 			if (State.getInstance().dbMode == 2){ // postgresql
 				rsQuery = String.format("SELECT * FROM %s.%s.%s WHERE 1=2", SyncUtils.getTableCatalog(tmpTableName), SyncUtils.getTableSchema(tmpTableName), SyncUtils.getTableName(tmpTableName));
 			}
-	
+
 			ResultSet rs;
 			rs = dbmd.getConnection().createStatement().executeQuery(rsQuery);
 
@@ -150,35 +149,35 @@ public class Core {
 				}
 				defaultValue = fieldNames.getString("COLUMN_DEF");
 				remarks = fieldNames.getString("REMARKS");
-				
+
 				String colName = rsmd.getColumnName(i).toLowerCase();
 				if (!Character.isJavaIdentifierStart(colName.charAt(0))){
 					HbnPojoGen.logE("Field name cannot be mapped to a valid java identifier. Field: "+colName+", table: "+tableName);
-					
+
 				}
-				
+
 				if (indices == 0 && tableObj.isViewTable()){
 					tableObj.getPrimaryKeys().add(colName);
 					HbnPojoGen.logE("Found a view without any keys. Marking all fields as part of the id because otherwise Hibernate wouldn't work. View: "+tableName);
-					
+
 				}
-				
+
 				if (State.getInstance().ignoreFieldList.containsKey("*.*." + colName) || State.getInstance().ignoreFieldList.containsKey(tableName + ".*") ||
 						State.getInstance().ignoreFieldList.containsKey(tableName + "." + colName)) {
-					
+
 					List<String> exceptions = State.getInstance().ignoreFieldList.get("*.*." + colName);
 					if (exceptions == null){
 						exceptions = State.getInstance().ignoreFieldList.get(tableName + ".*");
-						
+
 						if (exceptions == null){
 							exceptions = State.getInstance().ignoreFieldList.get(tableName + "." + colName);
 						}
 					}
-					
+
 					if (exceptions == null){
 						continue;
 					}
-					
+
 					String tblCat = SyncUtils.getTableCatalog(tableName);
 					String tblName = SyncUtils.getTableName(tableName);
 					boolean matched = true;
@@ -189,11 +188,11 @@ public class Core {
 							break;
 						}
 					}
-					
+
 					if (matched){
 						continue;
 					}
-					
+
 				}
 
 				// System.out.println("colName " + colName + "- " + tableName+"
@@ -205,16 +204,16 @@ public class Core {
 				if (defValue && defaultValue.startsWith("nextval(")){
 					// pgsql, let's try adding the sequence no
 					// nextval('address_components_id_seq'::regclass)
-					
+
 					String sequenceName = defaultValue.substring(defaultValue.indexOf('\'')+1, defaultValue.lastIndexOf("'"));
 //					if (sequenceName.indexOf(".") > -1){ // sequence is in different schema
 //						sequenceName = sequenceName.substring(sequenceName.indexOf(".")+1);
 //					}
 //					System.out.println("cat : "+tableObj.getDbCat()+", schem: "+tableObj.getDbSchema()+", tbl: "+sequenceName+" def: "+defaultValue);
 					tableObj.getPrimaryKeySequences().put(colName, sequenceName.indexOf(".") > -1 ? tableObj.getDbCat()+"."+sequenceName : sequenceName);
-					
+
 				}
-				
+
 				fo.setTableObj(tableObj); // link to the table this is coming
 				// from
 				fo.setFieldType(rsmd.getColumnType(i));
@@ -261,7 +260,7 @@ public class Core {
 						;
 					fakeEnum = (dstTableMap != null);
 				}
-				if (!typeName.toUpperCase().equals("UUID") && (Constants.ENUM.equals(typeName.toUpperCase()) 
+				if (!typeName.toUpperCase().equals("UUID") && (Constants.ENUM.equals(typeName.toUpperCase())
 						|| sqlType == Types.OTHER // eg pgsql enum type
 						|| fakeEnum)) {
 					// if it's an enum, generate all the enum files and parse
@@ -347,7 +346,7 @@ public class Core {
 				relItem.setPkColumnName(importedKeys.getString(Constants.PKCOLUMN_NAME));
 				relItem.setSchema(importedKeys.getString(Constants.PKTABLE_SCHEM));
 				relItem.setFkSchema(importedKeys.getString(Constants.FKTABLE_SCHEM));
-				
+
 				relItem.setFkName(importedKeys.getString(Constants.FK_NAME));
 				relItem.setCatalog(importedKeys.getString(Constants.PKTABLE_CAT));
 				if (relItem.getCatalog() == null){
@@ -369,7 +368,7 @@ public class Core {
 			for (RelationItem relItem: relList) {
 				String fkColName = relItem.getFkColumnName(); // importedKeys.getString(Constants.FKCOLUMN_NAME);
 				String pkColName = relItem.getPkColumnName(); // importedKeys.getString(Constants.PKCOLUMN_NAME);
-				String fkSchema = relItem.getFkSchema();
+				relItem.getFkSchema();
 				String pkTableCat = relItem.getCatalog(); // importedKeys.getString(Constants.PKTABLE_CAT);
 				String pkTableSchema = relItem.getSchema(); // importedKeys.getString(Constants.PKTABLE_CAT);
 				String pkTableName = relItem.getTableName(); //importedKeys.getString(Constants.PKTABLE_NAME);
@@ -425,7 +424,7 @@ public class Core {
 					if (toTable  != null) {
 						if (toTable.contains("*") || toTable.contains(fkColName)){
 							// pretend we never saw this FK link
-							continue; 
+							continue;
 						}
 					}
 				}
@@ -557,7 +556,7 @@ public class Core {
 
 
 	/**
-	 * 
+	 *
 	 *
 	 * @param tableName
 	 * @return
@@ -571,7 +570,7 @@ public class Core {
 
 		String etbl = SyncUtils.getTableName(tableName);
 		String ecat = SyncUtils.getTableCatalog(tableName);
-		if (!State.getInstance().ignoreEverythingExceptList.isEmpty()){ 
+		if (!State.getInstance().ignoreEverythingExceptList.isEmpty()){
 			if (!(State.getInstance().ignoreEverythingExceptList.contains(ecat + "." + etbl) ||
 					State.getInstance().ignoreEverythingExceptList.contains(ecat + ".*") ||
 					State.getInstance().ignoreEverythingExceptList.contains("*." + etbl) ||
@@ -588,7 +587,7 @@ public class Core {
 
 
 	/**
-	 * 
+	 *
 	 *
 	 * @param pkTableCat
 	 * @param pkTableName
@@ -660,11 +659,11 @@ public class Core {
 
 						if (whereClause == null || whereClause.equals("")){
 							whereClause = State.getInstance().getVersionCheckWhereClause().get("*");
-						} 
+						}
 
 						if (orderBy == null || orderBy.equals("")){
 							orderBy = State.getInstance().getVersionCheckOrderBy().get("*");
-						} 
+						}
 
 						if (whereClause != null && !whereClause.equals("")){
 							whereClause = "WHERE "+whereClause;
@@ -675,11 +674,11 @@ public class Core {
 						}
 
 						if (State.getInstance().dbMode==2) {
-							
+
 							query = String.format("SELECT %s FROM %s.%s %s %s", fieldList, verCat, verMatch.getKey(), whereClause, orderBy);
 						} else {
 							query = String.format("SELECT %s FROM `%s`.`%s` %s %s", fieldList, verCat, verMatch.getKey(), whereClause, orderBy);
-								
+
 						}
 							rs = dbmd.getConnection().createStatement().executeQuery(query);
 					}
@@ -691,7 +690,7 @@ public class Core {
 					}
 					if (rs != null) {
 						ResultSetMetaData rsmd = rs.getMetaData();
-						Map<String, List<String>> valuesRead = new TreeMap<String, List<String>>();
+						new TreeMap<String, List<String>>();
 						int numberOfColumns = rsmd.getColumnCount();
 						List<String> colNames = new LinkedList<String>();
 						for (int i = 1; i <= numberOfColumns; i++) {
@@ -710,7 +709,7 @@ public class Core {
 								rowValues.add(val);
 							}
 							versionRows.add(rowValues);
-						} 
+						}
 
 						State.getInstance().versionsRead.put(verCat + "." + verMatch.getKey(), versionRows);
 
@@ -779,10 +778,10 @@ public class Core {
 			TableObj tobj = State.getInstance().tables.get(tableName);
 			co.setTableObj(tobj); // convenience linking
 			tobj.setClazz(co); // convenience linking
-			
+
 			co.getImports().add("javax.persistence.Entity");
-			
-			
+
+
 			if ((State.getInstance().schemaRestrict != 0) || (co.getTableObj().getDbName().indexOf('_') >= 0) || !co.getClassName().equals(co.getTableObj().getDbName())) {
 				co.getImports().add("javax.persistence.Table");
 			}
@@ -911,14 +910,14 @@ public class Core {
 							property.setSequenceHibernateRef(property.getClazz().getClassPropertyName()+SyncUtils.upfirstChar(property.getFieldObj().getName())+"Generator");
 							co.getImports().add("javax.persistence.SequenceGenerator");
 							co.getImports().add("javax.persistence.GenerationType");
-						} 
+						}
 
 						else {
 								property.setGeneratorType(GeneratorEnum.AUTO);
-								
+
 							}
 						property.setGeneratedValue(true);
-						
+
 					}
 
 					if (tobj.getExportedKeys().containsKey(fieldName)) {
@@ -937,7 +936,7 @@ public class Core {
 					property.setJavaType(SyncUtils.mapSQLType(fieldObj));
 					if (property.getJavaType().equals("String")) {
 						property.setLength(fieldObj.getLength());
-						
+
 						if (property.isGeneratedValue()) {
 							HbnPojoGen.logE("PK with generated value with java type String detected. This is not supported by Hibernate unless you assign the ID manually. Expect unit tests to fail "+property);
 
@@ -1041,10 +1040,10 @@ public class Core {
 							break; // we should only find one
 						}
 					}
-					
-					
-				
-					
+
+
+
+
 					break;
 
 				case MANY_TO_ONE_FIELD:
@@ -1246,7 +1245,6 @@ public class Core {
 		addSuffixes(classes);
 
 		processLinkTables();
-		// System.out.println(State.getInstance().getClasses().get("wms.MarketingMaterials").getAllProperties().get("programs"));
 		disableBacklinks(classes);
 
 
@@ -1268,7 +1266,7 @@ public class Core {
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 * @param classPackage
 	 * @param className
@@ -1294,7 +1292,7 @@ public class Core {
 
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	private static void addSuffixes(TreeMap<String, Clazz> classes) {
@@ -1425,7 +1423,7 @@ public class Core {
 				// find the match on the inverse side and kill it off
 				for (PropertyObj search : link.getClazz().getProperties().values()) {
 					if ((search.isOneToMany() && search.getOneToManyLink().equals(property)) ||
-							(search.isManyToMany() && search.getManyToManyLink().getDstProperty().equals(property)) || 
+							(search.isManyToMany() && search.getManyToManyLink().getDstProperty().equals(property)) ||
 							(search.isOneToOne() && search.isOneTooneInverseSide() && search.getOneToOneLink().equals(property))) {
 						search.setOneToNBackLinkDisabled(true);
 
@@ -1731,13 +1729,13 @@ public class Core {
 				}
 				clazz.getImports().add("java.io.Serializable");
 			}
-			
+
 			if (!clazz.isEmbeddable() && !clazz.hasEmbeddableClass()) {
 				if (!clazz.isSubclass()){
 					clazz.getImports().add("java.util.Map");
 					clazz.getImports().add("java.util.Collections");
 					clazz.getImports().add("java.util.WeakHashMap");
-				
+
 				}
 				clazz.getImports().add("org.hibernate.proxy.HibernateProxy");
 				// clazz.getImports().add(clazz.getDataLayerImplFullClassName());
@@ -1848,7 +1846,7 @@ public class Core {
 							} else {
 								valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
 							}
-							
+
 							classannotation =
 								String
 								.format(
@@ -1912,7 +1910,7 @@ public class Core {
 				if (!property.isNullable()) {
 					clazz.getImports().add("javax.persistence.Basic");
 				}
-				
+
 				if (State.getInstance().isEnableHibernateValidator()) {
 					if (!property.getValidatorAnnotations().isEmpty()) {
 
@@ -2013,18 +2011,18 @@ public class Core {
 				State.getInstance().customAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
 			if (annotation == null){
 				annotation = State.getInstance().customAnnotations.get("*." + clazz.getClassName());
-				
+
 				if (annotation == null){
 					annotation = State.getInstance().customAnnotations.get(clazz.getClassPackage() + ".*");
-					
+
 					if (annotation == null){
 						annotation = State.getInstance().customAnnotations.get("*.*");
 					}
 
 				}
-				
+
 			}
-			
+
 			if (annotation != null) { // we have some custom annotation
 				for (Entry<String, PropertyObj> property : clazz.getProperties().entrySet()) {
 					CustomAnnotations settings = annotation.get(property.getValue().getJavaName());
@@ -2171,11 +2169,11 @@ public class Core {
 					srcProperty.setJavaName(dstPropertyBounce.getJavaName());
 					srcProperty.setPropertyName(dstPropertyBounce.getPropertyName());
 					srcJoin.setSrcPropertyBounce(srcPropertyBounce);
-					srcJoin.setDstPropertyBounce(dstPropertyBounce); 
+					srcJoin.setDstPropertyBounce(dstPropertyBounce);
 					dstJoin.setSrcPropertyBounce(srcPropertyBounce);
-					dstJoin.setDstPropertyBounce(dstPropertyBounce); 
-					
-					
+					dstJoin.setDstPropertyBounce(dstPropertyBounce);
+
+
 					dstProperty.setJavaType(srcPropertyBounce.getJavaType());
 					dstProperty.setJavaName(srcPropertyBounce.getJavaName());
 					dstProperty.setPropertyName(srcPropertyBounce.getPropertyName());
@@ -2347,8 +2345,8 @@ public class Core {
     public static boolean skipSchemaWrite(String catalog) {
         if (!State.getInstance().getNoOutPutForExceptSchemaList().isEmpty()){
         	return !State.getInstance().getNoOutPutForExceptSchemaList().contains(catalog);
-        } 
-        	
+        }
+
         return State.getInstance().getNoOutPutForSchemaList().contains(catalog);
     }
 

@@ -552,7 +552,7 @@ table section
 	Any property of any class in package util will/will not (depending on default) have Cascade=All 
 	suppressed.
 	
-	3. 	<except to-package="util" to-class="*" to-property="*" />
+	3. 	<except-to to-package="util" to-class="*" to-property="*" />
 	
 	Any property pointing to schema util will be suppressed.
 	

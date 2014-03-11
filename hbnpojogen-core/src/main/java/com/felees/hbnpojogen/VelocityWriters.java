@@ -96,7 +96,7 @@ public class VelocityWriters {
         notForInterfaceImports.add("javax.persistence.GeneratedValue");
         notForInterfaceImports.add("javax.persistence.SequenceGenerator");
         notForInterfaceImports.add("javax.persistence.Basic");
-        
+
         notForInterfaceImports.add("javax.persistence.Id");
         notForInterfaceImports.add("javax.persistence.ManyToMany");
         notForInterfaceImports.add("javax.persistence.OneToMany");
@@ -188,12 +188,12 @@ public class VelocityWriters {
             String pkImport = " ";
             if (clazz.hasEmbeddableClass()){
             	pkImport = "import "+clazz.getEmbeddableClass().getFullClassName()+";";
-            } 
+            }
             if (clazz.isEmbeddable() && !clazz.isSubclass()){
             	pkImport = "import java.io.Serializable;";
-            } 
-            
-            
+            }
+
+
             context.put("importPK", pkImport);
             context.put("packagename", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.DAOIMPL));
             context.put("daoImport", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.DAO));
@@ -215,7 +215,7 @@ public class VelocityWriters {
         }
     }
 
-   
+
 
 
     /**
@@ -494,11 +494,11 @@ public class VelocityWriters {
      * @param clazz
      * @param classWriter
      * @param isInterface
-     * @throws Exception 
-     * @throws ParseErrorException 
-     * @throws ResourceNotFoundException 
+     * @throws Exception
+     * @throws ParseErrorException
+     * @throws ResourceNotFoundException
      * @throws IOException
-     */ 
+     */
     public static void writeOutRepoClass(String projectName, String targetFolder, Clazz clazz) throws ResourceNotFoundException, ParseErrorException, Exception {
         if (!Core.skipSchemaWrite(clazz)) {
 
@@ -508,7 +508,7 @@ public class VelocityWriters {
                 context.put(PROJECTNAME, projectName);
                 context.put(CLASSCONST, clazz);
                 context.put(TOPLEVEL, State.getInstance().topLevel);
-                
+
                 context.put("packagename", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO));
                 context.put("impl", clazz.getFullClassName());
                 context.put("id", clazz.getTypeOfId());
@@ -638,7 +638,7 @@ public class VelocityWriters {
                 // Write Class
                 VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false);
 
-                
+
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, false);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
@@ -652,7 +652,7 @@ public class VelocityWriters {
                 if (State.getInstance().isEnableSpringData()) {
                 	VelocityWriters.writeOutRepoClass(State.getInstance().projectName, targetFolder, co);
                 }
-            
+
             }
         }
     }
@@ -696,7 +696,7 @@ public class VelocityWriters {
 
     /**
      * Writes out the unit test
-     * @param targetFolder 
+     * @param targetFolder
      *
      * @param classes
      * @param commitOrder
@@ -750,11 +750,11 @@ public class VelocityWriters {
                 // PackageTypeEnum.DAO) + ".*");
             }
             imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.FACTORY) + ".*");
-            
+
             if (!State.getInstance().isEnableSpringData()) {
 	            imports.add(clazz.getDataLayerImplFullClassName());
 	            imports.add(clazz.getDataLayerInterfaceFullClassName());
-	            
+
 	            imports.add("com.felees.hbnpojogen.persistence.IPojoGenEntity");
             } else {
             	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
@@ -780,7 +780,7 @@ public class VelocityWriters {
 
         VelocityContext context = new VelocityContext();
         context.put("springData", State.getInstance().isEnableSpringData());
-        
+
         context.put(PROJECTNAME, State.getInstance().projectName);
         context.put(CLASSES, tmpClasses);
         context.put(TABLES_REVERSE, vtablesReverse);
@@ -885,13 +885,12 @@ public class VelocityWriters {
                 if (Core.skipSchemaWrite(catalog)) {
                     continue;
                 }
-                String cat  = catalog;
                 catalog = SyncUtils.removeUnderscores(catalog);
                 TreeSet<String> imports = new TreeSet<String>(new CaseInsensitiveComparator());
 //                if (Core.skipSchemaWrite(cat)){
                 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.OBJECT) + ".*");
 //                }
-                
+
                 if (State.getInstance().isEnableSpringData()) {
                 	 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
                 	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
@@ -901,24 +900,24 @@ public class VelocityWriters {
 
                 }
 
-                
+
                 TreeMap<String, Clazz> tmpClasses = new TreeMap<String, Clazz>(new CaseInsensitiveComparator());
                 boolean hasImmutable = false;
                for (Entry<String, Clazz> co : classes.entrySet()) {
-                    
+
             	   if (co.getValue().isSubclass()){
             		   if (!Core.skipSchemaWrite(co.getValue().getExtendsFrom().getClazz().getTableObj().getDbCat())){
             			   imports.add(SyncUtils.getConfigPackage(co.getValue().getExtendsFrom().getClazz().getTableObj().getDbCat(), PackageTypeEnum.OBJECT) + ".*");
             		   }
             	   }
                     if (co.getValue().isImmutableAndNotStaticTest() && !co.getValue().isHiddenJoinTable() && !co.getValue().isAbstractClass()){
-                      hasImmutable = true;   
+                      hasImmutable = true;
                     }
-               } 
-                   
+               }
+
                 for (Entry<String, Clazz> co : classes.entrySet()) {
-                    
-                            
+
+
                     if (hasImmutable) {
                     	if (!State.getInstance().isEnableSpringData()){
                     		imports.add(co.getValue().getDataLayerInterfaceFullClassName());
@@ -932,7 +931,7 @@ public class VelocityWriters {
                         for (PropertyObj property : co.getValue().getAllPropertiesWithoutPFK().values()) {
                             if (!property.isNullable()) {
                                 if (!property.isAutoInc()) {
-                                	
+
                                 	 if (State.getInstance().isEnableSpringData()) {
                                     	 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
                                     	 imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
@@ -956,7 +955,7 @@ public class VelocityWriters {
                     }
 
                 }
-                
+
                 imports.add("org.springframework.stereotype.Component");
                 if (hasImmutable){
                     imports.add("org.springframework.beans.factory.annotation.Autowired");
@@ -980,7 +979,7 @@ public class VelocityWriters {
                 	commitOrder=commitOrder.substring(0, commitOrder.length()-2);
                 }
                 context.put("commitOrder", commitOrder);
-                
+
                 context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY));
                 String tmp = getAndCreateDataPoolFactoryPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", catalog);
                 PrintWriter daoFactoryWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
@@ -1045,17 +1044,17 @@ public class VelocityWriters {
         Set<String> packages = new TreeSet<String>();
         Set<String> repoPackages = new TreeSet<String>();
          for (String schema : State.getInstance().getSchemas()){
-        	
-        	if (!State.getInstance().ignoreEverythingExceptList.isEmpty() && 
+
+        	if (!State.getInstance().ignoreEverythingExceptList.isEmpty() &&
         			!State.getInstance().ignoreEverythingExceptList.contains(schema)){
     				continue;
     			}
-        	
+
         	if (State.getInstance().noOutPutForSchemaList.contains(schema)){
         		continue;
         	}
-    				
-    			
+
+
             String shortest = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAO);
             String item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAOIMPL);
             shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
@@ -1075,8 +1074,8 @@ public class VelocityWriters {
             shortest = StringUtils.removeEnd(shortest, ".");
             packages.add(shortest);
         }
-        
-        
+
+
         for (String schema : State.getInstance().getSchemas()){
         	repoPackages.add(SyncUtils.getConfigPackage(schema, PackageTypeEnum.TABLE_REPO));
         }
@@ -1092,28 +1091,28 @@ public class VelocityWriters {
         <property name="user" value="${db.connection.username}"/>
         <property name="password" value="${db.connection.password}"/>
         <property name="idleConnectionTestPeriod" value="${db.connection_pool.idle_connection_test_period}"/>
-        <property name="maxIdleTime" value="${db.connection_pool.max_idle_time}"/>         
+        <property name="maxIdleTime" value="${db.connection_pool.max_idle_time}"/>
         <property name="maxPoolSize" value="${db.connection_pool.max_pool_size}"/>
         <property name="minPoolSize" value="${db.connection_pool.min_pool_size}"/>
-        <property name="initialPoolSize" value="${db.connection_pool.initial_pool_size}"/>          
-        <property name="maxStatements" value="${db.connection_pool.max_statements}"/>            
-        <property name="acquireIncrement" value="${db.connection_pool.acquire_increment}"/>    
+        <property name="initialPoolSize" value="${db.connection_pool.initial_pool_size}"/>
+        <property name="maxStatements" value="${db.connection_pool.max_statements}"/>
+        <property name="acquireIncrement" value="${db.connection_pool.acquire_increment}"/>
         */
         boolean propOverride = !State.getInstance().isEnablePropertyPlaceholderConfigurer();
         String dialect;
         switch( State.getInstance().dbMode){
-        case 1 : dialect = "org.hibernate.dialect.SQLServerDialect"; break; 
+        case 1 : dialect = "org.hibernate.dialect.SQLServerDialect"; break;
         case 2:  dialect = "org.hibernate.dialect.PostgreSQLDialect"; break;
         default:
         	dialect = "org.hibernate.dialect.MySQLDialect"; break;
         }
-       
+
         context.put("dialect", State.getInstance().dbMode == 1  ? "org.hibernate.dialect.SQLServerDialect" : dialect);
         context.put("restrictCatalog", State.getInstance().dbMode == 1);
-        
+
         String db;
         switch( State.getInstance().dbMode){
-        case 1 : db = "jdbc:jtds:sqlserver"; break; 
+        case 1 : db = "jdbc:jtds:sqlserver"; break;
         case 2:  db = "jdbc:postgresql"; break;
         default:
         	db = "jdbc:mysql"; break;
@@ -1142,27 +1141,27 @@ public class VelocityWriters {
             context.put("dbInitPool", "${dbInitPool}");
             context.put("dbMaxStatements", "${statementsCacheSize}");
             context.put("dbAcquireIncrement", "${acquireIncrement}");
-        	
+
         }
         context.put("pool", State.getInstance().getConnectionPool().toUpperCase());
         context.put("useLDAP", State.getInstance().getUseLDAP());
         context.put("useLDAPImport", State.getInstance().isUseLDAPImport());
-        
+
         context.put("ldapServer", State.getInstance().getLdapServer());
         context.put("ldapBase", State.getInstance().getLdapBase());
         context.put("ldapCn", State.getInstance().getLdapCn());
-        
+
         context.put("useDynamicLdapDataSource", State.getInstance().isUseDynamicLDAPDataSource());
         context.put("jndiRef", "jdbc/"+State.getInstance().getProjectName());
         context.put("sessionfactoryitems", State.getInstance().getSessionFactoryItems());
         context.put("transactionManagerItems", State.getInstance().getTransactionManagerItems());
         context.put("additionalContextItems", State.getInstance().getAdditionalContextItems());
         context.put("propOverride", !State.getInstance().isEnablePropertyPlaceholderConfigurer());
-        
+
         appContextTemplate.merge(context, appContextWriter);
         appContextWriter.close();
     }
-    
+
     public static void writeSpringOverrideFile(String targetFolder)
     throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
 
@@ -1187,12 +1186,12 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         out.println("db.connection_pool.acquire_increment=3" );
 } else {
 	   out.println("mainDataSource.logStatementsEnabled=true");
-	      
+
 }
-        
+
         out.close();
-        
-      
+
+
 
 }
 
@@ -1260,7 +1259,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
 
     public static void writeUtils(String targetFolder)
             throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
-        
+
     	String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "IPojoGenEntity", "BasicDataGenerator"};
     	for (String s: utilClasses) {
     	Template appContextTemplate = Velocity.getTemplate("templates/"+s+".vm");
@@ -1295,7 +1294,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
         	return;
         }
 
-    	
+
     	Template hbnTemplate = Velocity.getTemplate("templates/datalayer.vm");
 
 
@@ -1375,8 +1374,8 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
                 continue;
             }
             VelocityContext context = new VelocityContext();
-            Set<String> gteList = new HashSet<String>();
-            
+            new HashSet<String>();
+
             for (Entry<String,List<String>> tmp : State.getInstance().getVersionColumnsRead().entrySet()) {
                 String cat = tmp.getKey().split("\\.")[0];
                 if (State.getInstance().dbMode == 2) {
@@ -1405,24 +1404,24 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
             }
             if (whereClause == null) {
                 whereClause = "";
-            } 
+            }
             if (!whereClause.trim().equals("")){
                 whereClause = "WHERE "+whereClause;
             }
             context.put("whereClause", whereClause);
-            
+
             String orderBy = State.getInstance().getVersionCheckOrderBy().get(schema);
             if (orderBy == null) {
                 orderBy = State.getInstance().getVersionCheckOrderBy().get("*");
             }
             if (orderBy == null) {
                 orderBy = "";
-            } 
+            }
             if (!orderBy.trim().equals("")){
                 orderBy = " ORDER BY "+orderBy;
             }
             context.put("orderBy", orderBy);
-            
+
             String tmp = getAndCreateDBVersionCheckLayerHelper(schema, targetFolder + "/" + State.getInstance().getSrcFolder() + "/");
             PrintWriter hbnWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 
@@ -1522,7 +1521,7 @@ if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
                     context.put("others", field.getValue().getEnumOtherCols());
                     context.put(TOPLEVEL, State.getInstance().topLevel);
                     context.put(CATALOG, catalog);
-                    
+
                     if (State.getInstance().isEnableSpringData()) {
                     	context.put("stringValuedEnum", SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnum");
                     } else {
