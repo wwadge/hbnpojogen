@@ -216,10 +216,10 @@
 
 #if ($dbMode == 2)
 <dependency>
-			<groupId>postgresql</groupId>
+			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 #if ($doPomVersion)			
-			<version>9.1-901-1.jdbc4</version>
+			<version>9.3-1100-jdbc41</version>
 #end			
 			<scope>runtime</scope>
 		</dependency>
