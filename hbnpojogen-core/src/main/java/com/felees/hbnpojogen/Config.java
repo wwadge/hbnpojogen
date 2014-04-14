@@ -17,7 +17,6 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.jvnet.inflector.Noun;
-import org.jvnet.inflector.Pluralizer;
 import org.jvnet.inflector.Rule;
 import org.jvnet.inflector.RuleBasedPluralizer;
 import org.jvnet.inflector.rule.RegexReplacementRule;
@@ -114,7 +113,7 @@ public class Config {
         fillEnumMap();
         // Build the annotations list
         fillVersionCheck();
-        
+
         // build the linkTables list
         fillLinkTableList();
         // build the list of declare one-to-one relations
@@ -143,22 +142,22 @@ public class Config {
         fillEqualityExcludes();
         fillTransientFields();
         fillUniqueKeys();
-        
+
         // switch config get List here:
         fillLdap();
         fillAnnotationList();
-        
+
         return path;
     }
 
 
     /**
-     * 
+     *
      *
      */
     @SuppressWarnings("unchecked")
     private static void fillEqualityExcludes() {
-            
+
             ArrayList<String> excludes = (ArrayList<String>) Config.config.getList("equalityExcludes.field");
             State.getInstance().getEqualityExcludes().addAll(excludes);
     }
@@ -189,14 +188,14 @@ public class Config {
             String className = Config.config.getString(String.format("cascading.%s.except(%d)[@class]", cascadeType, i), "*");
             String propertyName = Config.config.getString(String.format("cascading.%s.except(%d)[@property]", cascadeType, i), "*");
             List<String> cascadeL = Config.config.getList(String.format("cascading.%s.except(%d)[@cascade]", cascadeType, i));
-            
+
 
             if (!cascadeL.isEmpty()){
                  cascadeL.add("SAVE_UPDATE");
             }
-            
+
             Boolean enabled = Config.config.getBoolean(String.format("cascading.%s.except(%d)[@enabled]", cascadeType, i), !defaultXToX);
-            
+
             state.put(packageName+"."+className+"."+propertyName, new CascadeState(enabled, new HashSet<String>(cascadeL)));
         }
 
@@ -217,18 +216,18 @@ public class Config {
 
     }
 
-    
+
     /**
      */
     @SuppressWarnings("unchecked")
     private static void fillSuffix(){
         String defaultSuffix = Config.config.getString("suffix[@default]", "");
         Map<String, String> state = State.getInstance().getClassSuffixes();
-        
+
         state.put("*", defaultSuffix);
 
         ArrayList<Object> tmpSuffix = (ArrayList<Object>) Config.config.getList("suffix.except[@package]");
-        
+
         for (int i = 0; i < tmpSuffix.size(); i++) {
             String packageName = Config.config.getString(String.format("suffix.except(%d)[@package]", i), "*");
             String className = Config.config.getString(String.format("suffix.except(%d)[@class]",  i), "*");
@@ -244,13 +243,13 @@ public class Config {
         boolean enabled = Config.config.getBoolean("fakeFK[@enabled]", false);
         String pattern = Config.config.getString("fakeFK[@pattern]", "_DONT_MATCH_BY_DEFAULT_");
         String replacePattern = Config.config.getString("fakeFK[@replacePattern]", "$0");
-        
+
         TreeMap<String, FakeFKPattern> state = State.getInstance().getFakeFK();
-        
+
         state.put("*", new FakeFKPattern(pattern, replacePattern, enabled));
 
         ArrayList<Object> tmpSuffix = (ArrayList<Object>) Config.config.getList("fakeFK.except[@table]");
-        
+
         for (int i = 0; i < tmpSuffix.size(); i++) {
             String table = Config.config.getString(String.format("fakeFK.except(%d)[@table]", i), "*");
             String patternItem = Config.config.getString(String.format("fakeFK.except(%d)[@pattern]",  i), "*");
@@ -268,16 +267,16 @@ public class Config {
     private static void fillCustomPluralization(){
 
         ArrayList<Object> tmpRule = (ArrayList<Object>) Config.config.getList("customPluralization.rule[@regexmatch]");
-        
+
         List<Rule> customRules =  new ArrayList<Rule>();
-        
-        
+
+
         for (int i = 0; i < tmpRule.size(); i++) {
             String match = Config.config.getString(String.format("customPluralization.rule(%d)[@regexmatch]", i), "*");
             String replace = Config.config.getString(String.format("customPluralization.rule(%d)[@regexreplace]", i), "");
             customRules.add(new RegexReplacementRule(match, replace));
         }
-        
+
         State.getInstance().setCustomPluralizer(new RuleBasedPluralizer(customRules, Locale.ENGLISH, Noun.pluralizer(Locale.ENGLISH)));
 
     }
@@ -295,12 +294,12 @@ public class Config {
     	String defaultTable = Config.config.getString("versionCheck[@defaultTable]", "db_version");
     	String defaultVersionCheckWhereClause = Config.config.getString("versionCheck[@whereClause]", "");
     	String defaultVersionCheckOrderBy = Config.config.getString("versionCheck[@orderBy]", "");
-        
-        
+
+
     	if (!defaultEnable){
     		defaultTable = Config.DISABLED_FROM_CONFIG;
     	} else {
-    	
+
     	    State.getInstance().ignoreTableList.add("*."+defaultTable);
     	}
     	List defList = new LinkedList<String>();
@@ -316,7 +315,7 @@ public class Config {
     	State.getInstance().getVersionCheck().put("*", new ObjectPair<String, Set<String>>(defaultTable, fields));
     	State.getInstance().getVersionCheckWhereClause().put("*", defaultVersionCheckWhereClause);
     	State.getInstance().getVersionCheckOrderBy().put("*", defaultVersionCheckOrderBy);
-    	
+
     	ArrayList<Object> tmpVersion = (ArrayList<Object>) Config.config.getList("versionCheck.except[@schema]");
         for (int i = 0; i < tmpVersion.size(); i++) {
         	Boolean enabled = Config.config.getBoolean(String.format("versionCheck.except(%d)[@enabled]",  i), false);
@@ -495,7 +494,7 @@ public class Config {
            String table = Config.config.getString(String.format("uniqueKeys.unique(%d)[@table]", i));
            String field = Config.config.getString(String.format("uniqueKeys.unique(%d)[@field]", i));
            String fullTable = schema + "." + table;
-           
+
            TreeSet<String> entry = State.getInstance().getUniqueKeys().get(fullTable);
 
            if (entry == null) {
@@ -519,17 +518,17 @@ public class Config {
         for (int i = 0; i < tmp.size(); i++) {
             State.getInstance().ignoreTableList.add(tmp.get(i).toUpperCase());
             }
-        
+
         tmp = (ArrayList<String>) Config.config.getList("ignore.field");
         for (int i = 0; i < tmp.size(); i++) {
             State.getInstance().ignoreFieldList.put(tmp.get(i).toUpperCase(), Config.config.getList(String.format("ignore.field(%d)[@except-for]", i), null));
         }
-        
+
         tmp = (ArrayList<String>) Config.config.getList("ignore.everything-except.table");
         for (int i = 0; i < tmp.size(); i++) {
             State.getInstance().ignoreEverythingExceptList.add(tmp.get(i).toUpperCase());
         }
-        
+
 
     }
 
@@ -602,8 +601,8 @@ public class Config {
         String path = Config.config.getString(Constants.SOURCE_TARGET);
         State.getInstance().setSourceTarget(path);
         State.getInstance().setConnectionPool(Config.config.getString("connectionPool", "C3P0").toUpperCase());
-        
-				
+
+
         State.getInstance().projectName = Config.config.getString(Constants.PROJECT_NAME);
         HbnPojoGen.driver = Config.config.getString(Constants.DRIVER);
         HbnPojoGen.jdbcConnection = Config.config.getString(Constants.JDBC_CONNECTION_STRING);
@@ -625,11 +624,12 @@ public class Config {
         State.getInstance().setDisableLazyConnections(Config.config.getString("disableLazyConnections", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnablePropertyPlaceholderConfigurer(Config.config.getString("enablePropertyPlaceholderConfigurer", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setApplicationContextFilename(Config.config.getString("applicationContextFilename", "applicationContext.xml"));
+		State.getInstance().setDisableApplicationContext(Config.config.getBoolean("applicationContextFilename[@disableGeneration]", false));
         State.getInstance().setSessionFactoryItems(Config.config.getString("sessionFactory", ""));
         State.getInstance().setTransactionManagerItems(Config.config.getString("transactionManagerItems", ""));
         State.getInstance().setAdditionalContextItems(Config.config.getString("additionalContextItems", ""));
         State.getInstance().setSpringVersion(Config.config.getInt("springVersion", 2));
-        
+
         boolean mavenEnabled = State.getInstance().isMavenEnabled();
         String defaultSrc = mavenEnabled ?  "src/main/java" : "src";
         State.getInstance().setSrcFolder(Config.config.getString("sourceFolderName", defaultSrc));
@@ -720,7 +720,7 @@ public class Config {
         }
 
 
-            
+
         testValues = (ArrayList<Object>) Config.config.getList("testValues.target[@schema]");
         for (int i = 0; i < testValues.size(); i++) {
             String schema=Config.config.getString(String.format("testValues.target(%d)[@schema]", i));
@@ -855,7 +855,7 @@ public class Config {
    			// TODO Auto-generated catch block
    			e.printStackTrace();
    		}
-   		
+
         ArrayList<Object> tmpAnnotationClasses = (ArrayList<Object>) Config.config.getList("annotations.class[@name]");
 
         for (int i = 0; i < tmpAnnotationClasses.size(); i++) {
@@ -883,7 +883,7 @@ public class Config {
             TreeSet<String> tmpAnnotationExtends = new TreeSet<String>(new CaseInsensitiveComparator());
             tmpAnnotationExtends.addAll((ArrayList<String>) Config.config.getList(String.format("annotations.class(%d).extends.extend", i)));
             State.getInstance().customClassExtends.put(tmpAnnotationClasses.get(i).toString(), tmpAnnotationExtends);
-            
+
 
 
             // Build the annotations list

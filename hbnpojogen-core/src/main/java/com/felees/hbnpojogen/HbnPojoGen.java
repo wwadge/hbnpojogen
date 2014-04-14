@@ -49,14 +49,14 @@ public class HbnPojoGen {
 
 
     private static Set<String> errors = new HashSet<String>();
-    
+
     public static URL[] getSkeletonURL(String source) throws IOException {
-    	
+
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Enumeration[] e = new Enumeration[] {
                 cl.getResources(source),
             };
-        
+
         Set all = new LinkedHashSet();
         URL url;
         URLConnection conn;
@@ -69,8 +69,8 @@ public class HbnPojoGen {
                 conn.setDefaultUseCaches(false);
                 if (conn instanceof JarURLConnection) {
                     jarFile = ((JarURLConnection) conn).getJarFile();
-                } 
-                
+                }
+
                 if (jarFile != null) {
                     searchJar(cl, all, jarFile);
                 } else {
@@ -82,7 +82,7 @@ public class HbnPojoGen {
         return urlArray;
     }
 
-    private static boolean searchDir(Set result, File file) 
+    private static boolean searchDir(Set result, File file)
             throws IOException {
         if (file.exists() && file.isDirectory()) {
             File[] fc = file.listFiles();
@@ -93,7 +93,7 @@ public class HbnPojoGen {
                 if (fc[i].isDirectory()) {
                     result.add(fc[i].toURI().toURL());
                     searchDir(result, fc[i]);
-                } 
+                }
                     result.add(fc[i].toURI().toURL());
             }
             return true;
@@ -101,10 +101,10 @@ public class HbnPojoGen {
         return false;
     }
 
-   
-    
 
-   
+
+
+
     private static void searchJar(ClassLoader cl, Set result, JarFile file) throws IOException {
         Enumeration e = file.entries();
         JarEntry entry;
@@ -150,7 +150,7 @@ public class HbnPojoGen {
         BufferedReader br = new BufferedReader(new InputStreamReader(HbnPojoGen.class.getResource("/synchronizer.version").openStream()));
         State.getInstance().setSynchronizerVersion(br.readLine());
         br.close();
-        
+
         //SyncUtils.copyDirectory(new File("skeleton"), targetFolder);
 
         // Fetch the commit order of the db, this makes creation of test cases easier later on
@@ -208,7 +208,7 @@ public class HbnPojoGen {
             	State.getInstance().schemas.add(SyncUtils.getTableSchema(table));
             } else {
             	State.getInstance().schemas.add(SyncUtils.getTableCatalog(table));
-                    	
+
             }
         }
 
@@ -244,12 +244,14 @@ public class HbnPojoGen {
         VelocityWriters.writeOutDaoFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
 
         log("Stage 9: Writing Spring, EhCache configs, etc");
-        VelocityWriters.writeSpringApplicationContext(targetFolder, State.getInstance().classes, dbCatalog);
+        if (!State.getInstance().isDisableApplicationContext()){
+        		VelocityWriters.writeSpringApplicationContext(targetFolder, State.getInstance().classes, dbCatalog);
+        }
 //        VelocityWriters.writeAntBuildFile(targetFolder, dbCatalog);
         VelocityWriters.writeEHCache(targetFolder);
         VelocityWriters.writeUtils(targetFolder);
         VelocityWriters.writeSpringOverrideFile(targetFolder);
-        
+
 
         log("Stage 10: Writing DAO Test classes");
         VelocityWriters.writeOutDaoTestClass(targetFolder, State.getInstance().classes, commitOrder, srcFolder);
@@ -260,7 +262,7 @@ public class HbnPojoGen {
         log("Stage 12: Writing Data layer helpers");
         VelocityWriters.writeOutDataLayerHelpers(targetFolder, State.getInstance().classes, State.getInstance().schemas);
 
-        
+
         if (!State.getInstance().isMavenEnabled() || !State.getInstance().isMavenPomEnabled()){
         	log("Stage 13: Writing Maven pom.xml [Disabled]");
         } else {
@@ -404,7 +406,7 @@ public class HbnPojoGen {
     public static void setLog(Log log){
     	outputLogger = log;
     }
-    
+
     public static void log(String s){
     	if (outputLogger == null){
     		System.out.println(s);
@@ -413,10 +415,10 @@ public class HbnPojoGen {
     	}
     }
 
-    
+
     public static void logE(String s){
     	if (!errors.contains(s)){
-    		
+
     	if (outputLogger == null){
     		System.err.println(s);
     	} else {
@@ -428,7 +430,7 @@ public class HbnPojoGen {
 
     public static void run(String config, String overridePath, String overrideIP){
     	try{
-       
+
         String path = Config.parseConfig(config, overridePath, overrideIP);
 
         log("Hibernate POJO Generator\n");
@@ -471,7 +473,7 @@ public class HbnPojoGen {
                 log("Edit the templates (templates/*) and regenerate if the style is not to your liking");
                 System.exit(1);
             }
-            
+
             String overridePath = null;
             String overrideIP = null;
             String config = args[0];
@@ -484,7 +486,7 @@ public class HbnPojoGen {
 
             run(config, overridePath, overrideIP);
 
-        
+
     }
 
 

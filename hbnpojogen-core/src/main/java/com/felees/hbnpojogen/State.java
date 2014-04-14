@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.TreeSet;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
-import org.jvnet.inflector.Rule;
 import org.jvnet.inflector.RuleBasedPluralizer;
 
 import com.felees.hbnpojogen.SyncUtils.CommitResults;
@@ -74,7 +72,7 @@ implements Serializable {
 	public TreeMap<String, String> customClassCode = new TreeMap<String, String>(new CaseInsensitiveComparator());
 	/** Key = classname, value=extra class code */
 	public TreeMap<String, String> customClassCodeFields = new TreeMap<String, String>(new CaseInsensitiveComparator());
-    
+
     /** Key = classname, value=imports */
     public TreeMap<String, TreeSet<String>> customClassImports = new TreeMap<String, TreeSet<String>>(new CaseInsensitiveComparator());
     /** Key = classname, value=interface */
@@ -109,7 +107,7 @@ implements Serializable {
 	private Set<String> equalityExcludes = new HashSet<String>();
 	/** set of transient fields. */
 	private Set<String> transientFields = new HashSet<String>();
-	
+
 	/** prepopulate stuff */
 	public LinkedList<CustomDB> prepopulateList = new LinkedList<CustomDB>();
 	/** prepopulate stuff */
@@ -124,7 +122,7 @@ implements Serializable {
 	public TreeSet<String> noOutPutForSchemaList = new TreeSet<String>(new CaseInsensitiveComparator());
 	/** Schemas that should be written out to disk. */
 	public TreeSet<String> noOutPutForExceptSchemaList = new TreeSet<String>(new CaseInsensitiveComparator());
-	
+
 	/** Table representation of the DB */
 	public TreeMap<String, PackageMap> packageMaps = new TreeMap<String, PackageMap>(new CaseInsensitiveComparator());
 	/** Table representation of the DB */
@@ -157,6 +155,7 @@ implements Serializable {
 	public int dbMode = 0;
 	/** Inner handle. */
 	private String applicationContextFilename;
+	private boolean disableApplicationContext;
 	/** Inner handle. */
     private String sessionFactoryItems;
     /** Inner handle. */
@@ -189,7 +188,7 @@ implements Serializable {
     public boolean enableSpringData;
     public String springDataFactoryClass="";
     public String springDataRepoInterface=" org.springframework.data.jpa.repository.JpaRepository";
-    
+
 	/** enable validator. */
 	public boolean enableHibernateValidator;
 	/** disable backlinks in data pool factory */
@@ -237,7 +236,7 @@ implements Serializable {
 	public TreeMap<String, List<List<String>>> versionsRead = new TreeMap<String, List<List<String>>>();
 	/** key = schema.dbTable, value = Column names. */
 	public TreeMap<String, List<String>> versionColumnsRead = new TreeMap<String, List<String>>();
-	/** key = schema.dbTable, value = set of version column names marked with >= */ 
+	/** key = schema.dbTable, value = set of version column names marked with >= */
 	public TreeMap<String, Set<String>> versionGTE = new TreeMap<String, Set<String>>();
 	/** Maven setting.  */
     private String mavenDistributionManagement = "";
@@ -255,16 +254,16 @@ implements Serializable {
 	private String mavenArtifactId = "";
 	/** Maven setting.  */
 	private String mavenGroupId = "";
-	/** Key = package/classname, value = suffix */ 
+	/** Key = package/classname, value = suffix */
     public TreeMap<String, String> classSuffixes = new TreeMap<String, String>();
-	/** Key = table, value = {Pattern, enabled} */ 
+	/** Key = table, value = {Pattern, enabled} */
     public TreeMap<String, FakeFKPattern> fakeFK = new TreeMap<String, FakeFKPattern>();
     private TreeMap<String, HashSet<RelationItem>>  fakeFKmatched= new TreeMap<String, HashSet<RelationItem>> ();
-    
+
     private String ldapServer;
     private String ldapBase;
     private String ldapCn;
-    
+
 	public TreeMap<String, HashSet<RelationItem>> getFakeFKmatched() {
 		return fakeFKmatched;
 	}
@@ -286,7 +285,7 @@ implements Serializable {
 	public void setFakeFK(TreeMap<String, FakeFKPattern> fakeFK) {
 		this.fakeFK = fakeFK;
 	}
-	
+
 	public String getMavenArtifactId() {
 		return this.mavenArtifactId;
 	}
@@ -405,7 +404,7 @@ implements Serializable {
 
 
 
-	
+
 
 
 	/**
@@ -1590,11 +1589,11 @@ implements Serializable {
     }
 
 
-   
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public String getTransactionManagerItems() {
         return this.transactionManagerItems;
@@ -1602,11 +1601,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param transactionManagerItems 
+     * @param transactionManagerItems
      */
     public void setTransactionManagerItems(String transactionManagerItems) {
         this.transactionManagerItems = transactionManagerItems;
@@ -1614,11 +1613,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public String getAdditionalContextItems() {
         return this.additionalContextItems;
@@ -1626,11 +1625,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param additionalContextItems 
+     * @param additionalContextItems
      */
     public void setAdditionalContextItems(String additionalContextItems) {
         this.additionalContextItems = additionalContextItems;
@@ -1638,11 +1637,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public Set<String> getEqualityExcludes() {
         return this.equalityExcludes;
@@ -1650,11 +1649,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param equalityExcludes 
+     * @param equalityExcludes
      */
     public void setEqualityExcludes(Set<String> equalityExcludes) {
         this.equalityExcludes = equalityExcludes;
@@ -1662,11 +1661,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public boolean isEnableJodaSupport() {
         return this.enableJodaSupport;
@@ -1674,11 +1673,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param enableJodaSupport 
+     * @param enableJodaSupport
      */
     public void setEnableJodaSupport(boolean enableJodaSupport) {
         this.enableJodaSupport = enableJodaSupport;
@@ -1686,11 +1685,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public String getMavenAdditionalPomEntries() {
         return this.mavenAdditionalPomEntries;
@@ -1698,11 +1697,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param mavenAdditionalPomEntries 
+     * @param mavenAdditionalPomEntries
      */
     public void setMavenAdditionalPomEntries(String mavenAdditionalPomEntries) {
         this.mavenAdditionalPomEntries = mavenAdditionalPomEntries;
@@ -1710,14 +1709,14 @@ implements Serializable {
 
 
 
-  
 
 
-    
+
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeMap<String, String> getTestDataPools() {
         return this.testDataPools;
@@ -1725,11 +1724,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param testDataPools 
+     * @param testDataPools
      */
     public void setTestDataPools(TreeMap<String, String> testDataPools) {
         this.testDataPools = testDataPools;
@@ -1737,11 +1736,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public Map<String, Boolean> getImmutableTables() {
         return this.immutableTables;
@@ -1749,11 +1748,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param immutableTables 
+     * @param immutableTables
      */
     public void setImmutableTables(Map<String, Boolean> immutableTables) {
         this.immutableTables = immutableTables;
@@ -1761,11 +1760,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeMap<String, TreeMap<String, TreeSet<String>>> getNoFollowTables() {
         return this.noFollowTables;
@@ -1773,11 +1772,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param noFollowTables 
+     * @param noFollowTables
      */
     public void setNoFollowTables(TreeMap<String, TreeMap<String, TreeSet<String>>> noFollowTables) {
         this.noFollowTables = noFollowTables;
@@ -1785,11 +1784,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeMap<String, String> getClassSuffixes() {
         return this.classSuffixes;
@@ -1797,11 +1796,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param classSuffixes 
+     * @param classSuffixes
      */
     public void setClassSuffixes(TreeMap<String, String> classSuffixes) {
         this.classSuffixes = classSuffixes;
@@ -1810,7 +1809,7 @@ implements Serializable {
 
 
     /**
-     * 
+     *
      *
      * @param ruleBasedPluralizer
      */
@@ -1820,11 +1819,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public RuleBasedPluralizer getCustomPluralizer() {
         return this.customPluralizer;
@@ -1832,11 +1831,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeSet<String> getIgnoreEverythingExceptList() {
         return this.ignoreEverythingExceptList;
@@ -1844,11 +1843,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param ignoreEverythingExceptList 
+     * @param ignoreEverythingExceptList
      */
     public void setIgnoreEverythingExceptList(TreeSet<String> ignoreEverythingExceptList) {
         this.ignoreEverythingExceptList = ignoreEverythingExceptList;
@@ -1856,11 +1855,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeMap<String, TreeSet<String>> getUniqueKeys() {
         return this.uniqueKeys;
@@ -1868,11 +1867,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param uniqueKeys 
+     * @param uniqueKeys
      */
     public void setUniqueKeys(TreeMap<String, TreeSet<String>> uniqueKeys) {
         this.uniqueKeys = uniqueKeys;
@@ -1880,11 +1879,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public String getConnectionPool() {
         return this.connectionPool;
@@ -1892,11 +1891,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param connectionPool 
+     * @param connectionPool
      */
     public void setConnectionPool(String connectionPool) {
         this.connectionPool = connectionPool;
@@ -1904,11 +1903,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Gets 
+     * Gets
      *
-     * @return 
+     * @return
      */
     public TreeMap<String, String> getVersionCheckWhereClause() {
         return this.versionCheckWhereClause;
@@ -1916,11 +1915,11 @@ implements Serializable {
 
 
 
-    
+
     /**
-     * Sets 
+     * Sets
      *
-     * @param versionCheckWhereClause 
+     * @param versionCheckWhereClause
      */
     public void setVersionCheckWhereClause(TreeMap<String, String> versionCheckWhereClause) {
         this.versionCheckWhereClause = versionCheckWhereClause;
@@ -1958,7 +1957,7 @@ implements Serializable {
 
 	public void setMavenArtifactVersionsDisabled(boolean disabled) {
 		this.mavenArtifactVersionsDisabled = disabled;
-		
+
 	}
 
 
@@ -1989,7 +1988,7 @@ implements Serializable {
 
 	public void setUseLDAPImport(boolean useLDAPImport) {
 		this.useLDAPImport = useLDAPImport;
-		
+
 	}
 
 
@@ -2005,7 +2004,7 @@ implements Serializable {
 
 	public void setSynchronizerVersion(String version) {
 		this.synchronizerVersion = version;
-		
+
 	}
 
 
@@ -2149,7 +2148,7 @@ implements Serializable {
 
 	public void setMavenNoDeps(boolean noDeps) {
 		this.mavenNoDeps = noDeps;
-		
+
 	}
 
 
@@ -2358,6 +2357,24 @@ implements Serializable {
 	 */
 	protected void setSpringDataRepoInterface(String springDataRepoInterface) {
 		this.springDataRepoInterface = springDataRepoInterface;
+	}
+
+
+
+	/**
+	 * @return the disableApplicationContext
+	 */
+	public boolean isDisableApplicationContext() {
+		return disableApplicationContext;
+	}
+
+
+
+	/**
+	 * @param disableApplicationContext the disableApplicationContext to set
+	 */
+	public void setDisableApplicationContext(boolean disableApplicationContext) {
+		this.disableApplicationContext = disableApplicationContext;
 	}
 
 

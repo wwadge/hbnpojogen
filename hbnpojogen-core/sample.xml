@@ -59,7 +59,7 @@
 	<testResourceFolder>src/test/resources</testResourceFolder>
 	
 	<!--  Target name for spring context file. -->
-	<applicationContextFilename>applicationContext.xml</applicationContextFilename>
+	<applicationContextFilename disableGeneration="false">applicationContext.xml</applicationContextFilename>
 	
 	<!--  Any custom entries to insert in the sessionFactory bean definition of
 	the generated application context. Useful when you add interceptors and so on.

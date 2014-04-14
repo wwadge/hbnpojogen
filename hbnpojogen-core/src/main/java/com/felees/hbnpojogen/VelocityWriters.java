@@ -1102,7 +1102,7 @@ public class VelocityWriters {
         String dialect;
         switch( State.getInstance().dbMode){
         case 1 : dialect = "org.hibernate.dialect.SQLServerDialect"; break;
-        case 2:  dialect = "org.hibernate.dialect.PostgreSQLDialect"; break;
+        case 2:  dialect = "org.hibernate.dialect.PostgreSQL9Dialect"; break;
         default:
         	dialect = "org.hibernate.dialect.MySQLDialect"; break;
         }
