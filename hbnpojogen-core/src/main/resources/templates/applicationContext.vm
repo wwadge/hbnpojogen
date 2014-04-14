@@ -201,11 +201,11 @@
         <property name="jpaProperties">
     <props>
     				<prop key="hibernate.dialect">$dialect</prop>
-				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
 				<prop key="hibernate.show_sql">false</prop>
 			    <prop key="hibernate.cache.use_second_level_cache">true</prop>
 				<prop key="hibernate.cache.use_query_cache">true</prop>
-				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</prop>
+            		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
        </props>
     </property>
     

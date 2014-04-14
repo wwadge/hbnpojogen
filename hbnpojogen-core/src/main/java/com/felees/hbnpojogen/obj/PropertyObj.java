@@ -1007,7 +1007,7 @@ implements Serializable {
 
 		if (State.getInstance().isEnableJodaSupport()){
 		    if (this.javaType.equalsIgnoreCase("DateTime")){
-		        result.add("@Type(type=\"org.joda.time.contrib.hibernate.PersistentDateTime\")");
+		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.joda.PersistentDateTime\")");
 		    }
 		}
 		if (State.getInstance().isEnableHibernateValidator()) {

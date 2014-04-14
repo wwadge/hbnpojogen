@@ -13,8 +13,8 @@ import java.util.Properties;
 
 
 import org.hibernate.HibernateException;
-import org.hibernate.usertype.EnhancedUserType;
 import org.hibernate.usertype.ParameterizedType;
+import org.hibernate.engine.spi.SessionImplementor;
 
 import static ${packagename}.StringValuedEnumReflect.*;
 
@@ -27,9 +27,8 @@ import static ${packagename}.StringValuedEnumReflect.*;
 //Please notice the calls to getNameFromValue *************************
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class StringValuedEnumType <T extends Enum & StringValuedEnum> 
-        implements EnhancedUserType, ParameterizedType {
+        implements org.hibernate.usertype.UserType, ParameterizedType {
 
-	
     /**
      * Enum class for this particular user type.
      */
@@ -225,6 +224,50 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
         return x.hashCode();
     }
 
+    @Override
+    public Object nullSafeGet(ResultSet resultSet, String[] strings, SessionImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
+
+        if (pgEnum){
+            Object object = resultSet.getObject(strings[0]);
+            if (resultSet.wasNull()) {
+                object = getDefaultValue();
+                if (object == null) { //no default value
+                    return null;
+                }
+            }
+
+            String name = getNameFromValue(enumClass, object);
+            Object res = resultSet.wasNull() ? null : Enum.valueOf(enumClass, name);
+
+            return res;
+        }
+
+        String value = resultSet.getString( strings[0] );
+        if (value == null) {
+            value = getDefaultValue();
+            if (value == null) { //no default value
+                return null;
+            }
+        }
+        String name = getNameFromValue(enumClass, value);
+        Object res = resultSet.wasNull() ? null : Enum.valueOf(enumClass, name);
+
+        return res;
+    }
+
+    @Override
+    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
+        if (value == null) {
+            preparedStatement.setNull(index, Types.CHAR);
+        } else {
+            if (pgEnum){
+                preparedStatement.setObject( index, ((T) value).getValue(), 1111 ); // 1111 = java.sql.Types "OTHER"
+            } else {
+                preparedStatement.setString( index, ((T) value).getValue() );
+            }
+        }
+    }
+
     /** Replace.
     * @param original original
     * @param target target
@@ -246,21 +289,4 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
         return '\'' + ((T) value).getValue() + '\'';
     }
 
-   /** toXMLString.
-    * @param value value
-    * @return internal
-    */
-    public String toXMLString(Object value) {
-        return ((T) value).getValue();
-    }
-
-   /** fromXMLString.
-    * @param xmlValue value
-    * @return internal
-    */
-     public Object fromXMLString(String xmlValue) {
-        String name = getNameFromValue(this.enumClass, xmlValue);
-        return Enum.valueOf(this.enumClass, name);
-    }
-        
 }

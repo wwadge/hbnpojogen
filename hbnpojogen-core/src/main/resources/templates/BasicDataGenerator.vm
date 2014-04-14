@@ -665,6 +665,7 @@ public class BasicDataGenerator {
        * @param className The full path of the Class with enums
        * @return A random enum from the class
        */
+      @SuppressWarnings("unchecked")
       public static <T extends Enum<?>> T generateRandomEnumFromClass(String className) {
           Class<T> loadedClass = null;
           T result = null;
