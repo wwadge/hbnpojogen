@@ -614,8 +614,6 @@ public class Config {
         State.getInstance().disableEnglishPlural = Config.config.getString(Constants.DISABLE_ENGLISH_PLURAL, "false").equalsIgnoreCase("TRUE");
         State.getInstance().disableTestRollback = Config.config.getString("disableTestRollback", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableStateSave = Config.config.getString("enableStateSave", "false").equalsIgnoreCase("TRUE");
-        State.getInstance().enableMockitoBeans = Config.config.getString("enableMockitoBeans", "true").equalsIgnoreCase("TRUE");
-		State.getInstance().setMockitoFilename(Config.config.getString("enableMockitoBeans[@filename]", "beans.test.mockito.xml"));
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setEnableJodaSupport(Config.config.getString("enableJodaSupport", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnableSpringData(Config.config.getString("enableSpringData", "true").equalsIgnoreCase("TRUE"));

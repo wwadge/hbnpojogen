@@ -151,9 +151,6 @@ implements Serializable {
 	public boolean disableTestRollback = false;
 	/** If true, hibernate pojo gen state will be dumped to disk. */
 	public boolean enableStateSave = false;
-	/** If true, generate mockito context file. */
-	public boolean enableMockitoBeans = true;
-	public String mockitoFilename;
 	/** 0=MySQL, 1=MSSQL, 2=POSTGRESQL */
 	public int dbMode = 0;
 	/** Inner handle. */
@@ -2378,42 +2375,6 @@ implements Serializable {
 	 */
 	public void setDisableApplicationContext(boolean disableApplicationContext) {
 		this.disableApplicationContext = disableApplicationContext;
-	}
-
-
-
-	/**
-	 * @return the enableMockitoBeans
-	 */
-	public boolean isEnableMockitoBeans() {
-		return enableMockitoBeans;
-	}
-
-
-
-	/**
-	 * @param enableMockitoBeans the enableMockitoBeans to set
-	 */
-	public void setEnableMockitoBeans(boolean enableMockitoBeans) {
-		this.enableMockitoBeans = enableMockitoBeans;
-	}
-
-
-
-	/**
-	 * @return the mockitoFilename
-	 */
-	public String getMockitoFilename() {
-		return mockitoFilename;
-	}
-
-
-
-	/**
-	 * @param mockitoFilename the mockitoFilename to set
-	 */
-	public void setMockitoFilename(String mockitoFilename) {
-		this.mockitoFilename = mockitoFilename;
 	}
 
 
