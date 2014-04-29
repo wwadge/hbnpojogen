@@ -219,7 +219,7 @@
     <property name="jpaVendorAdapter">
         <bean 
           class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-            <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
+            <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect" />
 			
 			 
         </bean>
