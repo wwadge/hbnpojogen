@@ -41,6 +41,10 @@
 	<!-- Enable this to use Joda dateTime instead of java.util.Date -->
 	<enableJodaSupport>false</enableJodaSupport>
 	
+	<!--  If not disabled, generates a spring context containing mock objects for each repository
+	for testing. Use the name tag to define the context filename. Default: true and filename set to beans.test.mockito.xml -->
+	<enableMockitoBeans filename="some.file.name.xml">true</enableMockitoBeans>
+	
 	<!--  Enable this to add @NotNull and @Length annotations where appropriate. 
 	Requires hibernate validator jar to be in your classpath. -->
 	<enableHibernateValidator>false</enableHibernateValidator>

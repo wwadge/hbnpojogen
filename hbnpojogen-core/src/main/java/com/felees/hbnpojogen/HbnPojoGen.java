@@ -270,10 +270,15 @@ public class HbnPojoGen {
         	VelocityWriters.writeMavenPom(targetFolder);
         }
 
-        if (State.getInstance().isVersionCheckEnabled()){
         	log("Stage 14: Writing DB Version Check helpers");
-        	VelocityWriters.writeOutDBVersionCheck(targetFolder, State.getInstance().classes, State.getInstance().schemas);
+        	if (State.getInstance().isVersionCheckEnabled()){
+        		VelocityWriters.writeOutDBVersionCheck(targetFolder, State.getInstance().classes, State.getInstance().schemas);
+        	}
+        if (State.getInstance().isEnableMockitoBeans()){
+        	log("Stage 15: Writing mockito test context file");
+        	VelocityWriters.writeOutMockitoBean(targetFolder, State.getInstance().classes, State.getInstance().schemas);
         }
+
         printStatistics(State.getInstance().classes, ignoredTables);
 
         long endTime = System.currentTimeMillis() - startTime;
