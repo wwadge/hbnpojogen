@@ -20,7 +20,7 @@
 #if ($v2SpringVersion)
 		<springVersion>2.5.6</springVersion>
 #else
-		<springVersion>4.0.0.RELEASE</springVersion>
+		<springVersion>4.0.3.RELEASE</springVersion>
 #end
 	</properties>
 #end
@@ -34,7 +34,7 @@
     <groupId>com.mysema.querydsl</groupId>
     <artifactId>querydsl-core</artifactId>
 #if ($doPomVersion)			
-    <version>2.3.2</version>
+    <version>3.3.0</version>
 #end
 </dependency>
 
@@ -42,7 +42,7 @@
     <groupId>com.mysema.querydsl</groupId>
     <artifactId>querydsl-apt</artifactId>
 #if ($doPomVersion)			
-    <version>2.3.2</version>
+    <version>3.3.0</version>
 #end
 </dependency>
 
