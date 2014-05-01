@@ -6,9 +6,9 @@ import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import com.felees.hbnpojogen.CaseInsensitiveComparator;
 import com.felees.hbnpojogen.HbnPojoGen;
@@ -126,7 +126,7 @@ implements Serializable, Comparable<Clazz> {
 
 	/** A list of enums that is used in the getXXXsubclassType(); */
 	private List<String> subclassEnum = new LinkedList<String>();
-	/** The className as computed internally prior to adding optional suffixes 
+	/** The className as computed internally prior to adding optional suffixes
 	 * defined by the config.
 	 */
 	private String classNameNoSuffix;
@@ -1479,6 +1479,14 @@ implements Serializable, Comparable<Clazz> {
 		 return "dataLayer" + SyncUtils.upfirstChar(this.classPackage) + "Impl";
 	 }
 
+	 /**
+	  * Returns the spring bean name assigned to the data layer handling this class
+	  *
+	  * @return bean name
+	  */
+	 public String getMockRepoBeanName() {
+		 return "mock" + SyncUtils.upfirstChar(this.className);
+	 }
 
 
 	 /**
@@ -1748,9 +1756,9 @@ implements Serializable, Comparable<Clazz> {
 
 
 	  /**
-	   * Gets 
+	   * Gets
 	   *
-	   * @return 
+	   * @return
 	   */
 	  public boolean isImmutable() {
 		  Map<String, Boolean> immutableTables = State.getInstance().getImmutableTables();
@@ -1777,9 +1785,9 @@ implements Serializable, Comparable<Clazz> {
 	  }
 
 	  /**
-	   * Gets 
+	   * Gets
 	   *
-	   * @return 
+	   * @return
 	   */
 	  public boolean isImmutableAndNotStaticTest() {
 		  Map<String, Boolean> immutableTables = State.getInstance().getImmutableTables();
@@ -1810,9 +1818,9 @@ implements Serializable, Comparable<Clazz> {
 
 
 	  /**
-	   * Gets 
+	   * Gets
 	   *
-	   * @return 
+	   * @return
 	   */
 	  public String getSuffix() {
 		  return this.suffix;
@@ -1822,9 +1830,9 @@ implements Serializable, Comparable<Clazz> {
 
 
 	  /**
-	   * Sets 
+	   * Sets
 	   *
-	   * @param suffix 
+	   * @param suffix
 	   */
 	  public void setSuffix(String suffix) {
 		  this.suffix = suffix;
@@ -1834,9 +1842,9 @@ implements Serializable, Comparable<Clazz> {
 
 
 	  /**
-	   * Gets 
+	   * Gets
 	   *
-	   * @return 
+	   * @return
 	   */
 	  public String getClassNameNoSuffix() {
 		  return this.classNameNoSuffix;
@@ -1846,9 +1854,9 @@ implements Serializable, Comparable<Clazz> {
 
 
 	  /**
-	   * Sets 
+	   * Sets
 	   *
-	   * @param classNameNoSuffix 
+	   * @param classNameNoSuffix
 	   */
 	  public void setClassNameNoSuffix(String classNameNoSuffix) {
 		  this.classNameNoSuffix = classNameNoSuffix;

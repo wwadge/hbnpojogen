@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1679,9 +1680,23 @@ public class VelocityWriters {
 
 		PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 		VelocityContext context = new VelocityContext();
-		context.put(CLASSES, classes);
+		List<Clazz> classesToExpose = new LinkedList<Clazz>();
+		for (Clazz clazz: classes.values()){
+			if ( !Core.skipSchemaWrite(clazz) && (!clazz.isHiddenJoinTable())) {
+				classesToExpose.add(clazz);
+			}
+		}
+		Collections.sort(classesToExpose, new Comparator<Clazz>() {
+			/* (non-Javadoc)
+			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+			 */
+			@Override
+			public int compare(Clazz o1, Clazz o2) {
+				return o1.getClassName().compareTo(o2.getClassName());
+			}
 
-
+		});
+		context.put(CLASSES, classesToExpose);
 		appContextTemplate.merge(context, appContextWriter);
 		appContextWriter.close();
 	}

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans profile="enableRepositoryMocks" xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
- #foreach( $class in $classes )
-        <bean class="org.mockito.Mockito" factory-method="mock" primary="true">
+#foreach( $class in $classes )
+        <bean id="${class.getMockRepoBeanName()}" class="org.mockito.Mockito" factory-method="mock" primary="true">
             <constructor-arg value="${class.getRepositoryFullClassName()}" />
         </bean>
 #end
