@@ -13,18 +13,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.IOUtils;
@@ -36,7 +26,8 @@ import org.jvnet.inflector.Noun;
 import com.felees.hbnpojogen.db.FieldObj;
 import com.felees.hbnpojogen.obj.Clazz;
 import com.felees.hbnpojogen.obj.PropertyObj;
-
+import org.jvnet.inflector.Rule;
+import org.jvnet.inflector.RuleBasedPluralizer;
 
 
 /**
@@ -1006,15 +997,14 @@ implements Serializable {
 	 * @return nice english
 	 */
 	public static String pluralize(String input) {
-		String result = input;
-		if (!State.getInstance().disableEnglishPlural && Locale.getDefault().getLanguage().equals("en")) {
+        String result = input;
+        if (!State.getInstance().disableEnglishPlural) {
+            String tmp = Noun.pluralOf(input.substring(0, 1).toLowerCase() + input.substring(1), State.getInstance().getCustomPluralizer());
+            result = input.substring(0, 1) + tmp.substring(1);
+        }
 
-			String tmp = Noun.pluralOf(input.substring(0, 1).toLowerCase() + input.substring(1), State.getInstance().getCustomPluralizer());
-			result = input.substring(0, 1) + tmp.substring(1);
-		}
-
-		return result;
-	}
+        return result;
+    }
 
 
 
