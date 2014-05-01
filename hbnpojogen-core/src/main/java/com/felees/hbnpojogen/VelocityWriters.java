@@ -1680,6 +1680,7 @@ public class VelocityWriters {
 
 		PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 		VelocityContext context = new VelocityContext();
+
 		List<Clazz> classesToExpose = new LinkedList<Clazz>();
 		for (Clazz clazz: classes.values()){
 			if ( !Core.skipSchemaWrite(clazz) && (!clazz.isHiddenJoinTable())) {
