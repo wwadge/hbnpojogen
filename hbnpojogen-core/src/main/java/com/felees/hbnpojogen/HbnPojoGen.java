@@ -479,6 +479,7 @@ public class HbnPojoGen {
                 System.exit(1);
             }
 
+            System.setProperty("line.separator", "\n");
             String overridePath = null;
             String overrideIP = null;
             String config = args[0];

@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -401,6 +404,13 @@ public class VelocityWriters {
 
 
 
+	public static long bytesToLong(byte[] bytes) {
+	    ByteBuffer buffer = ByteBuffer.allocate(100);
+	    buffer.put(bytes);
+	    buffer.flip();//need flip
+	    return buffer.getLong();
+	}
+
 	/**
 	 * Writes out the class representing the table
 	 *
@@ -409,9 +419,10 @@ public class VelocityWriters {
 	 * @param classWriter
 	 * @param isInterface
 	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public static void writeClass(final String projectName, final Clazz clazz, final PrintWriter classWriter, boolean isInterface)
-			throws IOException {
+			throws IOException, NoSuchAlgorithmException {
 		if (!Core.skipSchemaWrite(clazz)) {
 
 			TreeSet<String> imports = new TreeSet<String>();
@@ -468,7 +479,11 @@ public class VelocityWriters {
 			context.put("classCustomCodeFields", clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
 			context.put("isSubtypeGenerationEnabled", !State.getInstance().disableSubtypeEnumGeneration);
-			context.put("serial", (serialCount++) + "L");
+			 MessageDigest hash = MessageDigest.getInstance("MD5");
+
+
+
+			context.put("serial", String.valueOf(bytesToLong(hash.digest(clazz.getClassName().getBytes())))+"L");
 			if (clazz.isEmbeddable() || clazz.hasCompositeKey()) {
 				context.put("properties", clazz.getAllProperties());
 			}
