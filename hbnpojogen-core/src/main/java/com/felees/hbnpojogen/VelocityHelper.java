@@ -3,9 +3,9 @@ package com.felees.hbnpojogen;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import com.felees.hbnpojogen.obj.Clazz;
 import com.felees.hbnpojogen.obj.PropertyObj;
@@ -45,6 +45,13 @@ public class VelocityHelper {
         return SyncUtils.upfirstChar(s);
     }
 
+
+    public static String maybeImplements(String s) {
+        return s.trim().equals("") ? "" : "implements "+s;
+    }
+
+
+
     /**
      * @param clazz
      * @return a valid enum path
@@ -61,7 +68,7 @@ public class VelocityHelper {
 
     public String convertListToStringList(List<String> list){
         String result = "";
-        
+
         for (String entry: list){
             result = result + "\""+entry+"\", ";
         }
@@ -104,7 +111,7 @@ public class VelocityHelper {
 
             case java.sql.Types.OTHER:
             	if (fieldColumnType.equalsIgnoreCase("UUID")){
-            		returnValue= java.util.UUID.randomUUID().toString(); 
+            		returnValue= java.util.UUID.randomUUID().toString();
             	} else {
             		returnValue= "new Object();";
             	}
@@ -175,21 +182,21 @@ public class VelocityHelper {
 
     public String doExtends(Clazz clazz){
     	TreeSet<String> entries = new TreeSet<String>();
-    	
+
     	if (clazz.isSubclass()){
-    		entries.add(clazz.getExtendsFrom().getClazz().getClassName()); 
+    		entries.add(clazz.getExtendsFrom().getClazz().getClassName());
     	}
-    	
+
     	entries.addAll(clazz.getCustomExtends());
-    	
-    	
+
+
     	String result = "";
     	if (!entries.isEmpty()){
     		for (String s: entries){
     			result = result+ ", "+ s;
     		}
     		result = " extends "+result.substring(2);
-    		
+
     	}
     	return result;
     }
@@ -318,7 +325,7 @@ public class VelocityHelper {
         	if (State.getInstance().isEnableSpringData()) {
         		result.add(entry.getKey().getRepositoryClassNamePropertyName()+".save("+
         				entry.getValue()+")");
-        		
+
         	} else {
         		result.add(entry.getKey().getFullHibernateDAOFactory()+".get"+entry.getKey().getClassName()+"Dao().saveOrUpdate("+
         				entry.getValue()+")");
@@ -368,7 +375,7 @@ public class VelocityHelper {
                     tmp = testHandle + ".get" + property.getJavaName() + "()";
                 }
                 // make recursive call inside this item
-                if (property.isManyToOne()){ 
+                if (property.isManyToOne()){
                 	result.addAll(getUncascadedInternal(property.getManyToOneLink().getClazz(), tmp, seen, full));
                 if (property.getManyToOneLink().isIdField() && (!property.isManyToOneCascadeEnabledByConfig() || !property.getManyToOneLink().isAutoInc())) {
                     result.add(new ObjectPair<Clazz, String>(property.getManyToOneLink().getClazz(), tmp));
@@ -377,7 +384,7 @@ public class VelocityHelper {
                 	result.addAll(getUncascadedInternal(property.getOneToOneLink().getClazz(), tmp, seen, full));
                     if (property.getOneToOneLink().isIdField() && !property.isOneToOneCascadeEnabledByConfig() ) {
                         result.add(new ObjectPair<Clazz, String>(property.getOneToOneLink().getClazz(), tmp));
-                    }	
+                    }
                 }
             }
             else {
@@ -713,11 +720,11 @@ public class VelocityHelper {
                         break;
                     case java.sql.Types.OTHER:
                      	if (fieldColumntype.equalsIgnoreCase("UUID")){
-                    		returnValue= "java.util.UUID.randomUUID()"; 
+                    		returnValue= "java.util.UUID.randomUUID()";
                     	} else {
                     		returnValue= "new Object();";
                     	}
-           
+
                     	break;
                     case java.sql.Types.ROWID:
                     case java.sql.Types.NCLOB:
@@ -892,8 +899,8 @@ public class VelocityHelper {
     public static boolean isPGSQL() {
         return State.getInstance().dbMode == 2;
     }
-    
-    
+
+
 
     public static String getClassName(String name){
     	try {

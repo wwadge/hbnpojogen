@@ -463,7 +463,9 @@ public class VelocityWriters {
 				}
 
 				imports.addAll(clazz.getImports());
-				imports.add(clazz.getInterfacePackageName());
+				if (!State.getInstance().isSkipModelInterfaces()){
+					imports.add(clazz.getInterfacePackageName());
+				}
 				context.put("customInterfaces", clazz.getCustomInterfaces());
 			}
 
