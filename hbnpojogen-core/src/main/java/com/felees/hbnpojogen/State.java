@@ -366,8 +366,15 @@ implements Serializable {
 	private boolean useDynamicLDAPDataSource;
 	private boolean mavenNoDeps;
 	private boolean mavenUseExternalLib;
+	private boolean skipModelInterfaces;
 
 
+	/**
+	 * @return the skipModelInterfaces
+	 */
+	public boolean isSkipModelInterfaces() {
+		return skipModelInterfaces;
+	}
 
 
 	/**
@@ -2414,6 +2421,15 @@ implements Serializable {
 	 */
 	public void setMockitoFilename(String mockitoFilename) {
 		this.mockitoFilename = mockitoFilename;
+	}
+
+
+
+	/**
+	 * @param boolean1
+	 */
+	public void skipModelInterfaces(boolean skip) {
+		this.skipModelInterfaces = skip;
 	}
 
 

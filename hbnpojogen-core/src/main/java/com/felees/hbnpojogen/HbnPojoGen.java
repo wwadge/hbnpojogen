@@ -231,9 +231,10 @@ public class HbnPojoGen {
         log("Stage 5: Writing classes");
         VelocityWriters.writeClasses(targetFolder, State.getInstance().classes);
 
-        log("Stage 6: Writing interfaces");
-        VelocityWriters.writeInterfaceClasses(targetFolder, State.getInstance().classes);
-
+        log("Stage 6: Writing interfaces" + (State.getInstance().isSkipModelInterfaces() ? " [disabled]" : ""));
+        if (!State.getInstance().isSkipModelInterfaces()){
+        		VelocityWriters.writeInterfaceClasses(targetFolder, State.getInstance().classes);
+        }
         // Dump the enums
         log("Stage 7: Writing enums");
         VelocityWriters.writeEnums(targetFolder);

@@ -476,6 +476,7 @@ public class VelocityWriters {
 			context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
 			context.put("classAnnotation", clazz.getClassAnnotation());
 			context.put("classCustomCode", clazz.getClassCustomCode());
+			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
 			context.put("classCustomCodeFields", clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
 			context.put("isSubtypeGenerationEnabled", !State.getInstance().disableSubtypeEnumGeneration);

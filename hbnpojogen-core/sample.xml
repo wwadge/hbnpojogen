@@ -104,7 +104,7 @@
 			<objectPackage>
 				${topLevel}.${projectName}.model.obj.${DB}
 			</objectPackage>
-			<objectInterfacePackage>
+			<objectInterfacePackage skip="true">
 				${topLevel}.${projectName}.model.obj.${DB}.iface
 			</objectInterfacePackage>
 			<!--  Location of repository objects (spring data only)  -->

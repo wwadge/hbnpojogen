@@ -982,6 +982,7 @@ public class Config {
             packageMap.setUtilPackage(Config.config.getString(String.format("dbPackageMap.map(%d).utilPackage", i)));
             packageMap.setObjectPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectPackage", i)));
             packageMap.setObjectInterfacePackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectInterfacePackage", i)));
+            State.getInstance().skipModelInterfaces(Config.config.getBoolean(String.format("dbPackageMap.map(%d).objectInterfacePackage[@skip]", i), false));
             packageMap.setObjectTableRepoPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectTableRepoPackage", i)));
             State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
         }
