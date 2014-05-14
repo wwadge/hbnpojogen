@@ -262,6 +262,21 @@ public class VelocityWriters {
 	 * @param clazz
 	 * @return a valid path
 	 */
+	private static void getAndCreateRepoFactoryPath(String targetFolder, Clazz clazz) {
+
+		String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.TABLE_REPO_FACTORY));
+		new File(targetFolder + "/" + config).mkdirs();
+
+
+	}
+
+	/**
+	 * Returns the dao path.
+	 *
+	 * @param targetFolder
+	 * @param clazz
+	 * @return a valid path
+	 */
 	private static String getAndCreateDaoInterfacePath(String targetFolder, Clazz clazz) {
 
 		String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), PackageTypeEnum.DAO));
@@ -353,6 +368,31 @@ public class VelocityWriters {
 		return result;
 
 	}
+
+	/**
+	 * @param targetFolder
+	 * @return a valid path
+	 */
+	private static String getAndCreateRepoFactoryPath(String targetFolder) {
+		String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY));
+		new File(targetFolder + "/" + State.getInstance().getSrcFolder() +"/"+config).mkdirs();
+
+		String result = targetFolder + "/" + State.getInstance().getSrcFolder() +"/"+ config + "/";
+		return result;
+
+	}
+	private static String getAndCreateTestPath(String targetFolder) {
+
+		String tmp =
+				State.getInstance().getSourceTarget() + "/" + State.getInstance().getTestFolder() + "/" +
+						State.getInstance().getTopLevel().replaceAll("\\.", "/")+"/"+State.getInstance().projectName.replaceAll("\\.", "/");
+		new File(tmp).mkdirs();
+
+
+		return tmp+"/";
+
+	}
+
 
 	/**
 	 * @param catalog
@@ -806,7 +846,7 @@ public class VelocityWriters {
 		context.put(PREPOPULATE, State.getInstance().prepopulateList);
 		context.put(PRE_EXEC, State.getInstance().preExecList);
 		context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
-		context.put(TOPLEVEL, State.getInstance().topLevel);
+		context.put(TOPLEVEL, State.getInstance().topLevel+"."+State.getInstance().projectName);
 		context.put(IMPORTS, imports);
 		String tmpContext = State.getInstance().getApplicationContextFilename();
 		if (tmpContext.lastIndexOf("/") > -1) {
@@ -869,9 +909,9 @@ public class VelocityWriters {
 		State.getInstance().setTableSetCycles(tableSetCycles);
 		context.put(TABLE_SET_CYCLES, tableSetCycles);
 		// FIXME
-		String tmp =
-				State.getInstance().getSourceTarget() + "/" + State.getInstance().getTestFolder() + "/" +
-						State.getInstance().getTopLevel().replaceAll("\\.", "/");
+		String tmp =getAndCreateTestPath(targetFolder);
+//				State.getInstance().getSourceTarget() + "/" + State.getInstance().getTestFolder() + "/" +
+//						State.getInstance().getTopLevel().replaceAll("\\.", "/");
 		new File(tmp).mkdirs();
 
 		PrintWriter testWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp + "/DAOIntegrationTest.java", false)));
@@ -1276,14 +1316,13 @@ public class VelocityWriters {
 		appContextWriter.close();
 	}
 
-	public static void writeUtils(String targetFolder)
+	public static void writeUtils(String targetFolder, String basePath, String[] utilClasses, String packagename)
 			throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
 
-		String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "IPojoGenEntity", "BasicDataGenerator"};
 		for (String s: utilClasses) {
 			Template appContextTemplate = Velocity.getTemplate("templates/"+s+".vm");
 
-			String tmp =  getAndCreateUtilPath( targetFolder ) + s+".java";
+			String tmp =  basePath + s+".java";
 
 			PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 			VelocityContext context = new VelocityContext();
@@ -1291,10 +1330,27 @@ public class VelocityWriters {
 			for (Clazz clazz : State.getInstance().getClasses().values()) {
 				classes.add(clazz.getFullClassName());
 			}
-			context.put("packagename", SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+			context.put("packagename", packagename);
+			context.put("repositoryClass", SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY)+".CustomRepository");
+
 			appContextTemplate.merge(context, appContextWriter);
 			appContextWriter.close();
 		}
+	}
+
+
+
+	public static void writeUtils(String targetFolder)
+			throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
+		String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "MockDatabase", "IPojoGenEntity", "BasicDataGenerator"};
+
+		writeUtils(targetFolder, getAndCreateUtilPath( targetFolder ), utilClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+
+		String[] repoClasses = {"CustomRepository", "CustomRepositoryImpl", "RepositoryFactoryBean"};
+
+		writeUtils(targetFolder, getAndCreateRepoFactoryPath( targetFolder ), repoClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY));
+
+
 	}
 
 
@@ -1718,6 +1774,8 @@ public class VelocityWriters {
 		context.put(CLASSES, classesToExpose);
 		appContextTemplate.merge(context, appContextWriter);
 		appContextWriter.close();
+
+
 	}
 
 

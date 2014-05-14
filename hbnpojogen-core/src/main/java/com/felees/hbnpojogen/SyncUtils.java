@@ -13,8 +13,17 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.IOUtils;
@@ -26,8 +35,6 @@ import org.jvnet.inflector.Noun;
 import com.felees.hbnpojogen.db.FieldObj;
 import com.felees.hbnpojogen.obj.Clazz;
 import com.felees.hbnpojogen.obj.PropertyObj;
-import org.jvnet.inflector.Rule;
-import org.jvnet.inflector.RuleBasedPluralizer;
 
 
 /**
@@ -188,18 +195,18 @@ implements Serializable {
 				dbSchema = null;
 				checkTable = tmp.substring(tmp.indexOf(".") + 1);
 			}
-			
+
 
 		//	buildFakeFKSet(dbmd, checkTable, dbCatalog);
-				
+
 			String checkTableFull = dbCatalog + ".";
-			
+
 			if (State.getInstance().dbMode == 2){ // postgresql
 				checkTableFull+=dbSchema+".";
 			}
 			checkTableFull += checkTable;
-			
-			
+
+
 			tableDependencies = result.getTableDeps().get(checkTableFull);
 			// uncomment to see loop deps
 			    System.out.println(tmp + ", Deps: " + tableDependencies);
@@ -214,7 +221,7 @@ implements Serializable {
 				HashSet<RelationItem> relList = new HashSet<RelationItem>();
 //				State.getInstance().getFakeFKmatched().get(dbCatalog+"."+checkTable);
 //				if (relList == null){
-//					relList 
+//					relList
 //					State.getInstance().getFakeFKmatched().put(dbCatalog+"."+checkTable, relList);
 //				}
 
@@ -226,7 +233,7 @@ implements Serializable {
 					 relItem.setSchema(importedK.getString(JDBC_PKTABLE_SCHEM));
 					relItem.setTableName(importedK.getString(JDBC_PKTABLE_NAME));
 					relItem.setFkColumnName(importedK.getString(FKCOLUMN_NAME));
-					
+
 					relList.add(relItem);
 				}
 
@@ -239,7 +246,7 @@ implements Serializable {
 						String newDepSchema = relItem.getSchema();
 						String newDepTableName = relItem.getTableName();
 						String newDep = newDepCat + "." + (newDepSchema != null ? newDepSchema+"." : "")+newDepTableName;
-						
+
 						String cat = newDep.substring(0, newDep.lastIndexOf("."));
 						if (!singleSchema && !catalogs.contains(cat)) {
 
@@ -249,7 +256,7 @@ implements Serializable {
 
 								// Get the table name
 								while (rs2.next()) {
-									
+
 									 String catalog = rs2.getString(TABLE_CAT) == null ? cat : rs2.getString(TABLE_CAT);  //STANIMIR
 									 String rs2Schema = rs2.getString(TABLE_SCHEM);
 									 tables.add(catalog + "." + (rs2Schema != null ? rs2Schema+"." : "") + rs2.getString(JDBC_TABLE_NAME));
@@ -281,11 +288,11 @@ implements Serializable {
 									ResultSet resultSet =
 										dbmd.getTables(newDepCat, newDepSchema, newDepTableName,
 												new String[] { JDBC_TABLE, "VIEW" });
-								
+
 									if (resultSet.next()) {
 										   String catalog = resultSet.getString(TABLE_CAT) == null ? dbCatalog : resultSet.getString(TABLE_CAT);  //STANIMIR
 										   String resultSetSchema = resultSet.getString(TABLE_SCHEM);
-											
+
 										   String match = catalog + "." + (resultSetSchema != null ? resultSetSchema+"." : "") + resultSet.getString(JDBC_TABLE_NAME);
 
 										boolean matched = false;
@@ -369,7 +376,7 @@ implements Serializable {
 				activeTable = checkTable;
 				fieldNames = dbmd.getColumns(dbCatalog, null, checkTable, null);
 				fakeFKenabled = mapping.isEnabled();
-				
+
 				FakeFKPattern exceptionMatch = State.getInstance().getFakeFK().get(activeCatalog+"."+activeTable);
 				if (exceptionMatch != null){
 					fakeFKenabled = exceptionMatch.isEnabled();
@@ -377,16 +384,16 @@ implements Serializable {
 					activeTable = checkTable;
 					fieldNames = dbmd.getColumns(activeCatalog, null, activeTable, null);
 					mapping = exceptionMatch;
-						
+
 				}
 			}
-			
+
 			else{
 				fakeFKenabled = mapping.isEnabled();
 				activeCatalog = getTableCatalog(tableName);
 				activeTable = getTableName(tableName);
 				fieldNames = dbmd.getColumns(activeCatalog, null, activeTable, null);
-			} 
+			}
 
 
 
@@ -424,12 +431,12 @@ implements Serializable {
 	*/
 
 
-	
+
 	/**
 	 * @param dbmd
 	 * @param checkTableFull
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	private static String getTableNameInProperCase(DatabaseMetaData dbmd,
 			String checkTableFull) throws SQLException {
@@ -486,7 +493,7 @@ implements Serializable {
 		String dbCatalog = connection.getCatalog();
 
 		if (State.getInstance().dbMode == 2){ // postgresql
-			dbCatalog = State.getInstance().dbCatalog+"."+State.getInstance().dbSchema; // 
+			dbCatalog = State.getInstance().dbCatalog+"."+State.getInstance().dbSchema; //
 		}
 		DatabaseMetaData dbmd = connection.getMetaData();
 		TreeSet<String> catalogs = new TreeSet<String>(new CaseInsensitiveComparator());
@@ -555,7 +562,7 @@ implements Serializable {
 			String[] enumText = {};
 			stat = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			if (!fakeEnum && State.getInstance().dbMode != 2){ // pgsql
-			
+
 				rs = stat.executeQuery(String.format("SHOW COLUMNS FROM %s LIKE '%s'", tblName, fieldName));
 
 				rs.next();
@@ -580,8 +587,8 @@ implements Serializable {
 					wasScrubbed[0] = true;
 					rs = stat.executeQuery(String.format("SELECT pg_enum.enumlabel, pg_enum.enumlabel AS enumlabel FROM pg_type JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid"+
 						" where pg_type.typname='%s'",  fieldName));
-				}					
-			
+				}
+
 				while (rs.next()) { // process results one row at a time
 					String key = keyCol == null ? rs.getString(2).toUpperCase() : rs.getString(keyCol).toUpperCase();
 
@@ -614,13 +621,15 @@ implements Serializable {
 
 								if (!valueWasNull && valueOfOther instanceof String) {
 									enumAppend += '"' + valueOfOther.toString() + '"';
-								} else 
+								} else
 									if (valueOfOther instanceof Long) {
 										enumAppend += valueOfOther.toString() + "L";
 									} else{
 										if (valueWasNull){
 											enumAppend += "null";
-										} else enumAppend += valueOfOther.toString();
+										} else {
+											enumAppend += valueOfOther.toString();
+										}
 									}
 								enumAppend += ", ";
 							}
@@ -755,7 +764,7 @@ implements Serializable {
 			if (fieldObj.getFieldColumnType().equalsIgnoreCase("UUID")){
 				result = "java.util.UUID";
 			} else {
-				result = "Object"; 
+				result = "Object";
 			}
 			break;
 		case java.sql.Types.DATE:
@@ -814,12 +823,12 @@ implements Serializable {
 
 
 	/**
-	 * Copies src file to dst file. If the dst file does not exist, it is created. 
+	 * Copies src file to dst file. If the dst file does not exist, it is created.
 	 *
 	 * @param src
 	 * @param dst
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 */
 	public static void copyFile(InputStream src, String dst) throws FileNotFoundException, IOException {
 		IOUtils.copy(src, new FileOutputStream(dst));
@@ -1184,6 +1193,12 @@ implements Serializable {
 				result = defaultPackageMap.getObjectTableRepoPackage();
 			}
 			break;
+		case TABLE_REPO_FACTORY:
+			result = packageMap.getRepositoryFactoryPackage();
+			if (result == null) {
+				result = defaultPackageMap.getRepositoryFactoryPackage();
+			}
+			break;
 		case DAO:
 			result = packageMap.getDaoPackage();
 			if (result == null) {
@@ -1266,7 +1281,7 @@ implements Serializable {
 	public static String getTableCatalog(String dottedInput) {
 		return dottedInput.substring(0, dottedInput.indexOf("."));
 	}
-	
+
 
 	/** Find a match even inside subclasses/superclass. Used in DFS
 	 * @param match

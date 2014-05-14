@@ -111,6 +111,12 @@
 			<objectTableRepoPackage>
 				${topLevel}.${projectName}.model.obj.${DB}.repository
 			</objectTableRepoPackage>
+
+			<!--  Location of repository factory objects.  -->
+			<repositoryFactoryPackage>
+				${topLevel}.${projectName}.model.obj.${DB}.repository.factory
+			</repositoryFactoryPackage>
+			
 			<!--  Location of hibernate DAO objects.  -->
 			<daoPackage>
 				${topLevel}.${projectName}.model.dao.${DB}
@@ -134,6 +140,10 @@
 			<factoryPackage>
 				${topLevel}.${projectName}.factories.${DB}
 			</factoryPackage>
+			<!--  Location of repository factory objects.  -->
+			<repositoryFactoryPackage>
+				${topLevel}.${projectName}.factories.${DB}
+			</repositoryFactoryPackage>
 			<!-- Location of assorted classes -->
 			<utilPackage>
 				${topLevel}.${projectName}.util

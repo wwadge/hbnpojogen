@@ -21,6 +21,8 @@ public class PackageMap implements Serializable {
 	/** Inner handle */
 	private String objectTableRepoPackage;
 	/** Inner handle */
+	private String repositoryFactoryPackage;
+	/** Inner handle */
 	private String daoPackage;
 	/** Inner handle */
 	private String daoImplPackage;
@@ -165,6 +167,18 @@ public class PackageMap implements Serializable {
 	 */
 	public void setUtilPackage(String utilPackage) {
 		this.utilPackage = utilPackage;
+	}
+	/**
+	 * @return the repositoryFactoryPackage
+	 */
+	public String getRepositoryFactoryPackage() {
+		return repositoryFactoryPackage;
+	}
+	/**
+	 * @param repositoryFactoryPackage the repositoryFactoryPackage to set
+	 */
+	public void setRepositoryFactoryPackage(String repositoryFactoryPackage) {
+		this.repositoryFactoryPackage = repositoryFactoryPackage;
 	}
 
 }

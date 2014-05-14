@@ -984,6 +984,7 @@ public class Config {
             packageMap.setObjectInterfacePackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectInterfacePackage", i)));
             State.getInstance().skipModelInterfaces(Config.config.getBoolean(String.format("dbPackageMap.map(%d).objectInterfacePackage[@skip]", i), false));
             packageMap.setObjectTableRepoPackage(Config.config.getString(String.format("dbPackageMap.map(%d).objectTableRepoPackage", i)));
+            packageMap.setRepositoryFactoryPackage(Config.config.getString(String.format("dbPackageMap.map(%d).repositoryFactoryPackage", i)));
             State.getInstance().packageMaps.put(SyncUtils.removeUnderscores((String) tmpPackageClasses.get(i)), packageMap);
         }
 
@@ -1005,6 +1006,9 @@ public class Config {
         }
         if (packageMap.getObjectTableRepoPackage() == null) {
             packageMap.setObjectTableRepoPackage(String.format("%s.%s.model.obj.${DB}.repository", State.getInstance().topLevel, State.getInstance().projectName));
+        }
+        if (packageMap.getRepositoryFactoryPackage() == null) {
+            packageMap.setRepositoryFactoryPackage(String.format("%s.%s.model.obj.${DB}.repository.factory", State.getInstance().topLevel, State.getInstance().projectName));
         }
         if (packageMap.getDataPackage() == null) {
             packageMap.setDataPackage(String.format("%s.%s.services.data", State.getInstance().topLevel, State.getInstance().projectName));
