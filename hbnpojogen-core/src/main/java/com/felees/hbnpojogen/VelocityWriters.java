@@ -1772,6 +1772,7 @@ public class VelocityWriters {
 
 		});
 		context.put(CLASSES, classesToExpose);
+		context.put("mockdatabase", SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL)+".MockDatabase");
 		appContextTemplate.merge(context, appContextWriter);
 		appContextWriter.close();
 

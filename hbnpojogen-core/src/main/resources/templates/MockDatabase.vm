@@ -27,6 +27,12 @@ public class MockDatabase<T> {
 
     private final CustomRepository<T,Serializable> repository;
 
+    public static <T extends CustomRepository> T mock(Class<T> classToMock) {
+
+        T repository = Mockito.mock(classToMock);
+        new MockDatabase<T>(repository);
+        return repository;
+    }
 
 
     public <ID extends Serializable> MockDatabase(CustomRepository<T, ID> repository){
