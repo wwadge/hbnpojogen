@@ -74,11 +74,7 @@
             <artifactId>mockito-core</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        
+      
 
   <dependency>
                 <groupId>org.hibernate</groupId>
@@ -244,7 +240,6 @@
 #if ($doPomVersion)			
 			<version>${springVersion}</version>
 #end			
-			<scope>test</scope>
 		</dependency>
 		
 #if ($v2SpringVersion)
