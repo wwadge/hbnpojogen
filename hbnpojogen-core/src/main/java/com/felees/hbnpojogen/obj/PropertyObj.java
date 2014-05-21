@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.SystemUtils;
-
 import com.felees.hbnpojogen.CascadeState;
 import com.felees.hbnpojogen.State;
 import com.felees.hbnpojogen.SyncUtils;
@@ -108,7 +106,7 @@ implements Serializable {
 	private TreeSet<String> methodLevelGettersPostcondition = new TreeSet<String>();
 	/** For postgresql ID fields, defines the sequence generator controlling this field. */
 	private String sequenceName;
-	
+
 
 	/**
 	 * If true, the javaname/propertyname have been changed because we had multiple oneToMany on this field
@@ -159,7 +157,7 @@ implements Serializable {
     }
 
     /**
-     * 
+     *
      *
      * @param cascade
      * @return
@@ -169,7 +167,7 @@ implements Serializable {
 	    for (String cascadeType: cascade){
 	        result += "org.hibernate.annotations.CascadeType."+cascadeType+", ";
 	    }
-	    
+
 	    return result.substring(0, result.length()-2)+"}";
     }
 
@@ -510,12 +508,12 @@ implements Serializable {
 	 * @param propertyName the propertyName to set
 	 */
 	public final void setPropertyName(String propertyName) {
-		
+
 		this.propertyName = SyncUtils.removeUnderscores(propertyName);
 		if (!Character.isJavaIdentifierStart(propertyName.charAt(0))){
 			this.propertyName = "_"+propertyName;
 		}
-	
+
 	}
 
 
@@ -1066,13 +1064,13 @@ implements Serializable {
 				sb.insert(0, "@Column( ");
 				sb.append(" )");
 			}
-			
+
 
 		}
-		
+
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
 			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
-			
+
 		}
 		return sb.toString().trim();
 	}
@@ -1080,11 +1078,11 @@ implements Serializable {
 	public final String getSequenceAnnotation() {
 		LinkedList<String> annotation = new LinkedList<String>();
 		StringBuffer sb = new StringBuffer();
-		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() && 
+		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() &&
 			((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0))) {
-			sb.append(String.format("@SequenceGenerator(name=\"%s\", sequenceName=\"%s\")", this.sequenceHibernateRef, this.sequenceName) );
+			sb.append(String.format("@SequenceGenerator(name=\"%s\", sequenceName=\"%s\")", this.sequenceHibernateRef, this.getClazz().getTableObj().getDbSchema()+"."+this.sequenceName) );
 			sb.append("\n");
-			
+
 				}
 
 		return sb.toString().trim();
@@ -1243,8 +1241,8 @@ implements Serializable {
 	public boolean isGeneratedValueUUIDWithoutDashes() {
 		return GeneratorEnum.UUIDWithoutDashes.equals(this.generatorType);
 	}
-	
-	
+
+
     /**
      * @return getter
      */
@@ -1347,7 +1345,7 @@ implements Serializable {
 
 	/** Checks to see if this property has a match in the cascade list to return if enabled or disabled.
 	 * @param state
-	 * @param propertyObj 
+	 * @param propertyObj
 	 * @return t/f
 	 */
 	private boolean isXToXCascadeEnabledByConfig(TreeMap<String, CascadeState> state, PropertyObj target) {
@@ -1361,14 +1359,14 @@ implements Serializable {
         String targetClassName = target.getClazz().getClassName();
         String targetPropertyName = target.getPropertyName();
 
-		
-        CascadeState match = matchCascade(state,  
+
+        CascadeState match = matchCascade(state,
 		"*.*.*",
 		"*."+className+".*",
 		"*."+className+"."+propertyName,
 		classPackage+".*."+propertyName,
 		classPackage+".*.*",
-		classPackage+"."+className+".*", 
+		classPackage+"."+className+".*",
 		"*.*."+propertyName,
 		classPackage+"."+className+"."+propertyName);
 
@@ -1393,10 +1391,10 @@ implements Serializable {
 
 		return enableCascading;
 	}
-	
+
 	   /** Checks to see if this property has a match in the cascade list to return if enabled or disabled.
      * @param state
-     * @param propertyObj 
+     * @param propertyObj
      * @return t/f
      */
     private Set<String> getXToXCascadeType(TreeMap<String, CascadeState> state, PropertyObj target) {
@@ -1408,8 +1406,8 @@ implements Serializable {
         String targetClassName = target.getClazz().getClassName();
         String targetPropertyName = target.getPropertyName();
 
-        
-        CascadeState match = matchCascade(state, "*.*.*", "*."+className+".*", 
+
+        CascadeState match = matchCascade(state, "*.*.*", "*."+className+".*",
         "*."+className+"."+this.propertyName,
         classPackage+".*."+this.propertyName,
         classPackage+".*.*",
@@ -1418,8 +1416,8 @@ implements Serializable {
         classPackage+"."+className+"."+this.propertyName);
 
         if (match == null) {
-              match = 
-                  matchCascade(state, 
+              match =
+                  matchCascade(state,
                   "to:*.*.*",
                 "to:*."+targetClassName+".*",
                 "to:*."+targetClassName+"."+targetPropertyName,
@@ -1452,7 +1450,7 @@ implements Serializable {
         }
         return match;
     }
-    
+
 	public boolean isTestValueOverride(){
         TreeMap<String, String> defTest = State.getInstance().getDefaultTestValues().get(this.clazz.getTableObj().getFullTableName().toUpperCase());
         if (defTest != null) {
@@ -1469,8 +1467,8 @@ implements Serializable {
 	public boolean isManyToOneLazyEnabledByConfig() {
 		return isXToXLazyEnabledByConfig(State.getInstance().getManyToOneLazyEnabled());
 	}
-	
-	
+
+
 	/** If the config file specifies that cascading is allowed from this one-to-many
 	 * field, return true.
 	 * @return true/false
@@ -1642,27 +1640,27 @@ implements Serializable {
 	public boolean isInverseLinkDisabled(){
 		return this.inverseLink == null || this.inverseLink.isOneToNBackLinkDisabled();
 	}
-	
+
 	public boolean isExcludedFromEquality() {
 	    String fname = this.getFieldObj().getName();
 	    Set<String> excludes = State.getInstance().getEqualityExcludes();
 	    return excludes.contains("*.*."+fname) ||
 	    excludes.contains("*."+this.clazz.getTableObj().getDbName()+"."+fname) ||
 	    excludes.contains(this.clazz.getTableObj().getDbCat()+".*."+fname);
-	    
+
 	}
-	
+
 	public boolean isTransientField() {
 	    String fname = this.getFieldObj().getName();
 	    Set<String> transientField = State.getInstance().getTransientFields();
 	    return transientField.contains("*.*."+fname) ||
 	    transientField.contains("*."+this.clazz.getTableObj().getDbName()+"."+fname) ||
 	    transientField.contains(this.clazz.getTableObj().getDbCat()+".*."+fname);
-	    
+
 	}
 	/** Returns true if the config file says that this field came from a db field
-	 * that has a unique index on it. 
-	 * 
+	 * that has a unique index on it.
+	 *
 	 *
 	 * @return
 	 */
@@ -1670,7 +1668,7 @@ implements Serializable {
 	    String table = this.fieldObj.getTableObj().getFullTableName();
 	    TreeSet<String> fields = State.getInstance().getUniqueKeys().get(table);
 	    return fields != null && fields.contains(this.fieldObj.getName());
-	    
+
 	}
 
 
