@@ -29,6 +29,6 @@ Also supports
 - Multiple schema support (4 modes)
 - Natural Keys
 - Enumerations (including those entries which cannot be mapped cleanly onto the java world)
-- A whole bunch of more stuff (see sample.xml)
+- A whole bunch of more stuff (see [sample.xml](./hbnpojogen-core/sample.xml))
 
 Please see sample.xml for a very documented list of available features.
