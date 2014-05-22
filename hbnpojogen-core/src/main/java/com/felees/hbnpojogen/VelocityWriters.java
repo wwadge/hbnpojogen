@@ -518,6 +518,18 @@ public class VelocityWriters {
 			context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
 			context.put("classAnnotation", clazz.getClassAnnotation());
 			context.put("classCustomCode", clazz.getClassCustomCode());
+			String interfacesToShow = "";
+			if (!State.getInstance().isSkipModelInterfaces()){
+				interfacesToShow += "I"+clazz.getClassName() +", ";
+			}
+			for (String s: clazz.getCustomInterfaces()){
+				interfacesToShow += s+", ";
+			}
+			if (interfacesToShow.endsWith(", ")){
+				interfacesToShow = interfacesToShow.substring(0, interfacesToShow.length()-2);
+			}
+			context.put("interfacesToShow", interfacesToShow);
+
 			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
 			context.put("classCustomCodeFields", clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
