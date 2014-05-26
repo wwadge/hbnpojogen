@@ -1080,7 +1080,7 @@ implements Serializable {
 		StringBuffer sb = new StringBuffer();
 		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() &&
 			((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0))) {
-			sb.append(String.format("@SequenceGenerator(name=\"%s\", sequenceName=\"%s\")", this.sequenceHibernateRef, this.getClazz().getTableObj().getDbSchema()+"."+this.sequenceName) );
+			sb.append(String.format("@SequenceGenerator(name = \"%s\", sequenceName = \"%s\", schema = \"%s\", catalog = \"%s\")", this.sequenceHibernateRef, this.sequenceName, this.getClazz().getTableObj().getDbSchema(), this.getClazz().getTableObj().getDbCat()) );
 			sb.append("\n");
 
 				}

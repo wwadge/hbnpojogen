@@ -518,17 +518,30 @@ public class VelocityWriters {
 			context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
 			context.put("classAnnotation", clazz.getClassAnnotation());
 			context.put("classCustomCode", clazz.getClassCustomCode());
-			String interfacesToShow = "";
+			List<String> interfacesToShow = new LinkedList<String>();
+			if (!clazz.isSubclass()){
+				interfacesToShow.add("Cloneable");
+				interfacesToShow.add("Serializable");
+			}
+			if (!clazz.isEmbeddable() && !clazz.isSubclass()){
+				interfacesToShow.add("IPojoGenEntity");
+			}
+
 			if (!State.getInstance().isSkipModelInterfaces()){
-				interfacesToShow += "I"+clazz.getClassName() +", ";
+				interfacesToShow.add( "I"+clazz.getClassName());
 			}
 			for (String s: clazz.getCustomInterfaces()){
-				interfacesToShow += s+", ";
+				interfacesToShow.add(s);
 			}
-			if (interfacesToShow.endsWith(", ")){
-				interfacesToShow = interfacesToShow.substring(0, interfacesToShow.length()-2);
+
+			String tmpInterfaces  = "";
+			for (String s: interfacesToShow){
+				tmpInterfaces += s+", ";
 			}
-			context.put("interfacesToShow", interfacesToShow);
+			if (tmpInterfaces.endsWith(", ")){
+				tmpInterfaces = tmpInterfaces.substring(0, tmpInterfaces.length()-2);
+			}
+			context.put("interfacesToShow", tmpInterfaces);
 
 			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
 			context.put("classCustomCodeFields", clazz.getClassCustomCodeFields());
