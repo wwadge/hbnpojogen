@@ -710,8 +710,11 @@ public class Config {
 
         for (int i = 0; i < testValues.size(); i++) {
 
-            State.getInstance().defaultTestValues.put(testValues.get(i).toString().toUpperCase(), new TreeMap<String, String>());
-            TreeMap<String, String> properties = State.getInstance().defaultTestValues.get(testValues.get(i).toString().toUpperCase());
+        		TreeMap<String, String> properties = State.getInstance().defaultTestValues.get(testValues.get(i).toString().toUpperCase());
+        		if (properties == null){
+        			properties  = new TreeMap<String, String>();
+        				State.getInstance().defaultTestValues.put(testValues.get(i).toString().toUpperCase(), properties);
+        		}
 
             ArrayList<Object> fieldValues = (ArrayList<Object>) Config.config.getList("testValues.tables.table(" + i + ").fields.name");
 

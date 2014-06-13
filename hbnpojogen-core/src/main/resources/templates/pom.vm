@@ -72,6 +72,9 @@
 	<dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+#if ($doPomVersion)	
+             <version>1.9.5</version>
+#end
             <scope>compile</scope>
         </dependency>
       

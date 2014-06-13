@@ -3,10 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+<bean id="modelValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
 #foreach( $class in $classes )
         <bean id="${class.getMockRepoBeanName()}" class="${mockdatabase}" factory-method="mock" primary="true">
             <constructor-arg value="${class.getRepositoryFullClassName()}" />
+            <constructor-arg ref="modelValidator" />
         </bean>
 #end
 </beans>

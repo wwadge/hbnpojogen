@@ -559,7 +559,15 @@ public class VelocityHelper {
 
             if (defTest != null) {
                 returnValue = defTest.get(propertyName.toUpperCase());
+            } else {
+
+          	 	defTest = this.defaultTestValues.get(tableName.substring(0, tableName.lastIndexOf(".")).toUpperCase()+".*");
+          	  if (defTest != null) {
+                  returnValue = defTest.get(propertyName.toUpperCase());
+              }
             }
+
+
 
             if (returnValue == null) {
                 if (property.isComposite()) {

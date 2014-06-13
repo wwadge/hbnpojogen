@@ -1329,7 +1329,7 @@ public class VelocityWriters {
 		Template appContextTemplate = Velocity.getTemplate("templates/ehcache.vm");
 
 		String tmp =
-				State.getInstance().getSourceTarget() + File.separator + State.getInstance().getResourceFolder() + File.separator + "ehcache.xml";
+				State.getInstance().getSourceTarget() + File.separator + State.getInstance().getResourceFolder() + File.separator + "ehcache-model.xml";
 		PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 		VelocityContext context = new VelocityContext();
 		TreeSet<String> classes = new TreeSet<String>();
