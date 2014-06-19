@@ -1,6 +1,6 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="ehcache.xsd"
-    updateCheck="false" monitoring="autodetect" name="ehcacheModel"
+    updateCheck="false" monitoring="autodetect" name="${projectname}EhcacheModel"
     dynamicConfig="true">
 
   <!--

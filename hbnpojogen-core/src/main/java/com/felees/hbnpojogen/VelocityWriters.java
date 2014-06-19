@@ -1345,6 +1345,8 @@ public class VelocityWriters {
 			classes.add(clazz.getFullClassName());
 		}
 		context.put("classes", classes);
+		context.put(PROJECTNAME, State.getInstance().projectName);
+
 		appContextTemplate.merge(context, appContextWriter);
 		appContextWriter.close();
 	}
