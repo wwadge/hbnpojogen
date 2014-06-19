@@ -1124,6 +1124,8 @@ public class VelocityWriters {
 		context.put(TOPLEVEL, State.getInstance().topLevel);
 		context.put("driverClass", HbnPojoGen.driver);
 		context.put("springData", State.getInstance().isEnableSpringData());
+		context.put("suppressPlaceholder", State.getInstance().isPropertyPlaceholderConfigurerSuppressBean());
+
 		context.put("factoryClass", State.getInstance().getSpringDataFactoryClass().equals("") ? "": "factory-class=\""+State.getInstance().getSpringDataFactoryClass()+"\"");
 		Set<String> packages = new TreeSet<String>();
 		Set<String> repoPackages = new TreeSet<String>();
@@ -1201,17 +1203,17 @@ public class VelocityWriters {
 		default:
 			db = "jdbc:mysql"; break;
 		}
-		context.put("dbUrl", propOverride ? db + "://"+State.getInstance().getDbIP()+"/"+State.getInstance().getDbCatalog() : "${db.connection.url}");
-		context.put("dbUsername", propOverride ? State.getInstance().dbUsername : "${db.connection.username}");
-		context.put("dbPassword", propOverride ? State.getInstance().dbPassword : "${db.connection.password}");
-		context.put("dbIdleConnectionTestPeriod", propOverride ? 60 : "${db.connection_pool.idle_connection_test_period}");
-		context.put("dbMaxIdle", propOverride ? 240 : "${db.connection_pool.max_idle_time}");
-		context.put("dbMaxPool", propOverride ? 20 : "${db.connection_pool.max_pool}");
-		context.put("dbMinPool", propOverride ? 10 : "${db.connection_pool.min_pool}");
-		context.put("dbPartitions", propOverride ? 1 : "${db.connection_pool.partition_count}");
-		context.put("dbInitPool", propOverride ? 10 : "${db.connection_pool.initial_pool_size}");
-		context.put("dbMaxStatements", propOverride ? 100 : "${db.connection_pool.max_statements}");
-		context.put("dbAcquireIncrement", propOverride ? 3 : "${db.connection_pool.acquire_increment}");
+		context.put("dbUrl", propOverride ? db + "://"+State.getInstance().getDbIP()+"/"+State.getInstance().getDbCatalog() : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.url}");
+		context.put("dbUsername", propOverride ? State.getInstance().dbUsername : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.username}");
+		context.put("dbPassword", propOverride ? State.getInstance().dbPassword : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.password}");
+		context.put("dbIdleConnectionTestPeriod", propOverride ? 60 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.idle_connection_test_period}");
+		context.put("dbMaxIdle", propOverride ? 240 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.max_idle_time}");
+		context.put("dbMaxPool", propOverride ? 20 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connections.max}");
+		context.put("dbMinPool", propOverride ? 10 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connections.min}");
+		context.put("dbPartitions", propOverride ? 1 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.partition_count}");
+		context.put("dbInitPool", propOverride ? 10 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.initial_pool_size}");
+		context.put("dbMaxStatements", propOverride ? 100 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.max_statements}");
+		context.put("dbAcquireIncrement", propOverride ? 3 : "${"+State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.acquire_increment}");
 
 		if (State.getInstance().getUseLDAP() || State.getInstance().isUseLDAPImport()){
 			context.put("dbUrl", "${jdbcUrl}");
@@ -1255,19 +1257,25 @@ public class VelocityWriters {
 		override = override +  File.separator + State.getInstance().projectName+".db.properties";
 		FileWriter outFile = new FileWriter(override);
 		PrintWriter out = new PrintWriter(outFile);
-		String db = State.getInstance().dbMode == 1 ? "jdbc:jtds:sqlserver" : "jdbc:mysql";
+		String db;
+		switch( State.getInstance().dbMode){
+		case 1 : db = "jdbc:jtds:sqlserver"; break;
+		case 2:  db = "jdbc:postgresql"; break;
+		default:
+			db = "jdbc:mysql"; break;
+		}
 		if (State.getInstance().isEnablePropertyPlaceholderConfigurer()){
-			out.println("db.connection.url="+db+"://"+State.getInstance().getDbIP()+"/"+State.getInstance().getDbCatalog());
-			out.println("db.connection.username="+ State.getInstance().dbUsername);
-			out.println("db.connection.password="+State.getInstance().dbPassword );
-			out.println("db.connection_pool.idle_connection_test_period=60");
-			out.println("db.connection_pool.max_idle_time=240" );
-			out.println("db.connection_pool.max_pool=30" );
-			out.println("db.connection_pool.min_pool=10");
-			out.println("db.connection_pool.partition_count=3");
-			out.println("db.connection_pool.initial_pool_size=10" );
-			out.println("db.connection_pool.max_statements=100");
-			out.println("db.connection_pool.acquire_increment=3" );
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.url="+db+"://"+State.getInstance().getDbIP()+"/"+State.getInstance().getDbCatalog());
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.username="+ State.getInstance().dbUsername);
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection.password="+State.getInstance().dbPassword );
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.idle_connection_test_period=60");
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.max_idle_time=240" );
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connections.max=30" );
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connections.min=10");
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.partition_count=3");
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.initial_pool_size=10" );
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.max_statements=100");
+			out.println(State.getInstance().getPropertyPlaceholderConfigurerPrefix()+"db.connection_pool.acquire_increment=3" );
 		} else {
 			out.println("mainDataSource.logStatementsEnabled=true");
 

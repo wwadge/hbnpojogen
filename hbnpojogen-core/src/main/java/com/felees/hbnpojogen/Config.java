@@ -600,7 +600,7 @@ public class Config {
         State.getInstance().dbPassword = Config.config.getString(Constants.DATABASE_PASSWORD);
         String path = Config.config.getString(Constants.SOURCE_TARGET);
         State.getInstance().setSourceTarget(path);
-        State.getInstance().setConnectionPool(Config.config.getString("connectionPool", "C3P0").toUpperCase());
+        State.getInstance().setConnectionPool(Config.config.getString("connectionPool", "HIKARICP").toUpperCase());
 
 
         State.getInstance().projectName = Config.config.getString(Constants.PROJECT_NAME);
@@ -625,6 +625,9 @@ public class Config {
         State.getInstance().disableBackLinksInDataPoolFactory = Config.config.getString("disableBackLinksInDataPoolFactory", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setDisableLazyConnections(Config.config.getString("disableLazyConnections", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnablePropertyPlaceholderConfigurer(Config.config.getString("enablePropertyPlaceholderConfigurer", "false").equalsIgnoreCase("TRUE"));
+        State.getInstance().setPropertyPlaceholderConfigurerPrefix(Config.config.getString("enablePropertyPlaceholderConfigurer[@prefix]", ""));
+        State.getInstance().setPropertyPlaceholderConfigurerSuppressBean(Config.config.getBoolean("enablePropertyPlaceholderConfigurer[@suppressBean]", false));
+
         State.getInstance().setApplicationContextFilename(Config.config.getString("applicationContextFilename", "applicationContext.xml"));
 		State.getInstance().setDisableApplicationContext(Config.config.getBoolean("applicationContextFilename[@disableGeneration]", false));
         State.getInstance().setSessionFactoryItems(Config.config.getString("sessionFactory", ""));

@@ -200,6 +200,9 @@ implements Serializable {
     public boolean disableLazyConnections;
     /** disable backlinks in data pool factory */
     public boolean enablePropertyPlaceholderConfigurer;
+    /** prefix */
+    public String propertyPlaceholderConfigurerPrefix;
+    public boolean propertyPlaceholderConfigurerSuppressBean;
 	/** key = fromtable, value = TreeMap<ToTable string, fromField list>> */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> disableBackLinkTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /** key = fromtable, value = TreeMap<ToTable string, fromField list>> */
@@ -2430,6 +2433,44 @@ implements Serializable {
 	 */
 	public void skipModelInterfaces(boolean skip) {
 		this.skipModelInterfaces = skip;
+	}
+
+
+
+	/**
+	 * @return the propertyPlaceholderConfigurerPrefix
+	 */
+	public String getPropertyPlaceholderConfigurerPrefix() {
+		return propertyPlaceholderConfigurerPrefix;
+	}
+
+
+
+	/**
+	 * @param propertyPlaceholderConfigurerPrefix the propertyPlaceholderConfigurerPrefix to set
+	 */
+	public void setPropertyPlaceholderConfigurerPrefix(
+			String propertyPlaceholderConfigurerPrefix) {
+		this.propertyPlaceholderConfigurerPrefix = propertyPlaceholderConfigurerPrefix;
+	}
+
+
+
+	/**
+	 * @return the propertyPlaceholderConfigurerSuppressBean
+	 */
+	public boolean isPropertyPlaceholderConfigurerSuppressBean() {
+		return propertyPlaceholderConfigurerSuppressBean;
+	}
+
+
+
+	/**
+	 * @param propertyPlaceholderConfigurerSuppressBean the propertyPlaceholderConfigurerSuppressBean to set
+	 */
+	public void setPropertyPlaceholderConfigurerSuppressBean(
+			boolean propertyPlaceholderConfigurerSuppressBean) {
+		this.propertyPlaceholderConfigurerSuppressBean = propertyPlaceholderConfigurerSuppressBean;
 	}
 
 

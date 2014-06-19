@@ -81,7 +81,7 @@
 	<additionalContextItems><![CDATA[]]></additionalContextItems>
 
 
-	<!--  Select the connection pool to use. Valid options are: C3P0, BoneCP, JNDI. Set useLDAP to true if you want
+	<!--  Select the connection pool to use. Valid options are: C3P0, BoneCP, HikariCP, JNDI. Set useLDAP to true if you want
 	LDAP support. Set useLDAPImport if you plan on doing a spring import instead of wanting the appropriate beans being generated. 
 	enableDynamicLdapDataSource set to true will bounce the datasource off DynamicDataSourceProxy too. Other ldap properties are
 	optional for non-ldap configs. -->
@@ -638,8 +638,8 @@ table section
 	
 	<!--  Set the following flag to true to enable the use of spring's PropertyPlaceholderConfigurer. Setting to false will make use of
 	  PropertyOverrideConfigurer instead. Setting to true has the effect of forcing the end user of creating the override file rather 
-	  than relying on defaults. -->
-	<enablePropertyPlaceholderConfigurer>false</enablePropertyPlaceholderConfigurer>
+	  than relying on defaults. Optionally use a prefix for the variable names -->
+	<enablePropertyPlaceholderConfigurer prefix="yourprojectName." suppressBean="false">false</enablePropertyPlaceholderConfigurer>
 	
 	
 	<!-- Enable database version check. This will enable both the hibernate

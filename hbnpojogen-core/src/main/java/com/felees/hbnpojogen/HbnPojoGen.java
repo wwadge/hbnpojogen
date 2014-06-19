@@ -251,8 +251,9 @@ public class HbnPojoGen {
 //        VelocityWriters.writeAntBuildFile(targetFolder, dbCatalog);
         VelocityWriters.writeEHCache(targetFolder);
         VelocityWriters.writeUtils(targetFolder);
-        VelocityWriters.writeSpringOverrideFile(targetFolder);
-
+        if (!State.getInstance().isPropertyPlaceholderConfigurerSuppressBean()){
+        		VelocityWriters.writeSpringOverrideFile(targetFolder);
+        }
 
         log("Stage 10: Writing DAO Test classes");
         VelocityWriters.writeOutDaoTestClass(targetFolder, State.getInstance().classes, commitOrder, srcFolder);

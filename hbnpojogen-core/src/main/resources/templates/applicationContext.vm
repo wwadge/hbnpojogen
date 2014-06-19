@@ -57,6 +57,7 @@
     <bean id="persistenceManager" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
     
 
+#if (!$suppressPlaceholder)
     <bean class="org.springframework.beans.factory.config.#if ($propOverride)PropertyOverrideConfigurer#{else}PropertyPlaceholderConfigurer#end">
 	   #if ($propOverride)<property name="ignoreResourceNotFound"><value>true</value></property>#end
    <!--  In the properties file, #if ($propOverride)override #{else}define #{end}the items you need in this format:
@@ -73,7 +74,7 @@
     		<value>classpath:${projectname}.db.properties</value>
     	</property>
 	</bean>
-
+#end
 
 #if ($useLDAPImport)
 	<!-- Import the required ldap beans from some other package. -->
@@ -128,6 +129,15 @@
         <property name="maxStatements" value="$dbMaxStatements"/>            
         <property name="acquireIncrement" value="$dbAcquireIncrement"/>                              
 	</bean>
+#else #if ($pool.equals("HIKARICP"))
+ <bean id="mainDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">
+        <property name="username" value="$dbUsername" />
+        <property name="password" value="$dbPassword" />
+        <property name="jdbcUrl" value="$dbUrl" />
+        <property name="driverClassName" value="$driverClass" />
+        <property name="maximumPoolSize" value="$dbMaxPool" />
+    </bean>
+    
 #else #if ($pool.equals("BONECP"))
 
 #if ($useDynamicLdapDataSource)
@@ -163,6 +173,7 @@
          <property name="resourceRef" value="true" />
 	 </bean> 
 #end 
+#end
 #end
 #end
 	<!-- Obtain a datasource connection via JNDI. This section will go if we make the transition to jndi (just repeated here
