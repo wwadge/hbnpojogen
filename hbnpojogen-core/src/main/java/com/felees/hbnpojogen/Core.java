@@ -1831,58 +1831,18 @@ public class Core {
 
 
 				if (property.isEnumType()) {
+
 					clazz.getImports().add(Core.doEnumImport(clazz.getTableObj().getDbCat(), property.getFieldObj().getEnumName()));
 
 
 					if (clazz.getTableObj().isContainsScrubbedEnum()) {
 						if (!didScrubbedEnum) {
 							didScrubbedEnum = true;
-							classannotation = State.getInstance().customClassAnnotations.get(tmp);
 
-
-							String valueType;
-							if (State.getInstance().isEnableSpringData()) {
-								valueType = SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnumType.class";
-							} else {
-								valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
-							}
-
-							classannotation =
-								String
-								.format(
-										"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
-										classannotation);
-							State.getInstance().customClassAnnotations.put(tmp, classannotation);
-
-							clazz.getImports().add("org.hibernate.annotations.TypeDef");
-							clazz.getImports().add("org.hibernate.annotations.TypeDefs");
-							clazz.getImports().add("org.hibernate.annotations.Parameter");
-							clazz.getImports().add("org.hibernate.annotations.Type");
-
-							if (clazz.isEmbeddable()) {
-								// workaround for hibernate bug: typedef ignored in embeddable :-(
-
-								String parent = clazz.getEmbeddedFrom().getClassPackage() + "." + clazz.getEmbeddedFrom().getClassName();
-
-								classannotation = State.getInstance().customClassAnnotations.get(parent);
-
-								classannotation =
-									String
-									.format(
-											"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
-											classannotation);
-
-								State.getInstance().customClassAnnotations.put(parent, classannotation);
-								clazz.getEmbeddedFrom().setClassAnnotation(classannotation);
-								clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDef");
-								clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDefs");
-
-
-							}
+							enumTypedefImport(classes, clazz, tmp);
 
 						}
-					}
-					else {
+					} else {
 						clazz.getImports().add("javax.persistence.Enumerated");
 						clazz.getImports().add("javax.persistence.EnumType");
 					}
@@ -2036,6 +1996,71 @@ public class Core {
 						property.getValue().getMethodLevelGettersPostcondition().addAll(settings.getMethodLevelGetterPostcondition());
 					}
 				}
+			}
+		}
+	}
+
+
+	/**
+	 * @param classes
+	 * @param clazz
+	 * @param tmp
+	 */
+	private static void enumTypedefImport(TreeMap<String, Clazz> classes, Clazz clazz, String tmp) {
+		String classannotation;
+		classannotation = State.getInstance().customClassAnnotations.get(tmp);
+
+		if (classannotation == null){
+			classannotation = "";
+		}
+		String valueType;
+		if (State.getInstance().isEnableSpringData()) {
+			valueType = SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnumType.class";
+		} else {
+			valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
+		}
+
+		classannotation =
+			String
+			.format(
+					"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
+					classannotation);
+		State.getInstance().customClassAnnotations.put(tmp, classannotation);
+
+		clazz.getImports().add("org.hibernate.annotations.TypeDef");
+		clazz.getImports().add("org.hibernate.annotations.TypeDefs");
+		clazz.getImports().add("org.hibernate.annotations.Parameter");
+		clazz.getImports().add("org.hibernate.annotations.Type");
+
+		if (clazz.isEmbeddable()) {
+			// workaround for hibernate bug: typedef ignored in embeddable :-(
+
+			String parent = clazz.getEmbeddedFrom().getClassPackage() + "." + clazz.getEmbeddedFrom().getClassName();
+
+			classannotation = State.getInstance().customClassAnnotations.get(parent);
+
+			classannotation =
+				String
+				.format(
+						"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
+						classannotation);
+
+			State.getInstance().customClassAnnotations.put(parent, classannotation);
+			clazz.getEmbeddedFrom().setClassAnnotation(classannotation);
+			clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDef");
+			clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDefs");
+
+
+		}
+
+		for (Clazz c: classes.values()){
+//			if (c.isSubclass() && c.getExtendsFrom().getClazz().getClassName().equals(clazz.getClassName())){
+//				System.out
+//
+//					.println(c.getClassName() + " - " +c.getExtendsFrom().getClazz().getClassName() + " - "+clazz.getClassName());
+//			}
+				if (c.isSubclass() && c.getExtendsFrom().getClazz().getClassName().equals(clazz.getClassName())){
+				enumTypedefImport(classes, c, c.getClassPackage() + "." + c.getClassName());
 			}
 		}
 	}
