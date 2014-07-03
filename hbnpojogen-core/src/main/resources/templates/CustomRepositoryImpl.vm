@@ -36,8 +36,16 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends QueryDslJp
 		this.entityClass = entityInformation.getJavaType();
 	}
 
-	/** Returns a proxy to the given ID, does not hit DB */
+	@Override
 	public T getReference(ID primaryKey) {
 		return entityManager.getReference(entityClass, primaryKey);
 	}
+	
+	
+   
+    @Override
+    public <T> T merge(T entity){
+        return entityManager.merge(entity);
+    }
+	
 }
