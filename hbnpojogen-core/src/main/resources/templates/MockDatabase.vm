@@ -121,6 +121,14 @@ public class MockDatabase<T> {
         });
 
 
+        when(repository.merge(anyObject())).thenAnswer(new Answer<T>() {
+            @Override
+            public T answer(InvocationOnMock invocation) throws Throwable {
+                return (T) invocation.getArguments()[0];
+            }
+        });
+
+
         when(repository.findAll()).thenAnswer(new Answer<List<T>>() {
             @Override
             public List<T> answer(InvocationOnMock invocation) throws Throwable {
