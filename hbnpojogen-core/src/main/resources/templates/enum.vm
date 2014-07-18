@@ -100,9 +100,4 @@ public enum ${enumName} {
     }
 #end
 
-    @Override
-    public String toString() {
-        return this.status;
-    }
-
 }

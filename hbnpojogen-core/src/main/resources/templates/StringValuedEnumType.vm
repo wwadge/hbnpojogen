@@ -15,6 +15,7 @@ import java.util.Properties;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.engine.spi.SessionImplementor;
+import java.lang.reflect.InvocationTargetException;
 
 import static ${packagename}.StringValuedEnumReflect.*;
 
@@ -168,9 +169,9 @@ public class StringValuedEnumType <T extends Enum>
             st.setNull(index, Types.CHAR);
         } else {
         	if (pgEnum){
-                st.setObject( index, ((T) value).toString(), 1111 ); // 1111 = java.sql.Types "OTHER"
+                st.setObject( index, reflectGetValue(value), 1111 ); // 1111 = java.sql.Types "OTHER"
         	} else {
-        		st.setString( index, ((T) value).toString() );
+        		st.setString( index, reflectGetValue(value) );
         	}
         }
     }
@@ -261,9 +262,9 @@ public class StringValuedEnumType <T extends Enum>
             preparedStatement.setNull(index, Types.CHAR);
         } else {
             if (pgEnum){
-                preparedStatement.setObject( index, ((T) value).toString(), 1111 ); // 1111 = java.sql.Types "OTHER"
+                preparedStatement.setObject( index, reflectGetValue(value), 1111 ); // 1111 = java.sql.Types "OTHER"
             } else {
-                preparedStatement.setString( index, ((T) value).toString() );
+                preparedStatement.setString( index, reflectGetValue(value) );
             }
         }
     }
@@ -286,8 +287,15 @@ public class StringValuedEnumType <T extends Enum>
     * @return internal
     */
     public String objectToSQLString(Object value) {
-        return '\'' + ((T) value).toString() + '\'';
+        return '\'' + reflectGetValue(value) + '\'';
     }
 
+    public String reflectGetValue(Object v){
+        try {
+            return (String)v.getClass().getMethod("getValue").invoke(v);
+        } catch ( InvocationTargetException  | IllegalAccessException  | NoSuchMethodException e4) {
+            return "Unable to return a value from String Valued Enum";
+        }
+    }
 }
 
