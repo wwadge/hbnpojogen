@@ -80,6 +80,7 @@ public class VelocityWriters {
 	public static long serialCount = 0xDEADBABE;
 	/** For ignoring imports in interface. */
 	private static TreeSet<String> notForInterfaceImports = new TreeSet<String>(new CaseInsensitiveComparator());
+	private static boolean wroteAnEnum = false;
 
 
 	/**
@@ -834,8 +835,9 @@ public class VelocityWriters {
 				// PackageTypeEnum.DAO) + ".*");
 			}
 			imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.FACTORY) + ".*");
-			imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.ENUM) + ".*");
-
+			if (wroteAnEnum){
+				imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.ENUM) + ".*");
+			}
 
 			if (!State.getInstance().isEnableSpringData()) {
 				imports.add(clazz.getDataLayerImplFullClassName());
@@ -1643,6 +1645,7 @@ public class VelocityWriters {
 					context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
 					if (!Core.skipSchemaWrite(entry.getValue().getDbCat())) {
 						enumTemplate.merge(context, enumWriter);
+						wroteAnEnum  = true;
 					}
 					enumWriter.close();
 				}
