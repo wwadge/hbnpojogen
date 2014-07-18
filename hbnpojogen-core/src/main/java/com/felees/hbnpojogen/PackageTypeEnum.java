@@ -31,5 +31,6 @@ public enum PackageTypeEnum implements Serializable {
 	DATA,
 	UTIL,
 	/** Constant. */
-	DAOIMPL;
+	DAOIMPL,
+	ENUM_TARGET_BASE;
 }

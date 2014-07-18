@@ -983,6 +983,7 @@ public class Config {
             packageMap.setDaoImplPackage(Config.config.getString(String.format("dbPackageMap.map(%d).daoImplPackage", i)));
             packageMap.setDataPackage(Config.config.getString(String.format("dbPackageMap.map(%d).dataPackage", i)));
             packageMap.setEnumPackage(Config.config.getString(String.format("dbPackageMap.map(%d).enumPackage", i)));
+            packageMap.setEnumPackageTargetBase(Config.config.getString(String.format("dbPackageMap.map(%d).enumPackage[@targetbase]", i)));
             packageMap.setEnumSubtypePackage(Config.config.getString(String.format("dbPackageMap.map(%d).enumSubtypePackage", i)));
             packageMap.setFactoryPackage(Config.config.getString(String.format("dbPackageMap.map(%d).factoryPackage", i)));
             packageMap.setUtilPackage(Config.config.getString(String.format("dbPackageMap.map(%d).utilPackage", i)));
@@ -1021,6 +1022,9 @@ public class Config {
         }
         if (packageMap.getEnumPackage() == null) {
             packageMap.setEnumPackage(String.format("%s.%s.enums.db.${DB}", State.getInstance().topLevel, State.getInstance().projectName));
+        }
+        if (packageMap.getEnumPackageTargetBase() == null) {
+            packageMap.setEnumPackageTargetBase( 	State.getInstance().getSourceTarget());
         }
         if (packageMap.getEnumSubtypePackage() == null) {
             packageMap.setEnumSubtypePackage(String.format("%s.%s.enums.subtype.${DB}", State.getInstance().topLevel, State.getInstance().projectName));

@@ -18,6 +18,7 @@ import org.hibernate.engine.spi.SessionImplementor;
 
 import static ${packagename}.StringValuedEnumReflect.*;
 
+
 /** For internal hibernate use.
  * @author unknown
  *
@@ -26,7 +27,7 @@ import static ${packagename}.StringValuedEnumReflect.*;
 
 //Please notice the calls to getNameFromValue *************************
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class StringValuedEnumType <T extends Enum & StringValuedEnum> 
+public class StringValuedEnumType <T extends Enum>
         implements org.hibernate.usertype.UserType, ParameterizedType {
 
     /**
@@ -62,8 +63,7 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
         String enumClassName = parameters.getProperty("enum");
         String enumPostgres = parameters.getProperty("forPgSQL");
         try {
-            this.enumClass = (Class<T>) Class.forName(enumClassName, true, StringValuedEnumType.classLoader).asSubclass(Enum.class)
-                    .asSubclass(StringValuedEnum.class); //Validates the class but does not eliminate the cast
+            this.enumClass = (Class<T>) Class.forName(enumClassName, true, StringValuedEnumType.classLoader).asSubclass(Enum.class);
             this.pgEnum = "true".equalsIgnoreCase(enumPostgres);
         } catch (ClassNotFoundException cnfe) {
             throw new HibernateException("Enum class not found", cnfe);
@@ -168,9 +168,9 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
             st.setNull(index, Types.CHAR);
         } else {
         	if (pgEnum){
-                st.setObject( index, ((T) value).getValue(), 1111 ); // 1111 = java.sql.Types "OTHER"
+                st.setObject( index, ((T) value).toString(), 1111 ); // 1111 = java.sql.Types "OTHER"
         	} else {
-        		st.setString( index, ((T) value).getValue() );
+        		st.setString( index, ((T) value).toString() );
         	}
         }
     }
@@ -261,9 +261,9 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
             preparedStatement.setNull(index, Types.CHAR);
         } else {
             if (pgEnum){
-                preparedStatement.setObject( index, ((T) value).getValue(), 1111 ); // 1111 = java.sql.Types "OTHER"
+                preparedStatement.setObject( index, ((T) value).toString(), 1111 ); // 1111 = java.sql.Types "OTHER"
             } else {
-                preparedStatement.setString( index, ((T) value).getValue() );
+                preparedStatement.setString( index, ((T) value).toString() );
             }
         }
     }
@@ -286,7 +286,8 @@ public class StringValuedEnumType <T extends Enum & StringValuedEnum>
     * @return internal
     */
     public String objectToSQLString(Object value) {
-        return '\'' + ((T) value).getValue() + '\'';
+        return '\'' + ((T) value).toString() + '\'';
     }
 
 }
+

@@ -1227,6 +1227,13 @@ implements Serializable {
 			}
 
 			break;
+		case ENUM_TARGET_BASE:
+			result = packageMap.getEnumPackageTargetBase();
+			if (result == null) {
+				result = defaultPackageMap.getEnumPackageTargetBase();
+			}
+
+			break;
 		case SUBTYPE_ENUM:
 			result = packageMap.getEnumSubtypePackage();
 			if (result == null) {

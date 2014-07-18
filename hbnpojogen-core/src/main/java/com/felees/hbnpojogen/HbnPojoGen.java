@@ -237,8 +237,8 @@ public class HbnPojoGen {
         }
         // Dump the enums
         log("Stage 7: Writing enums");
-        VelocityWriters.writeEnums(targetFolder);
-        VelocityWriters.writeSubtypeEnums(targetFolder);
+        VelocityWriters.writeEnums(SyncUtils.getConfigPackage("DEFAULT", PackageTypeEnum.ENUM_TARGET_BASE));
+        VelocityWriters.writeSubtypeEnums(SyncUtils.getConfigPackage("DEFAULT", PackageTypeEnum.ENUM_TARGET_BASE));
 
 
         log("Stage 8: Writing DAO Factory classes");

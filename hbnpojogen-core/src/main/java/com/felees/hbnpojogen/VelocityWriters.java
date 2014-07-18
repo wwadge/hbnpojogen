@@ -834,6 +834,8 @@ public class VelocityWriters {
 				// PackageTypeEnum.DAO) + ".*");
 			}
 			imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.FACTORY) + ".*");
+			imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.ENUM) + ".*");
+
 
 			if (!State.getInstance().isEnableSpringData()) {
 				imports.add(clazz.getDataLayerImplFullClassName());

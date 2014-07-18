@@ -29,6 +29,8 @@ public class PackageMap implements Serializable {
     /** Inner handle */
     private String enumPackage;
     /** Inner handle */
+    private String enumPackageTargetBase;
+    /** Inner handle */
     private String enumSubtypePackage;
     /** Inner handle */
 	private String factoryPackage;
@@ -179,6 +181,18 @@ public class PackageMap implements Serializable {
 	 */
 	public void setRepositoryFactoryPackage(String repositoryFactoryPackage) {
 		this.repositoryFactoryPackage = repositoryFactoryPackage;
+	}
+	/**
+	 * @return the enumPackageTargetBase
+	 */
+	public String getEnumPackageTargetBase() {
+		return enumPackageTargetBase;
+	}
+	/**
+	 * @param enumPackageTargetBase the enumPackageTargetBase to set
+	 */
+	public void setEnumPackageTargetBase(String enumPackageTargetBase) {
+		this.enumPackageTargetBase = enumPackageTargetBase;
 	}
 
 }
