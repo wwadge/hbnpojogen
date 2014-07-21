@@ -1,5 +1,6 @@
 
 package ${packagename};
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Utility class designed to inspect StringValuedEnums.
