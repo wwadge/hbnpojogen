@@ -57,11 +57,18 @@ public class StringValuedEnumReflect {
             getNameFromValue(Class<T> enumClass, Object value) {
         T[] values = getValues(enumClass);
         for (int i = 0; i < values.length; i++) {
-            if (values[i].toString().equals(value.toString())) {
+            if (reflectGetValue(values[i]).equals(value.toString())) {
                 return values[i].name();
             }
         }
         return "";
     }
     
+    public static String reflectGetValue(Object v){
+        try {
+            return (String)v.getClass().getMethod("getValue").invoke(v);
+        } catch ( InvocationTargetException  | IllegalAccessException  | NoSuchMethodException e4) {
+            return "Unable to return a value from String Valued Enum";
+        }
+    }
 }

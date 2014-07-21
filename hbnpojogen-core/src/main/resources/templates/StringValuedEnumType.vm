@@ -290,12 +290,5 @@ public class StringValuedEnumType <T extends Enum>
         return '\'' + reflectGetValue(value) + '\'';
     }
 
-    public String reflectGetValue(Object v){
-        try {
-            return (String)v.getClass().getMethod("getValue").invoke(v);
-        } catch ( InvocationTargetException  | IllegalAccessException  | NoSuchMethodException e4) {
-            return "Unable to return a value from String Valued Enum";
-        }
-    }
 }
 
