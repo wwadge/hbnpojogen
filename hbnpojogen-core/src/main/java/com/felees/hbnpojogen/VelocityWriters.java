@@ -1036,6 +1036,9 @@ public class VelocityWriters {
 								if (property.getJavaType().equals("DateTime") && State.getInstance().isEnableJodaSupport()) {
 									imports.add("org.joda.time.DateTime");
 								}
+								if (property.getJavaType().equals("LocalDate") && State.getInstance().isEnableJodaSupport()) {
+									imports.add("org.joda.time.LocalDate");
+								}
 
 
 							}

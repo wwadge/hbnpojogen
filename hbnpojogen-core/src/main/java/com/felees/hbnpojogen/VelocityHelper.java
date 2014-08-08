@@ -708,6 +708,12 @@ public class VelocityHelper {
                         break;
 
                     case java.sql.Types.DATE:
+                        if (State.getInstance().isEnableJodaSupport()){
+                            returnValue = "new LocalDate(BasicDataGenerator.generateDate())";
+                        } else {
+                            returnValue = "BasicDataGenerator.generateDate()";
+                        }
+                        break;
                     case java.sql.Types.TIME:
                     case java.sql.Types.TIMESTAMP:
                         if (State.getInstance().isEnableJodaSupport()){

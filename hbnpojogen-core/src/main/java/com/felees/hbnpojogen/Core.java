@@ -1857,11 +1857,14 @@ public class Core {
 				if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.DATE)) {
 					clazz.getImports().add("java.util.Date");
 				}
+				if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.LOCALDATE)) {
+					clazz.getImports().add("org.joda.time.LocalDate");
+				}
+
 				if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.DATETIME)) {
 					clazz.getImports().add("org.joda.time.DateTime");
 					clazz.getImports().add("org.hibernate.annotations.Type");
 				}
-
 
 				if (!property.getColumnAnnotation().equals("")) {
 					clazz.getImports().add("javax.persistence.Column");

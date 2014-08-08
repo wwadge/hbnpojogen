@@ -59,6 +59,8 @@ public class Constants {
     /** Constant */
     static final String DATETIME = "DateTime";
 
+    /** Constant */
+    static final String LOCALDATE = "LocalDate";
 	/** Constant */
 	static final String FKTABLE_NAME = "FKTABLE_NAME";
 	/** Constant */
