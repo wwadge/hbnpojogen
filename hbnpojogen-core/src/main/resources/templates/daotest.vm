@@ -275,7 +275,6 @@ public class DAOIntegrationTest {
 #if ($property.getJavaType().equals("LocalDate"))
 #set($timebit = ".toDate()")
 #end
-
 #if ($property.fieldObj.fieldType == 91)
 		Assert.assertEquals(new java.text.SimpleDateFormat("dd/MM/yyyy").format(copy.get${property.javaName}()$timebit), new java.text.SimpleDateFormat("dd/MM/yyyy").format(${class.tableObj.testHandle}.get${property.javaName}()$timebit));
 #else
