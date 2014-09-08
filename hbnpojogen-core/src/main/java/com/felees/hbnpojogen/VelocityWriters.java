@@ -545,7 +545,7 @@ public class VelocityWriters {
 			context.put("interfacesToShow", tmpInterfaces);
 
 			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
-			context.put("classCustomCodeFields", clazz.getClassCustomCodeFields());
+			context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
 			context.put("isSubtypeGenerationEnabled", !State.getInstance().disableSubtypeEnumGeneration);
 			 MessageDigest hash = MessageDigest.getInstance("MD5");
