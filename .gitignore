@@ -11,3 +11,8 @@
 velocity.log
 velocity.log.1
 target/
+
+# IntelliJ
+.idea/
+*.iml
+
