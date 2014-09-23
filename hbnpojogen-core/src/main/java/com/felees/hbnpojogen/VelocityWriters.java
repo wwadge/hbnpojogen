@@ -1174,15 +1174,15 @@ public class VelocityWriters {
 				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.TABLE_REPO_FACTORY), "."));
 
 			}
-// 			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.ENUM), "."));
+ 			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.ENUM), "."));
 			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.UTIL), "."));
 
 
 			if (!State.getInstance().isSkipModelInterfaces()){
-//				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECTINTERFACE), "."));
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECTINTERFACE), "."));
 			}
 
-//			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT), "."));
+			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT), "."));
 
 //			shortest = StringUtils.removeEnd(shortest, ".");
 //			packages.add(shortest);
