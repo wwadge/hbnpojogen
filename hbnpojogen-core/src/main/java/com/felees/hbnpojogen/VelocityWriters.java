@@ -1147,7 +1147,7 @@ public class VelocityWriters {
 				continue;
 			}
 
-
+/*
 			String shortest = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAO);
 			String item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAOIMPL);
 			shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
@@ -1164,8 +1164,28 @@ public class VelocityWriters {
 			item = SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT);
 			shortest = shortest.substring(0, StringUtils.indexOfDifference(shortest, item));
 
-			shortest = StringUtils.removeEnd(shortest, ".");
-			packages.add(shortest);
+*/
+			if (!State.getInstance().isEnableSpringData()){
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAO), "."));
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.DAOIMPL), "."));
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.DATA), "."));
+			} else {
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.TABLE_REPO), "."));
+				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.TABLE_REPO_FACTORY), "."));
+
+			}
+// 			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.ENUM), "."));
+			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.UTIL), "."));
+
+
+			if (!State.getInstance().isSkipModelInterfaces()){
+//				packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECTINTERFACE), "."));
+			}
+
+//			packages.add( StringUtils.removeEnd(SyncUtils.getConfigPackage(schema, PackageTypeEnum.OBJECT), "."));
+
+//			shortest = StringUtils.removeEnd(shortest, ".");
+//			packages.add(shortest);
 		}
 
 
@@ -1200,6 +1220,9 @@ public class VelocityWriters {
 			dialect = "org.hibernate.dialect.MySQLDialect"; break;
 		}
 
+		if (State.getInstance().customDialect != null){
+			dialect = State.getInstance().customDialect;
+		}
 		context.put("dialect", State.getInstance().dbMode == 1  ? "org.hibernate.dialect.SQLServerDialect" : dialect);
 		context.put("restrictCatalog", State.getInstance().dbMode == 1);
 

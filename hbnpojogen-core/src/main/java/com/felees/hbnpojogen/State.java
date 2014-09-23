@@ -182,6 +182,7 @@ implements Serializable {
 	private LinkedList<LinkedList<Clazz>> tableSetCycles;
 	/** Instance handle.*/
 	private static State instance = null;
+	public static String customDialect;
 	/** C3P0, BoneCP, ... */
     private String connectionPool;
 

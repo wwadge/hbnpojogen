@@ -590,6 +590,7 @@ public class Config {
             	                State.getInstance().dbMode = 2;
             	            }
         }
+        State.getInstance().customDialect = Config.config.getString("dbType[@dialect]", null);
         State.getInstance().dbIP = Config.config.getString(Constants.DATABASE_IP);
         State.getInstance().dbCatalog = Config.config.getString(Constants.DATABASE_CATALOG);
         State.getInstance().dbSchema = Config.config.getString(Constants.DATABASE_SCHEMA);
