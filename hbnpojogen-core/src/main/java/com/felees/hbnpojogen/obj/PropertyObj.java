@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.felees.hbnpojogen.CascadeState;
+import com.felees.hbnpojogen.Config;
 import com.felees.hbnpojogen.State;
 import com.felees.hbnpojogen.SyncUtils;
 import com.felees.hbnpojogen.db.FieldObj;
@@ -1079,14 +1080,15 @@ implements Serializable {
 	}
 
 	public final String getSequenceAnnotation() {
-		LinkedList<String> annotation = new LinkedList<String>();
 		StringBuffer sb = new StringBuffer();
-		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() &&
-			((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0))) {
-			sb.append(String.format("@SequenceGenerator(name = \"%s\", sequenceName = \"%s\", schema = \"%s\", catalog = \"%s\")", this.sequenceHibernateRef, this.sequenceName, this.getClazz().getTableObj().getDbSchema(), this.getClazz().getTableObj().getDbCat()) );
+		if (this.sequenceName != null && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne() &&((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0))) {
+			if (State.getInstance().schemaRestrict == 0) {
+                sb.append(String.format("@SequenceGenerator(name = \"%s\", sequenceName = \"%s\")", this.sequenceHibernateRef, this.sequenceName));
+            } else {
+                sb.append(String.format("@SequenceGenerator(name = \"%s\", sequenceName = \"%s\", schema = \"%s\", catalog = \"%s\")", this.sequenceHibernateRef, this.sequenceName, this.getClazz().getTableObj().getDbSchema(), this.getClazz().getTableObj().getDbCat()));
+            }
 			sb.append("\n");
-
-				}
+		}
 
 		return sb.toString().trim();
 	}
