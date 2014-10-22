@@ -97,8 +97,10 @@ package ${packagename};
 
 	@JoinTable(
 		name = "$property.ManyToManyLink.linkClass.tableObj.dbName",
+#if (${this.isSchemaRestricted()} == true)
 		catalog = "$property.ManyToManyLink.linkClass.tableObj.dbCat",
 		schema = "$property.ManyToManyLink.linkClass.tableObj.dbSchema",
+#end
 		joinColumns = {@JoinColumn(name = "$property.ManyToManyLink.srcPropertyBounce.fieldObj.name")},
 		inverseJoinColumns = {@JoinColumn(name = "$property.ManyToManyLink.dstPropertyBounce.fieldObj.name")}
 	)
