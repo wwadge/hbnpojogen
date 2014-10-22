@@ -58,7 +58,7 @@ public class StringValuedEnumReflect {
             getNameFromValue(Class<T> enumClass, Object value) {
         T[] values = getValues(enumClass);
         for (int i = 0; i < values.length; i++) {
-            if (reflectGetValue(values[i]).equals(value.toString())) {
+            if (reflectGetValue(values[i]).equals(value.toString().trim())) {
                 return values[i].name();
             }
         }

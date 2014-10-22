@@ -1122,6 +1122,10 @@ public class VelocityWriters {
 				State.getInstance().getSourceTarget() + File.separator + State.getInstance().getResourceFolder() + File.separator +
 				State.getInstance().getApplicationContextFilename();
 
+		if (new File(tmp).exists()) {
+			return;
+		}
+
 		PrintWriter appContextWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 		VelocityContext context = new VelocityContext();
 		context.put(PROJECTNAME, State.getInstance().projectName);
@@ -1274,8 +1278,8 @@ public class VelocityWriters {
 		context.put("additionalContextItems", State.getInstance().getAdditionalContextItems());
 		context.put("propOverride", !State.getInstance().isEnablePropertyPlaceholderConfigurer());
 
-		appContextTemplate.merge(context, appContextWriter);
-		appContextWriter.close();
+			appContextTemplate.merge(context, appContextWriter);
+			appContextWriter.close();
 	}
 
 	public static void writeSpringOverrideFile(String targetFolder)

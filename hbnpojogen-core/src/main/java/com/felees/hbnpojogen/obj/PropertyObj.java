@@ -1071,10 +1071,10 @@ implements Serializable {
 
 		}
 
-		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
-			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
-
-		}
+//		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
+//			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
+//
+//		}
 		return sb.toString().trim();
 	}
 
