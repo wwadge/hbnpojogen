@@ -169,6 +169,9 @@ $classAnnotation
 #if ( $class.superclass ) 
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
+#if (${class.hasMoneyWithCurrencyType()} == true)
+@TypeDef(name = "moneyAmountWithCurrencyType", typeClass = PersistentMoneyAmountAndCurrency.class)
+#end
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end

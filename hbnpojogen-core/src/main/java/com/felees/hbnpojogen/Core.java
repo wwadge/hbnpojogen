@@ -934,6 +934,7 @@ public class Core {
 						co.getImports().add("javax.persistence.Id");
 					}
 					property.setJavaType(SyncUtils.mapSQLType(fieldObj));
+
 					if (property.getJavaType().equals("String")) {
 						property.setLength(fieldObj.getLength());
 
@@ -1087,6 +1088,29 @@ public class Core {
 					break;
 				case NORMAL_FIELD:
 					property.setJavaType(SyncUtils.mapSQLType(fieldObj));
+					if (fieldObj.getName().endsWith("_currency")){
+						FieldObj f = tobj.getFields().get( fieldObj.getName().substring(0,  fieldObj.getName().lastIndexOf("_currency")));
+						if (f != null && f.isMoneyType()){
+							property.setHiddenCurrencyField(true);
+						}
+					}
+
+					if (fieldObj.getName().endsWith("_currency_code")){
+						FieldObj f = tobj.getFields().get( fieldObj.getName().substring(0,  fieldObj.getName().lastIndexOf("_currency_code")));
+						if (f != null && f.isMoneyType()){
+							property.setHiddenCurrencyField(true);
+						}
+					}
+					if (fieldObj.isMoneyType()){
+						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyAmountAndCurrency");
+						co.getImports().add("org.javamoney.moneta.Money");
+						co.getImports().add("org.hibernate.annotations.TypeDef");
+						co.getImports().add("org.hibernate.annotations.TypeDefs");
+						co.getImports().add("org.hibernate.annotations.Type");
+
+						property.setMoneyType(true);
+						property.setJavaType("Money");
+					}
 					if (property.getJavaType().equals("String")) {
 						property.setLength(fieldObj.getLength());
 					}
@@ -1123,7 +1147,11 @@ public class Core {
 				else {
 					property.setPropertyName(fieldName);
 				}
-				co.getProperties().put(fieldName, property);
+				if (!property.isHiddenCurrencyField()){
+					co.getProperties().put(fieldName, property);
+				} else {
+					co.getHiddenCurrencyProperties().put(fieldName, property);
+				}
 			}
 		} // end main loop
 
@@ -1914,8 +1942,8 @@ public class Core {
 
 			String classCustomCodeFields = State.getInstance().customClassCodeFields.get(clazz.getClassPackage() + "." + clazz.getClassName());
 			if (classCustomCode != null) {
-				System.out.println(clazz.getClassPackage() + "."
-						+ clazz.getClassName());
+//				System.out.println(clazz.getClassPackage() + "."
+//						+ clazz.getClassName());
 				clazz.setClassCustomCodeFields(classCustomCodeFields);
 			}
 			else {

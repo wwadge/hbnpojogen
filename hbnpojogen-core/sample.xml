@@ -625,6 +625,15 @@ table section
 		<field>*.table.field</field>
 	</transientFields>	
 	
+	<!-- Specify any fields to use a Money type (JSR354, javamoney). Fields listed here should also have a matching XXX_currency field
+	to store the currency
+		 -->
+	<moneyFields>
+		<field>schema.table.field</field>
+		<field>*.table.field</field>
+	</moneyFields>	
+	
+	
 	<!-- Set disableBackLinksInDataPoolFactory to true to prevent the datapool
 	factory from returning objects with backlinks. The default is to make
 	calls such as obj.addXXX(B) rather than b.setXXX(obj) --> 

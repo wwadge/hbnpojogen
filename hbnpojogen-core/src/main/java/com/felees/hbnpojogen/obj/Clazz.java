@@ -55,6 +55,8 @@ implements Serializable, Comparable<Clazz> {
 	private TableObj tableObj;
 	/** Links to properties in this class */
 	private TreeMap<String, PropertyObj> properties = new TreeMap<String, PropertyObj>(new CaseInsensitiveComparator());
+	/** Links to properties in this class */
+	private TreeMap<String, PropertyObj> hiddenCurrencyProperties = new TreeMap<String, PropertyObj>(new CaseInsensitiveComparator());
 	/** imports needed by this class */
 	private TreeSet<String> imports = new TreeSet<String>(new CaseInsensitiveComparator());
 	/** custom interfaces as specified by config */
@@ -430,6 +432,22 @@ implements Serializable, Comparable<Clazz> {
 
 	 }
 
+	 /**
+	  * Returns true if one of the fields in this class is marked as autoincrement
+	  *
+	  * @return true if one of the fields in this class is marked as autoincrement
+	  */
+	 public boolean hasMoneyWithCurrencyType() {
+		 boolean result = false;
+		 for (PropertyObj propery : this.properties.values()) {
+			 if (propery.isMoneyType()) {
+				 result = true;
+				 break;
+			 }
+		 }
+		 return result;
+
+	 }
 
 
 	 /**
@@ -1938,5 +1956,24 @@ implements Serializable, Comparable<Clazz> {
 	  public String getRepositoryClassNamePropertyName() {
 		  return this.getClassPropertyName()+"Repository";
 	  }
+
+
+
+	/**
+	 * @return the hiddenCurrencyProperties
+	 */
+	public TreeMap<String, PropertyObj> getHiddenCurrencyProperties() {
+		return hiddenCurrencyProperties;
+	}
+
+
+
+	/**
+	 * @param hiddenCurrencyProperties the hiddenCurrencyProperties to set
+	 */
+	public void setHiddenCurrencyProperties(
+			TreeMap<String, PropertyObj> hiddenCurrencyProperties) {
+		this.hiddenCurrencyProperties = hiddenCurrencyProperties;
+	}
 
 }

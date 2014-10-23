@@ -9,7 +9,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.felees.hbnpojogen.CascadeState;
-import com.felees.hbnpojogen.Config;
 import com.felees.hbnpojogen.State;
 import com.felees.hbnpojogen.SyncUtils;
 import com.felees.hbnpojogen.db.FieldObj;
@@ -107,6 +106,8 @@ implements Serializable {
 	private TreeSet<String> methodLevelGettersPostcondition = new TreeSet<String>();
 	/** For postgresql ID fields, defines the sequence generator controlling this field. */
 	private String sequenceName;
+	/** If true, this property is part of a Moneta-type property. */
+	private boolean hiddenCurrencyField;
 
 
 	/**
@@ -131,6 +132,8 @@ implements Serializable {
 	private boolean validatorAnnotated;
 	/** The reference used internally within hibernate. */
 	private String sequenceHibernateRef;
+	/** if true, this is a money type */
+	private boolean moneyType;
 
 	/**
 	 * Gets
@@ -1041,6 +1044,7 @@ implements Serializable {
 		LinkedList<String> annotation = new LinkedList<String>();
 		StringBuffer sb = new StringBuffer();
 		if (!this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne()) {
+
 			if ((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0)) {
 				annotation.add(String.format("name = \"%s\"", this.fieldObj.getName()));
 			}
@@ -1065,16 +1069,26 @@ implements Serializable {
 			}
 			if (sb.length() > 0) {
 				sb.deleteCharAt(sb.lastIndexOf(","));
-				sb.insert(0, "@Column( ");
+				sb.insert(0, "\t@Column( ");
 				sb.append(" )");
 			}
 
 
 		}
+		if (this.isMoneyType()){
+			PropertyObj p = this.getClazz().getHiddenCurrencyProperties().get(this.fieldObj.getName()+"_currency");
+			if (p == null){
+				p = this.getClazz().getHiddenCurrencyProperties().get(this.fieldObj.getName()+"_currency_code");
+			}
+			sb.insert(0, "\t@Columns(columns = {"+p.getColumnAnnotation()+",\n");
+			sb.append("})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
+		}
 
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
 			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
 		}
+
+
 		return sb.toString().trim();
 	}
 
@@ -1396,6 +1410,10 @@ implements Serializable {
 		return enableCascading;
 	}
 
+	public boolean isMoneyType() {
+		return this.moneyType;
+	}
+
 	   /** Checks to see if this property has a match in the cascade list to return if enabled or disabled.
      * @param state
      * @param propertyObj
@@ -1693,5 +1711,31 @@ implements Serializable {
 
 	public void setSequenceHibernateRef(String sequenceHibernateRef) {
 		this.sequenceHibernateRef = sequenceHibernateRef;
+	}
+
+
+
+
+	/**
+	 * @param moneyType the moneyType to set
+	 */
+	public void setMoneyType(boolean moneyType) {
+		this.moneyType = moneyType;
+	}
+
+
+	/**
+	 * @return the hiddenCurrencyField
+	 */
+	public boolean isHiddenCurrencyField() {
+		return hiddenCurrencyField;
+	}
+
+
+	/**
+	 * @param hiddenCurrencyField the hiddenCurrencyField to set
+	 */
+	public void setHiddenCurrencyField(boolean hiddenCurrencyField) {
+		this.hiddenCurrencyField = hiddenCurrencyField;
 	}
 }

@@ -107,6 +107,8 @@ implements Serializable {
 	private Set<String> equalityExcludes = new HashSet<String>();
 	/** set of transient fields. */
 	private Set<String> transientFields = new HashSet<String>();
+	/** set of transient fields. */
+	private Set<String> moneyFields = new HashSet<String>();
 
 	/** prepopulate stuff */
 	public LinkedList<CustomDB> prepopulateList = new LinkedList<CustomDB>();
@@ -2208,6 +2210,23 @@ implements Serializable {
 	 */
 	public void setTransientFields(Set<String> transientFields) {
 		this.transientFields = transientFields;
+	}
+
+
+	/**
+	 * @return the transientFields
+	 */
+	public Set<String> getMoneyFields() {
+		return moneyFields;
+	}
+
+
+
+	/**
+	 * @param transientFields the transientFields to set
+	 */
+	public void setMoneyFields(Set<String> moneyFields) {
+		this.moneyFields = moneyFields;
 	}
 
 

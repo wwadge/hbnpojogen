@@ -2,8 +2,10 @@ package com.felees.hbnpojogen.db;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
+import com.felees.hbnpojogen.State;
 import com.felees.hbnpojogen.obj.Clazz;
 import com.felees.hbnpojogen.obj.PropertyObj;
 
@@ -420,7 +422,7 @@ public class FieldObj implements Serializable {
 
     /**
      * Gets
-     * 
+     *
      * @return
      */
     public Map<String, Object> getEnumOtherCols() {
@@ -431,7 +433,7 @@ public class FieldObj implements Serializable {
 
     /**
      * Sets
-     * 
+     *
      * @param enumOtherCols
      */
     public void setEnumOtherCols(Map<String, Object> enumOtherCols) {
@@ -462,6 +464,17 @@ public class FieldObj implements Serializable {
 		this.comment = comment;
 	}
 
+	/**
+	 * @param fieldObj2
+	 * @return
+	 */
+	public boolean isMoneyType() {
+		String fname = this.getName();
+	    Set<String> moneyField = State.getInstance().getMoneyFields();
+	    return moneyField.contains("*.*."+fname) ||
+	    		moneyField.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+	    		moneyField.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
+	}
 
 
 

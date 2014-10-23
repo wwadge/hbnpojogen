@@ -141,6 +141,7 @@ public class Config {
 
         fillEqualityExcludes();
         fillTransientFields();
+        fillMoneyFields();
         fillUniqueKeys();
 
         // switch config get List here:
@@ -167,6 +168,10 @@ public class Config {
         State.getInstance().getTransientFields().addAll(transients);
 }
 
+    private static void fillMoneyFields() {
+        ArrayList<String> money = (ArrayList<String>) Config.config.getList("moneyFields.field");
+        State.getInstance().getMoneyFields().addAll(money);
+}
 
     /**
      * @param cascadeType

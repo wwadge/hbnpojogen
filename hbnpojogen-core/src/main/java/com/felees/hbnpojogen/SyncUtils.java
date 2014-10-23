@@ -209,7 +209,7 @@ implements Serializable {
 
 			tableDependencies = result.getTableDeps().get(checkTableFull);
 			// uncomment to see loop deps
-			    System.out.println(tmp + ", Deps: " + tableDependencies);
+//			    System.out.println(tmp + ", Deps: " + tableDependencies);
 			if (tableDependencies == null) {
 				tableDependencies = new TreeSet<String>(new CaseInsensitiveComparator());
 				tableDepsWithPossibleCycles = new TreeMap<String, Boolean>(new CaseInsensitiveComparator());
