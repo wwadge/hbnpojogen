@@ -641,6 +641,10 @@ public class VelocityHelper {
                     SyncUtils.getConfigPackage(property.getClazz().getTableObj().getDbCat(), PackageTypeEnum.ENUM) + "." +
                     property.getFieldObj().getEnumFilename() + ".class)";
                 }
+                if (property.isMoneyType()){
+                	return "org.javamoney.moneta.Money.of(BasicDataGenerator.generateRandomDecimal(" + property.getFieldObj().getPrecision() + ", " +
+                            property.getFieldObj().getScale() + "), \"USD\")";
+                }
 
                 switch (fieldtype) {
                     case java.sql.Types.BOOLEAN:

@@ -1107,6 +1107,9 @@ public class Core {
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");
 						co.getImports().add("org.hibernate.annotations.Type");
+						co.getImports().add("org.hibernate.annotations.Columns");
+						co.getImports().add("javax.persistence.Column");
+
 
 						property.setMoneyType(true);
 						property.setJavaType("Money");

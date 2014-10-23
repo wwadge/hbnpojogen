@@ -1080,8 +1080,8 @@ implements Serializable {
 			if (p == null){
 				p = this.getClazz().getHiddenCurrencyProperties().get(this.fieldObj.getName()+"_currency_code");
 			}
-			sb.insert(0, "\t@Columns(columns = {"+p.getColumnAnnotation()+",\n");
-			sb.append("})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
+			sb.insert(0, "\t@Columns(columns = {\n\t\t\t"+p.getColumnAnnotation()+",\n\t\t");
+			sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
 		}
 
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
