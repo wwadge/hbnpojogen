@@ -811,6 +811,9 @@ implements Serializable {
 	 * @return the same string with the first character set to uppercase
 	 */
 	public static String upfirstChar(String s) {
+        if (s == null || s.length() == 0){
+            return "";
+        }
 		return s.substring(0, 1).toUpperCase() + s.substring(1, s.length());
 	}
 
@@ -982,8 +985,9 @@ implements Serializable {
 	 */
 	public static String removeUnderscores(String input) {
 		StringBuffer result = new StringBuffer();
-
-		if (State.getInstance().disableUnderscoreConversion) {
+        if (input == null){
+            return "";
+        } else if (State.getInstance().disableUnderscoreConversion) {
 			result.append(input);
 		}
 		else {
@@ -1292,7 +1296,10 @@ implements Serializable {
 	 * @return The table catalog
 	 */
 	public static String getTableCatalog(String dottedInput) {
-		return dottedInput.substring(0, dottedInput.indexOf("."));
+        if (dottedInput.indexOf(".") >= 0){
+            return dottedInput.substring(0, dottedInput.indexOf("."));
+        }
+        return dottedInput;
 	}
 
 
