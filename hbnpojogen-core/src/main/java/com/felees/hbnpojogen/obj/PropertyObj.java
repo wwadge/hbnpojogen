@@ -134,6 +134,8 @@ implements Serializable {
 	private String sequenceHibernateRef;
 	/** if true, this is a money type */
 	private boolean moneyType;
+	/** if true, this is a currency type */
+	private boolean currencyType;
 
 	/**
 	 * Gets
@@ -1080,8 +1082,18 @@ implements Serializable {
 			if (p == null){
 				p = this.getClazz().getHiddenCurrencyProperties().get(this.fieldObj.getName()+"_currency_code");
 			}
+			if (p == null){
+				System.err.printf("Found a field marked as money type in the config but didn't find the corresponding currency field. " +
+						"Field = '%s' in table '%s'. Was expecting to find a field named "+this.fieldObj.getName()+"_currency or "+this.fieldObj.getName()+"_currency_code",
+						this.getFieldObj().getName(), this.getFieldObj().getTableObj().getName() );
+
+				System.exit(1);
+			}
 			sb.insert(0, "\t@Columns(columns = {\n\t\t\t"+p.getColumnAnnotation()+",\n\t\t");
 			sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
+		}
+		if (this.isCurrencyType()){
+			sb.insert(0, "@Type(type = \"currencyUnitType\")\n\t");
 		}
 
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
@@ -1414,6 +1426,10 @@ implements Serializable {
 		return this.moneyType;
 	}
 
+	public boolean isCurrencyType() {
+		return this.currencyType;
+	}
+
 	   /** Checks to see if this property has a match in the cascade list to return if enabled or disabled.
      * @param state
      * @param propertyObj
@@ -1737,5 +1753,13 @@ implements Serializable {
 	 */
 	public void setHiddenCurrencyField(boolean hiddenCurrencyField) {
 		this.hiddenCurrencyField = hiddenCurrencyField;
+	}
+
+
+	/**
+	 * @param currencyType the currencyType to set
+	 */
+	public void setCurrencyType(boolean currencyType) {
+		this.currencyType = currencyType;
 	}
 }

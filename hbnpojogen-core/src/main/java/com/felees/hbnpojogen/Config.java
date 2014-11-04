@@ -142,6 +142,7 @@ public class Config {
         fillEqualityExcludes();
         fillTransientFields();
         fillMoneyFields();
+        fillCurrencyFields();
         fillUniqueKeys();
 
         // switch config get List here:
@@ -171,6 +172,10 @@ public class Config {
     private static void fillMoneyFields() {
         ArrayList<String> money = (ArrayList<String>) Config.config.getList("moneyFields.field");
         State.getInstance().getMoneyFields().addAll(money);
+}
+    private static void fillCurrencyFields() {
+        ArrayList<String> currency = (ArrayList<String>) Config.config.getList("currencyUnitFields.field");
+        State.getInstance().getCurrencyFields().addAll(currency);
 }
 
     /**

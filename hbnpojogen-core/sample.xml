@@ -633,6 +633,13 @@ table section
 		<field>*.table.field</field>
 	</moneyFields>	
 	
+	<!-- Specify any fields to use a CurrencyUnit type (JSR354, javamoney). 
+		 -->
+	<currencyUnitFields>
+		<field>schema.table.field</field>
+		<field>*.table.field</field>
+	</currencyUnitFields>	
+	
 	
 	<!-- Set disableBackLinksInDataPoolFactory to true to prevent the datapool
 	factory from returning objects with backlinks. The default is to make

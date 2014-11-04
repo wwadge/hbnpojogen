@@ -645,6 +645,9 @@ public class VelocityHelper {
                 	return "org.javamoney.moneta.Money.of(BasicDataGenerator.generateRandomDecimal(" + property.getFieldObj().getPrecision() + ", " +
                             property.getFieldObj().getScale() + "), \"USD\")";
                 }
+                if (property.isCurrencyType()){
+                		return "javax.money.MonetaryCurrencies.getCurrency(\"USD\")";
+                }
 
                 switch (fieldtype) {
                     case java.sql.Types.BOOLEAN:

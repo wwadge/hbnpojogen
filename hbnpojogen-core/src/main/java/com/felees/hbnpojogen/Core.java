@@ -1103,7 +1103,7 @@ public class Core {
 					}
 					if (fieldObj.isMoneyType()){
 						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyAmountAndCurrency");
-						co.getImports().add("org.javamoney.moneta.Money");
+						co.getImports().add("javax.money.MonetaryAmount");
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");
 						co.getImports().add("org.hibernate.annotations.Type");
@@ -1112,8 +1112,22 @@ public class Core {
 
 
 						property.setMoneyType(true);
-						property.setJavaType("Money");
+						property.setJavaType("MonetaryAmount");
 					}
+					if (fieldObj.isCurrencyType()){
+						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentCurrencyUnit");
+						co.getImports().add("javax.money.CurrencyUnit");
+						co.getImports().add("org.hibernate.annotations.TypeDef");
+						co.getImports().add("org.hibernate.annotations.TypeDefs");
+						co.getImports().add("org.hibernate.annotations.Type");
+						co.getImports().add("org.hibernate.annotations.Columns");
+						co.getImports().add("javax.persistence.Column");
+
+
+						property.setCurrencyType(true);
+						property.setJavaType("CurrencyUnit");
+					}
+
 					if (property.getJavaType().equals("String")) {
 						property.setLength(fieldObj.getLength());
 					}

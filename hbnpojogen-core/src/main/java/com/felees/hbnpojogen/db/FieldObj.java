@@ -477,5 +477,13 @@ public class FieldObj implements Serializable {
 	}
 
 
+	public boolean isCurrencyType() {
+		String fname = this.getName();
+	    Set<String> currencyFields = State.getInstance().getCurrencyFields();
+	    return currencyFields.contains("*.*."+fname) ||
+	    		currencyFields.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+	    		currencyFields.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
+	}
+
 
 }

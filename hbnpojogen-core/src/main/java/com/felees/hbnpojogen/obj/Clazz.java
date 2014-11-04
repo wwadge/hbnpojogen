@@ -437,10 +437,23 @@ implements Serializable, Comparable<Clazz> {
 	  *
 	  * @return true if one of the fields in this class is marked as autoincrement
 	  */
-	 public boolean hasMoneyWithCurrencyType() {
+	 public boolean hasPropertyWithMoneyType() {
 		 boolean result = false;
 		 for (PropertyObj propery : this.properties.values()) {
 			 if (propery.isMoneyType()) {
+				 result = true;
+				 break;
+			 }
+		 }
+		 return result;
+
+	 }
+
+
+	 public boolean hasPropertyWithCurrencyType() {
+		 boolean result = false;
+		 for (PropertyObj propery : this.properties.values()) {
+			 if (propery.isCurrencyType()) {
 				 result = true;
 				 break;
 			 }

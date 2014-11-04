@@ -110,6 +110,8 @@ implements Serializable {
 	/** set of transient fields. */
 	private Set<String> moneyFields = new HashSet<String>();
 
+	/** set of transient fields. */
+	private Set<String> currencyFields = new HashSet<String>();
 	/** prepopulate stuff */
 	public LinkedList<CustomDB> prepopulateList = new LinkedList<CustomDB>();
 	/** prepopulate stuff */
@@ -2491,6 +2493,24 @@ implements Serializable {
 	public void setPropertyPlaceholderConfigurerSuppressBean(
 			boolean propertyPlaceholderConfigurerSuppressBean) {
 		this.propertyPlaceholderConfigurerSuppressBean = propertyPlaceholderConfigurerSuppressBean;
+	}
+
+
+
+	/**
+	 * @return the currencyFields
+	 */
+	public Set<String> getCurrencyFields() {
+		return currencyFields;
+	}
+
+
+
+	/**
+	 * @param currencyFields the currencyFields to set
+	 */
+	public void setCurrencyFields(Set<String> currencyFields) {
+		this.currencyFields = currencyFields;
 	}
 
 
