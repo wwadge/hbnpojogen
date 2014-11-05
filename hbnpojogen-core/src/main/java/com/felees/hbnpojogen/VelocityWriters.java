@@ -472,6 +472,31 @@ public class VelocityWriters {
 			context.put(MODEL, MODEL);
 
 
+			String classAnnotations = "";
+			String typedefs = "";
+			for (String s: clazz.getClassAnnotation()){
+				if (s.indexOf("TypeDef") > -1){
+					typedefs +="\t\t"+s+",\n";
+				}
+			 else {
+				 classAnnotations += "\t\t"+s+"\n";
+						 };
+			}
+
+				if (clazz.hasPropertyWithMoneyType()){
+					typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = PersistentMoneyAmountAndCurrency.class),\n";
+				}
+				if (clazz.hasPropertyWithCurrencyType()){
+					typedefs += "\t\t@TypeDef(name = \"currencyUnitType\", typeClass = PersistentCurrencyUnit.class),\n";
+				}
+
+
+			if (!typedefs.isEmpty()){
+				typedefs = "@TypeDefs(value = {\n"+typedefs.substring(0, typedefs.lastIndexOf(","))+"\n})";
+				classAnnotations += typedefs;
+				clazz.getImports().add("org.hibernate.annotations.TypeDefs");
+
+			}
 
 			if (isInterface) {
 				if (clazz.isSubclass()){
@@ -517,7 +542,8 @@ public class VelocityWriters {
 			context.put("packagename", SyncUtils.getConfigPackage(clazz.getTableObj().getDbCat(), type));
 
 			context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
-			context.put("classAnnotation", clazz.getClassAnnotation());
+
+			context.put("classAnnotation", classAnnotations);
 			context.put("classCustomCode", clazz.getClassCustomCode());
 			List<String> interfacesToShow = new LinkedList<String>();
 			if (!clazz.isSubclass()){

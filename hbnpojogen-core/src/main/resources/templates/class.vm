@@ -169,19 +169,6 @@ $classAnnotation
 #if ( $class.superclass ) 
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
-#if (${class.hasPropertyWithMoneyType()} == true && ${class.hasPropertyWithCurrencyType()} == true)
-@TypeDefs(value = {
-        @TypeDef(name = "moneyAmountWithCurrencyType", typeClass = PersistentMoneyAmountAndCurrency.class),
-        @TypeDef(name = "currencyUnitType", typeClass = PersistentCurrencyUnit.class)
-		})
-#else
-#if (${class.hasPropertyWithMoneyType()} == true)
-@TypeDef(name = "moneyAmountWithCurrencyType", typeClass = PersistentMoneyAmountAndCurrency.class)
-#end
-#if (${class.hasPropertyWithCurrencyType()} == true)
-@TypeDef(name = "currencyUnitType", typeClass = PersistentCurrencyUnit.class)
-#end
-#end
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end

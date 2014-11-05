@@ -3,10 +3,12 @@ package com.felees.hbnpojogen.obj;
 
 import java.io.Serializable;
 import java.util.BitSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -90,7 +92,7 @@ implements Serializable, Comparable<Clazz> {
 	 */
 	private PropertyObj extendingProperty;
 	/** From config file - just anything to be pasted on top of the class as annotation */
-	private String classAnnotation;
+	private Set<String> classAnnotation = new HashSet<String>();
 	/** From config file - just anything to be pasted at bottom of class */
 	private String classCustomCode;
 	/** From config file - just anything to be pasted at bottom of fields list */
@@ -1258,7 +1260,7 @@ implements Serializable, Comparable<Clazz> {
 	 /**
 	  * @return class annottion
 	  */
-	 public String getClassAnnotation() {
+	 public Set<String> getClassAnnotation() {
 		 return classAnnotation;
 	 }
 
@@ -1267,7 +1269,7 @@ implements Serializable, Comparable<Clazz> {
 	 /**
 	  * @param classAnnotation
 	  */
-	 public void setClassAnnotation(String classAnnotation) {
+	 public void setClassAnnotation(Set<String> classAnnotation) {
 		 this.classAnnotation = classAnnotation;
 	 }
 

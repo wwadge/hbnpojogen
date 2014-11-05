@@ -1103,7 +1103,7 @@ public class Core {
 					}
 					if (fieldObj.isMoneyType()){
 						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyAmountAndCurrency");
-						co.getImports().add("javax.money.MonetaryAmount");
+						co.getImports().add("org.javamoney.moneta.Money");
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");
 						co.getImports().add("org.hibernate.annotations.Type");
@@ -1112,7 +1112,7 @@ public class Core {
 
 
 						property.setMoneyType(true);
-						property.setJavaType("MonetaryAmount");
+						property.setJavaType("Money");
 					}
 					if (fieldObj.isCurrencyType()){
 						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentCurrencyUnit");
@@ -1942,11 +1942,11 @@ public class Core {
 			}
 			String classAnnotation = State.getInstance().customClassAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
 			if (classAnnotation != null) {
-				clazz.setClassAnnotation(classAnnotation);
+				clazz.getClassAnnotation().add(classAnnotation);
 			}
-			else {
-				clazz.setClassAnnotation("");
-			}
+//			else {
+//				clazz.setClassAnnotation("");
+//			}
 
 			String classCustomCode = State.getInstance().customClassCode.get(clazz.getClassPackage() + "." + clazz.getClassName());
 			if (classCustomCode != null) {
@@ -2073,12 +2073,11 @@ public class Core {
 		classannotation =
 			String
 			.format(
-					"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
+					"%s@TypeDef(name = \"enumType\", typeClass = "+valueType+")",
 					classannotation);
 		State.getInstance().customClassAnnotations.put(tmp, classannotation);
 
 		clazz.getImports().add("org.hibernate.annotations.TypeDef");
-		clazz.getImports().add("org.hibernate.annotations.TypeDefs");
 		clazz.getImports().add("org.hibernate.annotations.Parameter");
 		clazz.getImports().add("org.hibernate.annotations.Type");
 
@@ -2092,23 +2091,17 @@ public class Core {
 			classannotation =
 				String
 				.format(
-						"%s\n@TypeDefs( {@TypeDef(name = \"enumType\", typeClass = "+valueType+")} )",
+						"%s@TypeDef(name = \"enumType\", typeClass = "+valueType+") )",
 						classannotation);
 
 			State.getInstance().customClassAnnotations.put(parent, classannotation);
-			clazz.getEmbeddedFrom().setClassAnnotation(classannotation);
+			clazz.getEmbeddedFrom().getClassAnnotation().add(classannotation);
 			clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDef");
-			clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDefs");
 
 
 		}
 
 		for (Clazz c: classes.values()){
-//			if (c.isSubclass() && c.getExtendsFrom().getClazz().getClassName().equals(clazz.getClassName())){
-//				System.out
-//
-//					.println(c.getClassName() + " - " +c.getExtendsFrom().getClazz().getClassName() + " - "+clazz.getClassName());
-//			}
 				if (c.isSubclass() && c.getExtendsFrom().getClazz().getClassName().equals(clazz.getClassName())){
 				enumTypedefImport(classes, c, c.getClassPackage() + "." + c.getClassName());
 			}
