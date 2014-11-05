@@ -1093,7 +1093,7 @@ implements Serializable {
 			sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
 		}
 		if (this.isCurrencyType()){
-			sb.insert(0, "@Type(type = \"currencyUnitType\")\n\t");
+			sb.append("\n\t@Type(type = \"currencyUnitType\")");
 		}
 
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
