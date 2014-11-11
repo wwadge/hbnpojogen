@@ -1090,6 +1090,9 @@ implements Serializable {
 				System.exit(1);
 			}
 			sb.insert(0, "\t@Columns(columns = {\n\t\t\t"+p.getColumnAnnotation()+",\n\t\t");
+            if(sb.toString().endsWith(",\n\t\t")){
+                sb.append("\t@Column()");
+            }
 			sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
 		}
 		if (this.isCurrencyType()){
