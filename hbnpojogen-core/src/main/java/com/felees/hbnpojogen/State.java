@@ -275,6 +275,8 @@ implements Serializable {
     private String ldapBase;
     private String ldapCn;
 
+    private String customCurrencyUnitType;
+
 	public TreeMap<String, HashSet<RelationItem>> getFakeFKmatched() {
 		return fakeFKmatched;
 	}
@@ -2511,6 +2513,24 @@ implements Serializable {
 	 */
 	public void setCurrencyFields(Set<String> currencyFields) {
 		this.currencyFields = currencyFields;
+	}
+
+
+
+	/**
+	 * @return the customCurrencyUnitType
+	 */
+	public String getCustomCurrencyUnitType() {
+		return customCurrencyUnitType;
+	}
+
+
+
+	/**
+	 * @param customCurrencyUnitType the customCurrencyUnitType to set
+	 */
+	public void setCustomCurrencyUnitType(String customCurrencyUnitType) {
+		this.customCurrencyUnitType = customCurrencyUnitType;
 	}
 
 

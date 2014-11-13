@@ -1115,7 +1115,7 @@ public class Core {
 						property.setJavaType("Money");
 					}
 					if (fieldObj.isCurrencyType()){
-						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentCurrencyUnit");
+						co.getImports().add(State.getInstance().getCustomCurrencyUnitType());
 						co.getImports().add("javax.money.CurrencyUnit");
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");

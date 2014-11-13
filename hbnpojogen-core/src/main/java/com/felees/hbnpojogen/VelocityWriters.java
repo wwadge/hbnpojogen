@@ -487,7 +487,8 @@ public class VelocityWriters {
 					typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = PersistentMoneyAmountAndCurrency.class),\n";
 				}
 				if (clazz.hasPropertyWithCurrencyType()){
-					typedefs += "\t\t@TypeDef(name = \"currencyUnitType\", typeClass = PersistentCurrencyUnit.class),\n";
+					String type = State.getInstance().getCustomCurrencyUnitType().substring(State.getInstance().getCustomCurrencyUnitType().lastIndexOf(".")+1);
+					typedefs += "\t\t@TypeDef(name = \"currencyUnitType\", typeClass = "+type+".class),\n";
 				}
 
 

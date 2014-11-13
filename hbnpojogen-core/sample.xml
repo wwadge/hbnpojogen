@@ -633,9 +633,10 @@ table section
 		<field>*.table.field</field>
 	</moneyFields>	
 	
-	<!-- Specify any fields to use a CurrencyUnit type (JSR354, javamoney). 
+	<!-- Specify any fields to use a CurrencyUnit type (JSR354, javamoney). typeOverride is optional and if defined
+	will use the type you give it instead of the jadira ones (meant for bug workaround only)
 		 -->
-	<currencyUnitFields>
+	<currencyUnitFields typeOverride="com.your.custom.override.classType">
 		<field>schema.table.field</field>
 		<field>*.table.field</field>
 	</currencyUnitFields>	
