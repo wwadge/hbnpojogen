@@ -484,7 +484,8 @@ public class VelocityWriters {
 			}
 
 				if (clazz.hasPropertyWithMoneyType()){
-					typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = PersistentMoneyAmountAndCurrency.class),\n";
+					String type = State.getInstance().getCustomMoneyType().substring(State.getInstance().getCustomMoneyType().lastIndexOf(".")+1);
+					typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = "+type+".class),\n";
 				}
 				if (clazz.hasPropertyWithCurrencyType()){
 					String type = State.getInstance().getCustomCurrencyUnitType().substring(State.getInstance().getCustomCurrencyUnitType().lastIndexOf(".")+1);

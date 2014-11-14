@@ -1102,7 +1102,7 @@ public class Core {
 						}
 					}
 					if (fieldObj.isMoneyType()){
-						co.getImports().add("org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyAmountAndCurrency");
+						co.getImports().add(State.getInstance().getCustomMoneyType());
 						co.getImports().add("org.javamoney.moneta.Money");
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");

@@ -172,6 +172,8 @@ public class Config {
     private static void fillMoneyFields() {
         ArrayList<String> money = (ArrayList<String>) Config.config.getList("moneyFields.field");
         State.getInstance().getMoneyFields().addAll(money);
+        State.getInstance().setCustomMoneyType(Config.config.getString("moneyFields[@typeOverride]", "org.jadira.usertype.moneyandcurrency.moneta.PersistentMoneyAmountAndCurrency"));
+
 }
     private static void fillCurrencyFields() {
         ArrayList<String> currency = (ArrayList<String>) Config.config.getList("currencyUnitFields.field");

@@ -626,9 +626,10 @@ table section
 	</transientFields>	
 	
 	<!-- Specify any fields to use a Money type (JSR354, javamoney). Fields listed here should also have a matching XXX_currency field
-	to store the currency
+	to store the currency. typeOverride is optional and if defined
+	will use the type you give it instead of the jadira ones (meant for bug workaround only)
 		 -->
-	<moneyFields>
+	<moneyFields typeOverride="com.your.custom.override.classType">
 		<field>schema.table.field</field>
 		<field>*.table.field</field>
 	</moneyFields>	
