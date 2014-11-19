@@ -48,4 +48,8 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends QueryDslJp
         return entityManager.merge(entity);
     }
 	
+	@Override
+    public void refresh(T entity){
+        entityManager.refresh(entity);
+    }
 }
