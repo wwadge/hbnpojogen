@@ -642,6 +642,24 @@ table section
 		<field>*.table.field</field>
 	</currencyUnitFields>	
 	
+	<!-- Uses Jasypt to encrypt/decrypt string fields.
+	See: http://tomaszdziurko.pl/2013/07/transparently-persist-retrieve-encrypted-data-database/ 
+	
+	Requires jaspyt hibernate library : org.jasypt:jasypt-hibernate4:1.9.2
+	You may also add "except-for" to the field ignore list to mean: ignore all those
+	fields except for the ones matching schema.tablename (wildcards accepted, CSV for multiple values)
+	
+	NB: Security standards establish that two different encryption operations on the same data should not 
+	return the same value (due to the use of a random salt). Because of this, none of the fields that are set to be
+	encrypted when persisted can be a part of a WHERE clause in your search queries for the entity they belong to.
+	
+	 -->
+	<encryptedFields>
+		<field>schema.table.field</field>
+		<field>*.table.field</field>
+		<field except-for="*.sometable,someschema.sometable">someschema.sometable.somefieldname</field>
+	</encryptedFields>	
+	
 	
 	<!-- Set disableBackLinksInDataPoolFactory to true to prevent the datapool
 	factory from returning objects with backlinks. The default is to make

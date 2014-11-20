@@ -1101,28 +1101,28 @@ public class Core {
 							property.setHiddenCurrencyField(true);
 						}
 					}
-					if (fieldObj.isMoneyType()){
-						co.getImports().add(State.getInstance().getCustomMoneyType());
-						co.getImports().add("org.javamoney.moneta.Money");
+					if (fieldObj.isEncryptedType() || fieldObj.isMoneyType() || fieldObj.isCurrencyType()){
 						co.getImports().add("org.hibernate.annotations.TypeDef");
 						co.getImports().add("org.hibernate.annotations.TypeDefs");
 						co.getImports().add("org.hibernate.annotations.Type");
 						co.getImports().add("org.hibernate.annotations.Columns");
 						co.getImports().add("javax.persistence.Column");
+					}
 
+					if (fieldObj.isEncryptedType()){
+						co.getImports().add("org.jasypt.hibernate4.type.EncryptedStringType");
+						property.setEncrypted(true);
+					}
 
+					if (fieldObj.isMoneyType()){
+						co.getImports().add(State.getInstance().getCustomMoneyType());
+						co.getImports().add("org.javamoney.moneta.Money");
 						property.setMoneyType(true);
 						property.setJavaType("Money");
 					}
 					if (fieldObj.isCurrencyType()){
 						co.getImports().add(State.getInstance().getCustomCurrencyUnitType());
 						co.getImports().add("javax.money.CurrencyUnit");
-						co.getImports().add("org.hibernate.annotations.TypeDef");
-						co.getImports().add("org.hibernate.annotations.TypeDefs");
-						co.getImports().add("org.hibernate.annotations.Type");
-						co.getImports().add("org.hibernate.annotations.Columns");
-						co.getImports().add("javax.persistence.Column");
-
 
 						property.setCurrencyType(true);
 						property.setJavaType("CurrencyUnit");

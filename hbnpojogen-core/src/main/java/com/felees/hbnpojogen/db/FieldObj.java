@@ -1,11 +1,13 @@
 package com.felees.hbnpojogen.db;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 import com.felees.hbnpojogen.State;
+import com.felees.hbnpojogen.SyncUtils;
 import com.felees.hbnpojogen.obj.Clazz;
 import com.felees.hbnpojogen.obj.PropertyObj;
 
@@ -20,12 +22,12 @@ public class FieldObj implements Serializable {
 	private static final long serialVersionUID = -1521632621587378270L;
 	/** fieldname. */
 	private String name;
-    /** Set if renamed. */
-    private String alias;
-    /** Set if renamed (inverse link). */
-    private String aliasInverse;
-    /** Comment stored in db metadata. */
-    private String comment;
+	/** Set if renamed. */
+	private String alias;
+	/** Set if renamed (inverse link). */
+	private String aliasInverse;
+	/** Comment stored in db metadata. */
+	private String comment;
 
 	/** If true, the field has a default value set in the database. */
 	@SuppressWarnings("unused")
@@ -53,8 +55,8 @@ public class FieldObj implements Serializable {
 	/** a list of allowed enum values. */
 	private String[] enumValues;
 	/** a map of "other" enum values. */
-    private Map<String, Object> enumOtherCols = new TreeMap<String, Object>();
-    /** Convenience linking. */
+	private Map<String, Object> enumOtherCols = new TreeMap<String, Object>();
+	/** Convenience linking. */
 	private Clazz clazz;
 	/** this field is marked as unsigned. */
 	private boolean fieldTypeUnsigned;
@@ -73,7 +75,7 @@ public class FieldObj implements Serializable {
 		return this.alias != null;
 	}
 	@Override
-    public String toString() {
+	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.name + " ");
 
@@ -109,7 +111,7 @@ public class FieldObj implements Serializable {
 			}
 		}
 
-			return pfk;
+		return pfk;
 	}
 
 	/** Returns true if field is an enum.
@@ -400,45 +402,45 @@ public class FieldObj implements Serializable {
 		this.alias = alias;
 	}
 
-    /**
-     * Gets
-     *
-     * @return
-     */
-    public String getAliasInverse() {
-        return this.aliasInverse;
-    }
+	/**
+	 * Gets
+	 *
+	 * @return
+	 */
+	public String getAliasInverse() {
+		return this.aliasInverse;
+	}
 
 
 
-    /**
-     * Sets
-     *
-     * @param aliasInverse
-     */
-    public void setAliasInverse(String aliasInverse) {
-        this.aliasInverse = aliasInverse;
-    }
+	/**
+	 * Sets
+	 *
+	 * @param aliasInverse
+	 */
+	public void setAliasInverse(String aliasInverse) {
+		this.aliasInverse = aliasInverse;
+	}
 
-    /**
-     * Gets
-     *
-     * @return
-     */
-    public Map<String, Object> getEnumOtherCols() {
-        return this.enumOtherCols;
-    }
+	/**
+	 * Gets
+	 *
+	 * @return
+	 */
+	public Map<String, Object> getEnumOtherCols() {
+		return this.enumOtherCols;
+	}
 
 
 
-    /**
-     * Sets
-     *
-     * @param enumOtherCols
-     */
-    public void setEnumOtherCols(Map<String, Object> enumOtherCols) {
-        this.enumOtherCols = enumOtherCols;
-    }
+	/**
+	 * Sets
+	 *
+	 * @param enumOtherCols
+	 */
+	public void setEnumOtherCols(Map<String, Object> enumOtherCols) {
+		this.enumOtherCols = enumOtherCols;
+	}
 	/**
 	 * @return the fieldColumnType
 	 */
@@ -470,20 +472,57 @@ public class FieldObj implements Serializable {
 	 */
 	public boolean isMoneyType() {
 		String fname = this.getName();
-	    Set<String> moneyField = State.getInstance().getMoneyFields();
-	    return moneyField.contains("*.*."+fname) ||
-	    		moneyField.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
-	    		moneyField.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
+		Set<String> moneyField = State.getInstance().getMoneyFields();
+		return moneyField.contains("*.*."+fname) ||
+				moneyField.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+				moneyField.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
 	}
 
 
 	public boolean isCurrencyType() {
 		String fname = this.getName();
-	    Set<String> currencyFields = State.getInstance().getCurrencyFields();
-	    return currencyFields.contains("*.*."+fname) ||
-	    		currencyFields.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
-	    		currencyFields.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
+		Set<String> currencyFields = State.getInstance().getCurrencyFields();
+		return SyncUtils.mapSQLType(this).equals("String") && currencyFields.contains("*.*."+fname) ||
+				currencyFields.contains("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+				currencyFields.contains(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname);
 	}
 
+
+	public boolean isEncryptedType() {
+		String fname = this.getName();
+		return checkEncrypt("*.*."+fname) ||
+				checkEncrypt("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+				checkEncrypt(this.getProperty().getClazz().getTableObj().getDbCat()+".*."+fname)  ||
+
+				checkEncrypt("*."+this.getProperty().getClazz().getTableObj().getDbName()+".*") ||
+				checkEncrypt(this.getProperty().getClazz().getTableObj().getDbCat()+".*.*");
+
+
+	}
+	/**
+	 * @param string
+	 * @return
+	 */
+	private boolean checkEncrypt(String check) {
+		boolean encrypt = false;
+		String fname = this.getName();
+
+		TreeMap<String, List<String>> encFields = State.getInstance().getEncryptList();
+
+		if  ( encFields.containsKey(check)){
+			List<String> exceptions = encFields.get(check);
+			for (String s: exceptions){
+				if (s.equalsIgnoreCase("*."+this.getProperty().getClazz().getTableObj().getDbName()+"."+fname) ||
+						s.equalsIgnoreCase("*."+this.getProperty().getClazz().getTableObj().getDbName()+".*") ||
+						s.equalsIgnoreCase("*.*.*")){
+					return false;
+				}
+
+			}
+			return true;
+		}
+
+		return false;
+	}
 
 }

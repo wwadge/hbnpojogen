@@ -491,7 +491,10 @@ public class VelocityWriters {
 					String type = State.getInstance().getCustomCurrencyUnitType().substring(State.getInstance().getCustomCurrencyUnitType().lastIndexOf(".")+1);
 					typedefs += "\t\t@TypeDef(name = \"currencyUnitType\", typeClass = "+type+".class),\n";
 				}
-
+				if (clazz.hasPropertyWithEncryptedType()){
+					typedefs += "\t\t@TypeDef(name = \"encryptedString\", typeClass = EncryptedStringType.class, "+
+				"\n\t\t\tparameters= {@Parameter(name=\"encryptorRegisteredName\", value=\"STRING_ENCRYPTOR\")}\n\t\t),\n";
+				}
 
 			if (!typedefs.isEmpty()){
 				typedefs = "@TypeDefs(value = {\n"+typedefs.substring(0, typedefs.lastIndexOf(","))+"\n})";

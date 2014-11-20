@@ -143,7 +143,8 @@ public class Config {
         fillTransientFields();
         fillMoneyFields();
         fillCurrencyFields();
-        fillUniqueKeys();
+        fillEncryptedFields();
+               fillUniqueKeys();
 
         // switch config get List here:
         fillLdap();
@@ -181,6 +182,18 @@ public class Config {
         State.getInstance().setCustomCurrencyUnitType(Config.config.getString("currencyUnitFields[@typeOverride]", "org.jadira.usertype.moneyandcurrency.moneta.PersistentCurrencyUnit"));
 
 }
+
+    private static void fillEncryptedFields() {
+//        ArrayList<String> enc = (ArrayList<String>) Config.config.getList("encryptedFields.field");
+
+        List<String> tmp = Config.config.getList("encryptedFields.field");
+        for (int i = 0; i < tmp.size(); i++) {
+            State.getInstance().encryptList.put(tmp.get(i).toUpperCase(), Config.config.getList(String.format("encryptedFields.field(%d)[@except-for]", i), new LinkedList<String>()));
+        }
+
+
+//        State.getInstance().getEncryptedFields().addAll(enc);
+    }
 
     /**
      * @param cascadeType

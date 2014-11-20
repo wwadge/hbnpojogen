@@ -136,6 +136,7 @@ implements Serializable {
 	private boolean moneyType;
 	/** if true, this is a currency type */
 	private boolean currencyType;
+	private boolean encryptedType;
 
 	/**
 	 * Gets
@@ -1098,6 +1099,9 @@ implements Serializable {
 		if (this.isCurrencyType()){
 			sb.append("\n\t@Type(type = \"currencyUnitType\")");
 		}
+		if (this.isEncryptedType() && this.javaType.equals("String")){
+			sb.append("\n\t@Type(type = \"encryptedString\")");
+		}
 
 		if (State.getInstance().dbMode == 2 && (getJavaType().equals("java.util.UUID") || getJavaType().equals("UUID"))){
 			sb.append(" @org.hibernate.annotations.Type(type=\"pg-uuid\")");
@@ -1764,5 +1768,29 @@ implements Serializable {
 	 */
 	public void setCurrencyType(boolean currencyType) {
 		this.currencyType = currencyType;
+	}
+
+
+	/**
+	 * @param b
+	 */
+	public void setEncrypted(boolean enc) {
+		this.encryptedType = enc;
+	}
+
+
+	/**
+	 * @return the encryptedType
+	 */
+	public boolean isEncryptedType() {
+		return encryptedType;
+	}
+
+
+	/**
+	 * @param encryptedType the encryptedType to set
+	 */
+	public void setEncryptedType(boolean encryptedType) {
+		this.encryptedType = encryptedType;
 	}
 }

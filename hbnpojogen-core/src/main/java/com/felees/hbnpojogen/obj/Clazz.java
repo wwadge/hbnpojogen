@@ -464,6 +464,18 @@ implements Serializable, Comparable<Clazz> {
 
 	 }
 
+	 public boolean hasPropertyWithEncryptedType() {
+		 boolean result = false;
+		 for (PropertyObj propery : this.properties.values()) {
+			 if (propery.isEncryptedType()) {
+				 result = true;
+				 break;
+			 }
+		 }
+		 return result;
+
+	 }
+
 
 	 /**
 	  * Returns a name that is suitable for a property name eg fooClass for the class named FooClass

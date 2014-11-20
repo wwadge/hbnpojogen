@@ -112,12 +112,15 @@ implements Serializable {
 
 	/** set of transient fields. */
 	private Set<String> currencyFields = new HashSet<String>();
+//	private Set<String> encryptedFields = new HashSet<String>();
 	/** prepopulate stuff */
 	public LinkedList<CustomDB> prepopulateList = new LinkedList<CustomDB>();
 	/** prepopulate stuff */
 	public LinkedList<CustomDB> preExecList = new LinkedList<CustomDB>();
 	/** Tables to ignore during generation */
     public TreeSet<String> ignoreTableList = new TreeSet<String>(new CaseInsensitiveComparator());
+    /** Fields to encrypt. Key = field, value = exception list */
+    public TreeMap<String, List<String>> encryptList = new TreeMap<String, List<String>>(new CaseInsensitiveComparator());
     /** Fields to ignore during generation. Key = field, value = exception list */
     public TreeMap<String, List<String>> ignoreFieldList = new TreeMap<String, List<String>>(new CaseInsensitiveComparator());
     /** Ignore-except list */
@@ -2551,6 +2554,26 @@ implements Serializable {
 	public void setCustomMoneyType(String customMoneyType) {
 		this.customMoneyType = customMoneyType;
 	}
+
+
+
+	/**
+	 * @return the encryptList
+	 */
+	public TreeMap<String, List<String>> getEncryptList() {
+		return encryptList;
+	}
+
+
+
+	/**
+	 * @param encryptList the encryptList to set
+	 */
+	public void setEncryptList(TreeMap<String, List<String>> encryptList) {
+		this.encryptList = encryptList;
+	}
+
+
 
 
 
