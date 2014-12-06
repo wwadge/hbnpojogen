@@ -494,6 +494,8 @@ public class VelocityWriters {
 				if (clazz.hasPropertyWithEncryptedType()){
 					typedefs += "\t\t@TypeDef(name = \"encryptedString\", typeClass = EncryptedStringType.class, "+
 				"\n\t\t\tparameters= {@Parameter(name=\"encryptorRegisteredName\", value=\"STRING_ENCRYPTOR\")}\n\t\t),\n";
+					clazz.getImports().add("org.hibernate.annotations.Parameter");
+
 				}
 
 			if (!typedefs.isEmpty()){
@@ -913,7 +915,7 @@ public class VelocityWriters {
 			tmpContext = tmpContext.substring(tmpContext.lastIndexOf('/') + 1);
 		}
 		context.put("appContextFilename", tmpContext);
-
+		context.put("daoCustomContextConfig", State.getInstance().getDaoCustomContextConfig());
 
 		context.put(DISABLE_CLEAN_TABLES, State.getInstance().disableCleanTables);
 		context.put(DISABLE_TEST_ROLLBACK, State.getInstance().disableTestRollback);
@@ -1442,10 +1444,13 @@ public class VelocityWriters {
 
 	public static void writeUtils(String targetFolder)
 			throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
-		String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "MockDatabase", "IPojoGenEntity", "BasicDataGenerator"};
+		String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "IPojoGenEntity", "BasicDataGenerator"};
 
 		writeUtils(targetFolder, getAndCreateUtilPath( targetFolder ), utilClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
 
+		if (State.getInstance().enableMockitoBeans){
+			writeUtils(targetFolder, getAndCreateUtilPath( targetFolder ), new String[]{"MockDatabase"}, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+		}
 		String[] repoClasses = {"CustomRepository", "CustomRepositoryImpl", "RepositoryFactoryBean"};
 
 		writeUtils(targetFolder, getAndCreateRepoFactoryPath( targetFolder ), repoClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY));

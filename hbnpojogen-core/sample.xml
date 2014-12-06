@@ -54,8 +54,9 @@
 	<sourceFolderName>src/main/java</sourceFolderName>
 	
 	<!-- Default folder name for test unit under sourceTarget. 
-	Default is "test/unit" or (src/test/java if maven is enabled) -->
-	<testFolderName>src/test/java</testFolderName>
+	Default is "test/unit" or (src/test/java if maven is enabled). daoCustomContextConfig is optional and if defined will use 
+	whatever you type instead of the non-spring boot way of loading a context in tests -->
+	<testFolderName daoCustomContextConfig="@SpringApplicationConfiguration(classes = Application.class)">src/test/java</testFolderName>
 	
 	<!-- Only used to store state, normally more relevant for your application.  -->
 	<resourceFolder>src/main/resources</resourceFolder>

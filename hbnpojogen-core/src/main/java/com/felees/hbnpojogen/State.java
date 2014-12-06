@@ -178,6 +178,7 @@ implements Serializable {
 	private String srcFolder;
 	/** Eg <toplevel>/test/unit */
 	private String testFolder;
+	private String daoCustomContextConfig;
 	/** Eg <toplevel>/test/unit */
 	private String resourceFolder;
 	/** Eg <toplevel>/test/unit */
@@ -1414,6 +1415,7 @@ implements Serializable {
 	}
 
 
+
 	/**
 	 * @return the sourceTarget
 	 */
@@ -2571,6 +2573,24 @@ implements Serializable {
 	 */
 	public void setEncryptList(TreeMap<String, List<String>> encryptList) {
 		this.encryptList = encryptList;
+	}
+
+
+
+	/**
+	 * @return the daoCustomContextConfig
+	 */
+	public String getDaoCustomContextConfig() {
+		return daoCustomContextConfig;
+	}
+
+
+
+	/**
+	 * @param daoCustomContextConfig the daoCustomContextConfig to set
+	 */
+	public void setDaoCustomContextConfig(String daoCustomContextConfig) {
+		this.daoCustomContextConfig = daoCustomContextConfig;
 	}
 
 

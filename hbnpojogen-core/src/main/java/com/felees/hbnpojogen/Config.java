@@ -668,7 +668,8 @@ public class Config {
         State.getInstance().setSrcFolder(Config.config.getString("sourceFolderName", defaultSrc));
         defaultSrc = mavenEnabled ?  "src/test/java" : "test/unit";
         State.getInstance().setTestFolder(Config.config.getString("testFolderName", defaultSrc));
-        defaultSrc = mavenEnabled ?  "src/main/resources" : "resources";
+        State.getInstance().setDaoCustomContextConfig(Config.config.getString("testFolderName[@daoCustomContextConfig]", ""));
+         defaultSrc = mavenEnabled ?  "src/main/resources" : "resources";
         State.getInstance().setResourceFolder(Config.config.getString("resourceFolder", defaultSrc));
         defaultSrc = mavenEnabled ?  "src/test/resources": "test/unit/resources";
         State.getInstance().setTestResourceFolder(Config.config.getString("testResourceFolder", defaultSrc));
