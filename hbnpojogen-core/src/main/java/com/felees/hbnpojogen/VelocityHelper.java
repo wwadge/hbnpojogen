@@ -318,13 +318,45 @@ public class VelocityHelper {
      * @param testHandle
      * @return An ordered list
      */
+    public static String replaceLast(String string, String toReplace, String replacement) {
+        int pos = string.lastIndexOf(toReplace);
+        if (pos > -1) {
+            return string.substring(0, pos)
+                 + replacement
+                 + string.substring(pos + toReplace.length(), string.length());
+        }
+            return string;
+
+    }
+
+    String replaceFirstFrom(String str, int from, String regex, String replacement)
+    {
+        String prefix = str.substring(0, from);
+        String rest = str.substring(from);
+        rest = rest.replaceFirst(regex, replacement);
+        return prefix+rest;
+    }
+
     public LinkedList<String> getUncascaded(Clazz clazz, String testHandle) {
         LinkedList<String> result = new LinkedList<String>();
         LinkedList<ObjectPair<Clazz, String>> uncascadedOps = sortByDepth(getUncascadedInternal(clazz, testHandle, null, false));
         for (ObjectPair<Clazz, String> entry : uncascadedOps) {
+
+
+        	String s = entry.getValue().substring(0, entry.getValue().lastIndexOf(".")+1)+"set";
+        	String method = entry.getValue().substring(entry.getValue().lastIndexOf(".")+1);
+        	if (method.startsWith("get")){
+        		s = s + method.substring(3);
+        	} else {
+        		s = s + method.substring(2); // isXXX
+        	}
+
+
+       String set = replaceLast(s, "()", "(");
+
         	if (State.getInstance().isEnableSpringData()) {
-        		result.add(entry.getKey().getRepositoryClassNamePropertyName()+".save("+
-        				entry.getValue()+")");
+        		result.add(set +"("+entry.getKey().getRepositoryClassNamePropertyName()+".save("+
+        				entry.getValue()+")))");
 
         	} else {
         		result.add(entry.getKey().getFullHibernateDAOFactory()+".get"+entry.getKey().getClassName()+"Dao().saveOrUpdate("+
