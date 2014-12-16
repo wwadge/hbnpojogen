@@ -1,16 +1,7 @@
 package com.felees.hbnpojogen;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -668,8 +659,15 @@ public class Config {
         State.getInstance().setSrcFolder(Config.config.getString("sourceFolderName", defaultSrc));
         defaultSrc = mavenEnabled ?  "src/test/java" : "test/unit";
         State.getInstance().setTestFolder(Config.config.getString("testFolderName", defaultSrc));
-        State.getInstance().setDaoCustomContextConfig(Config.config.getString("testFolderName[@daoCustomContextConfig]", ""));
-         defaultSrc = mavenEnabled ?  "src/main/resources" : "resources";
+        StringBuilder sb = new StringBuilder();
+        for(Iterator<Object> it = Config.config.getList("testDaoCustomContextConfig", Collections.emptyList()).iterator(); it.hasNext();) {
+            sb.append(it.next());
+            if (it.hasNext()) {
+                sb.append(Config.config.getListDelimiter());
+            }
+        }
+        State.getInstance().setDaoCustomContextConfig(sb.toString());
+        defaultSrc = mavenEnabled ?  "src/main/resources" : "resources";
         State.getInstance().setResourceFolder(Config.config.getString("resourceFolder", defaultSrc));
         defaultSrc = mavenEnabled ?  "src/test/resources": "test/unit/resources";
         State.getInstance().setTestResourceFolder(Config.config.getString("testResourceFolder", defaultSrc));
