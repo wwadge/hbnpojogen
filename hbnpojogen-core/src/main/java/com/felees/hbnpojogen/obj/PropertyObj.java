@@ -1017,7 +1017,15 @@ implements Serializable {
 		    if (this.javaType.equalsIgnoreCase("LocalDate")){
 		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.joda.PersistentLocalDate\")");
 		    }
+		} else if (State.getInstance().isEnableJDK8Support()){
+		    if (this.javaType.equalsIgnoreCase("LocalDateTime")){
+		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
+		    }
+		    if (this.javaType.equalsIgnoreCase("LocalDate")){
+		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDate\")");
+		    }
 		}
+
 		if (State.getInstance().isEnableHibernateValidator()) {
 
 			if (!this.oneToMany &&  !this.manyToOne &&  !this.manyToMany && !this.isPFK() && !this.isOneToOne()){

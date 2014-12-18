@@ -1903,12 +1903,23 @@ public class Core {
 					clazz.getImports().add("java.util.Date");
 				}
 				if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.LOCALDATE)) {
-					clazz.getImports().add("org.joda.time.LocalDate");
-					clazz.getImports().add("org.hibernate.annotations.Type");
+					if (State.getInstance().isEnableJDK8Support()){
+						clazz.getImports().add("java.time.LocalDate");
+
+					} else {
+						clazz.getImports().add("org.joda.time.LocalDate");
+					}
+						clazz.getImports().add("org.hibernate.annotations.Type");
 				}
 
-				if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.DATETIME)) {
-					clazz.getImports().add("org.joda.time.DateTime");
+
+				if ((property.getJavaType() != null) && (property.getJavaType().equalsIgnoreCase(Constants.DATETIME) ||property.getJavaType().equalsIgnoreCase(Constants.LOCALDATETIME)) ) {
+					if (State.getInstance().isEnableJDK8Support()){
+						clazz.getImports().add("java.time.LocalDateTime");
+					} else {
+						clazz.getImports().add("org.joda.time.DateTime");
+
+					}
 					clazz.getImports().add("org.hibernate.annotations.Type");
 				}
 

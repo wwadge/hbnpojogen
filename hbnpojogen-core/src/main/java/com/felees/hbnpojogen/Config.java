@@ -646,6 +646,7 @@ public class Config {
 		State.getInstance().setMockitoFilename(Config.config.getString("enableMockitoBeans[@filename]", "beans.test.mockito.xml"));
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setEnableJodaSupport(Config.config.getString("enableJodaSupport", "false").equalsIgnoreCase("TRUE"));
+        State.getInstance().setEnableJDK8Support(Config.config.getString("enableJDK8Support", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnableSpringData(Config.config.getString("enableSpringData", "true").equalsIgnoreCase("TRUE"));
 		State.getInstance().setSpringDataFactoryClass(Config.config.getString("enableSpringData[@factoryClass]", ""));
 		State.getInstance().setSpringDataRepoInterface(Config.config.getString("enableSpringData[@repoInterface]", " org.springframework.data.jpa.repository.JpaRepository"));

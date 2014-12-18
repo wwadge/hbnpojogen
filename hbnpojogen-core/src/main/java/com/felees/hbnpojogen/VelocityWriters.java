@@ -1066,12 +1066,23 @@ public class VelocityWriters {
 								if (property.isManyToOne()) {
 									imports.add(property.getManyToOneLink().getClazz().getFullDataPoolFactory());
 								}
-								if (property.getJavaType().equals("DateTime") && State.getInstance().isEnableJodaSupport()) {
+								if (property.getJavaType().equals("DateTime") || property.getJavaType().equals("LocalDateTime")){
+									if (State.getInstance().isEnableJodaSupport()) {
 									imports.add("org.joda.time.DateTime");
-								}
-								if (property.getJavaType().equals("LocalDate") && State.getInstance().isEnableJodaSupport()) {
+									} else {
+										imports.add("java.time.LocalDateTime");
+
+									}
+									}
+								if (property.getJavaType().equals("LocalDate")){
+									if (State.getInstance().isEnableJodaSupport()) {
+
 									imports.add("org.joda.time.LocalDate");
-								}
+									} else {
+										imports.add("java.time.LocalDate");
+
+									}
+									}
 
 
 							}

@@ -768,10 +768,15 @@ implements Serializable {
 			}
 			break;
 		case java.sql.Types.DATE:
-			if (State.getInstance().isEnableJodaSupport()){
+			if (State.getInstance().isEnableJodaSupport() || State.getInstance().isEnableJDK8Support()){
 				result = "LocalDate";
 			} else {
-				result = "Date";
+				if (State.getInstance().isEnableJDK8Support()){
+					result = "LocalDate";
+				} else {
+					result = "Date";
+
+				}
 			}
 			break;
 		case java.sql.Types.TIME:
@@ -779,8 +784,12 @@ implements Serializable {
 			if (State.getInstance().isEnableJodaSupport()){
 				result = "DateTime";
 			} else {
-				result = "Date";
-			}
+				 if (State.getInstance().isEnableJDK8Support()){
+					 result = "LocalDateTime";
+				 } else {
+					 result = "Date";
+				 }
+				 }
 			break;
 		case java.sql.Types.ROWID:
 		case java.sql.Types.NCLOB:

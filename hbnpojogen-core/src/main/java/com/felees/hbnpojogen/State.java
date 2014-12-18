@@ -197,7 +197,8 @@ implements Serializable {
 
     /** enable joda-time */
     public boolean enableJodaSupport;
-    public boolean enableSpringData;
+    public boolean enableJDK8Support;
+       public boolean enableSpringData;
     public String springDataFactoryClass="";
     public String springDataRepoInterface=" org.springframework.data.jpa.repository.JpaRepository";
 
@@ -2591,6 +2592,24 @@ implements Serializable {
 	 */
 	public void setDaoCustomContextConfig(String daoCustomContextConfig) {
 		this.daoCustomContextConfig = daoCustomContextConfig;
+	}
+
+
+
+	/**
+	 * @return the enableJDK8Support
+	 */
+	public boolean isEnableJDK8Support() {
+		return enableJDK8Support;
+	}
+
+
+
+	/**
+	 * @param enableJDK8Support the enableJDK8Support to set
+	 */
+	public void setEnableJDK8Support(boolean enableJDK8Support) {
+		this.enableJDK8Support = enableJDK8Support;
 	}
 
 

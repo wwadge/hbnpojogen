@@ -59,6 +59,7 @@ public class Constants {
     /** Constant */
     static final String DATETIME = "DateTime";
 
+    static final String LOCALDATETIME = "LocalDateTime";
     /** Constant */
     static final String LOCALDATE = "LocalDate";
 	/** Constant */

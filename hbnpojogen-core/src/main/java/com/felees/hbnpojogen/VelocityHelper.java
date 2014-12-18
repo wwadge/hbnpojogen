@@ -750,7 +750,12 @@ public class VelocityHelper {
                         if (State.getInstance().isEnableJodaSupport()){
                             returnValue = "new LocalDate(BasicDataGenerator.generateDate())";
                         } else {
-                            returnValue = "BasicDataGenerator.generateDate()";
+                            if (State.getInstance().isEnableJDK8Support()){
+                            		returnValue = "BasicDataGenerator.generateDate().toLocalDateTime().toLocalDate()";
+                            } else {
+                        		returnValue = "BasicDataGenerator.generateDate()";
+
+                            }
                         }
                         break;
                     case java.sql.Types.TIME:
@@ -758,8 +763,14 @@ public class VelocityHelper {
                         if (State.getInstance().isEnableJodaSupport()){
                             returnValue = "new DateTime(BasicDataGenerator.generateDate())";
                         } else {
-                            returnValue = "BasicDataGenerator.generateDate()";
-                        }
+                            if (State.getInstance().isEnableJDK8Support()){
+
+                            		returnValue = "BasicDataGenerator.generateDate().toLocalDateTime()";
+                            } else{
+                        		returnValue = "BasicDataGenerator.generateDate()";
+
+                            }
+                            }
                         break;
 
                     case java.sql.Types.BINARY:

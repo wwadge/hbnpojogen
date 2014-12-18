@@ -42,6 +42,9 @@
 	<!-- Enable this to use Joda dateTime instead of java.util.Date -->
 	<enableJodaSupport>false</enableJodaSupport>
 	
+	<!-- If enableJodaSupport is false and enableJDK8Support is true, we use java.util.LocalDate -->
+	<enableJDK8Support>false</enableJDK8Support>
+	
 	<!--  If not disabled, generates a spring context containing mock objects for each repository
 	for testing. Use the name tag to define the context filename. Default: true and filename set to beans.test.mockito.xml -->
 	<enableMockitoBeans filename="some.file.name.xml">true</enableMockitoBeans>
