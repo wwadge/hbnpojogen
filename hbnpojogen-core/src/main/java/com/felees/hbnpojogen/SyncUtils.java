@@ -763,9 +763,12 @@ implements Serializable {
 		case java.sql.Types.OTHER:
 			if (fieldObj.getFieldColumnType().equalsIgnoreCase("UUID")){
 				result = "java.util.UUID";
+			} else if (fieldObj.getFieldColumnType().equalsIgnoreCase("JSON")){
+				result = "String";
 			} else {
 				result = "Object";
 			}
+
 			break;
 		case java.sql.Types.DATE:
 			if (State.getInstance().isEnableJodaSupport() || State.getInstance().isEnableJDK8Support()){

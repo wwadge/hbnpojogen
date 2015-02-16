@@ -107,7 +107,7 @@ package ${packagename};
 #end
 #end
 #macro(oneToManyAnnotation $property)
- 	@OneToMany( fetch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
+ 	@OneToMany( fe tch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
 #if ($property.isOneToManyCascadeEnabledByConfig())
  	@org.hibernate.annotations.Cascade($property.getCascadeTypeOneToMany())
 #end

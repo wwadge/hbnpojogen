@@ -261,7 +261,7 @@ public class Core {
 					fakeEnum = (dstTableMap != null);
 				}
 				if (!typeName.toUpperCase().equals("UUID") && (Constants.ENUM.equals(typeName.toUpperCase())
-						|| sqlType == Types.OTHER // eg pgsql enum type
+						|| (sqlType == Types.OTHER && !typeName.equalsIgnoreCase("JSON"))// eg pgsql enum type
 						|| fakeEnum)) {
 					// if it's an enum, generate all the enum files and parse
 					// the metadata to

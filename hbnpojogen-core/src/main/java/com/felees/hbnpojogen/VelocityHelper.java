@@ -112,6 +112,8 @@ public class VelocityHelper {
             case java.sql.Types.OTHER:
             	if (fieldColumnType.equalsIgnoreCase("UUID")){
             		returnValue= java.util.UUID.randomUUID().toString();
+            	} else  	if (fieldColumnType.equalsIgnoreCase("UUID")){
+            		returnValue= "new String(\"dummy\");";
             	} else {
             		returnValue= "new Object();";
             	}
@@ -785,8 +787,10 @@ public class VelocityHelper {
                     case java.sql.Types.OTHER:
                      	if (fieldColumntype.equalsIgnoreCase("UUID")){
                     		returnValue= "java.util.UUID.randomUUID()";
-                    	} else {
-                    		returnValue= "new Object();";
+                     	} else if (fieldColumntype.equalsIgnoreCase("JSON")){
+                            returnValue = "BasicDataGenerator.generateRandomString(" + property.getLength() + ")";
+                     	} else {
+                    		returnValue= "new Object()";
                     	}
 
                     	break;
