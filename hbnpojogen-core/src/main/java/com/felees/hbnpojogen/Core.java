@@ -429,7 +429,7 @@ public class Core {
 					}
 				}
 
-				if (keySeq == 1) { // first instance
+				if (tableObj.getImportedKeys().get(fkName) == null) { // first instance
 					tableObj.getImportedKeys().put(fkName,
 							new KeyObj(fkColName, State.getInstance().tables.get(pkFullTableName).getName(), pkTableCat, pkTableSchema, pkColName));
 				}
