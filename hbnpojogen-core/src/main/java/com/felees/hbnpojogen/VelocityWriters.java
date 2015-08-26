@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -474,13 +475,13 @@ public class VelocityWriters {
 
 			String classAnnotations = "";
 			String typedefs = "";
-			for (String s: clazz.getClassAnnotation()){
+			for (String s: Iterables.concat(clazz.getClassAnnotation(), clazz.getClassTypedefsAnnotation())){
 				if (s.indexOf("TypeDef") > -1){
 					typedefs +="\t\t"+s+",\n";
 				}
 			 else {
 				 classAnnotations += "\t\t"+s+"\n";
-						 };
+						 }
 			}
 
 				if (clazz.hasPropertyWithMoneyType()){

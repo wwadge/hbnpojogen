@@ -1,25 +1,12 @@
 package com.felees.hbnpojogen.obj;
 
 
-import java.io.Serializable;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import com.felees.hbnpojogen.CaseInsensitiveComparator;
-import com.felees.hbnpojogen.HbnPojoGen;
-import com.felees.hbnpojogen.ObjectPair;
-import com.felees.hbnpojogen.PackageTypeEnum;
-import com.felees.hbnpojogen.State;
-import com.felees.hbnpojogen.SyncUtils;
-import com.felees.hbnpojogen.VelocityHelper;
+import com.felees.hbnpojogen.*;
 import com.felees.hbnpojogen.db.TableObj;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 
@@ -93,6 +80,16 @@ implements Serializable, Comparable<Clazz> {
 	private PropertyObj extendingProperty;
 	/** From config file - just anything to be pasted on top of the class as annotation */
 	private Set<String> classAnnotation = new HashSet<String>();
+
+	public Set<String> getClassTypedefsAnnotation() {
+		return classTypedefsAnnotation;
+	}
+
+	public void setClassTypedefsAnnotation(Set<String> classTypedefsAnnotation) {
+		this.classTypedefsAnnotation = classTypedefsAnnotation;
+	}
+
+	private Set<String> classTypedefsAnnotation = new HashSet<String>();
 	/** From config file - just anything to be pasted at bottom of class */
 	private String classCustomCode;
 	/** From config file - just anything to be pasted at bottom of fields list */

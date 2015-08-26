@@ -68,6 +68,18 @@ implements Serializable {
 		new TreeMap<String, TreeMap<String, CustomAnnotations>>(new CaseInsensitiveComparator());
 	/** Key = classname, value=Annotation text */
 	public TreeMap<String, String> customClassAnnotations = new TreeMap<String, String>(new CaseInsensitiveComparator());
+
+	public TreeMap<String, String> getClassTypeDefsAnnotations() {
+
+		return classTypeDefsAnnotations;
+	}
+
+	public void setClassTypeDefsAnnotations(TreeMap<String, String> classTypeDefsAnnotations) {
+		this.classTypeDefsAnnotations = classTypeDefsAnnotations;
+	}
+
+	/** Key = classname, value=Annotation text */
+	public TreeMap<String, String> classTypeDefsAnnotations = new TreeMap<String, String>(new CaseInsensitiveComparator());
 	/** Key = classname, value=extra class code */
 	public TreeMap<String, String> customClassCode = new TreeMap<String, String>(new CaseInsensitiveComparator());
 	/** Key = classname, value=extra class code */

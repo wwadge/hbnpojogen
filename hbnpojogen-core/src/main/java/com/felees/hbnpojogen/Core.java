@@ -1951,10 +1951,7 @@ public class Core {
 					}
 				}
 			}
-			String classAnnotation = State.getInstance().customClassAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
-			if (classAnnotation != null) {
-				clazz.getClassAnnotation().add(classAnnotation);
-			}
+
 //			else {
 //				clazz.setClassAnnotation("");
 //			}
@@ -2058,6 +2055,17 @@ public class Core {
 					}
 				}
 			}
+
+			String classAnnotation = State.getInstance().customClassAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
+			if (classAnnotation != null) {
+				clazz.getClassAnnotation().add(classAnnotation);
+			}
+
+			String typeDefAnnotation = State.getInstance().classTypeDefsAnnotations.get(clazz.getClassPackage() + "." + clazz.getClassName());
+			if (typeDefAnnotation != null) {
+				clazz.getClassTypedefsAnnotation().add(typeDefAnnotation);
+			}
+
 		}
 	}
 
@@ -2069,7 +2077,7 @@ public class Core {
 	 */
 	private static void enumTypedefImport(TreeMap<String, Clazz> classes, Clazz clazz, String tmp) {
 		String classannotation;
-		classannotation = State.getInstance().customClassAnnotations.get(tmp);
+		classannotation = State.getInstance().classTypeDefsAnnotations.get(tmp);
 
 		if (classannotation == null){
 			classannotation = "";
@@ -2081,12 +2089,12 @@ public class Core {
 			valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
 		}
 
-		classannotation =
-			String
-			.format(
-					"%s@TypeDef(name = \"enumType\", typeClass = "+valueType+")",
-					classannotation);
-		State.getInstance().customClassAnnotations.put(tmp, classannotation);
+			classannotation =
+					String
+							.format(
+									"%s@TypeDef(name = \"enumType\", typeClass = " + valueType + ")",
+									classannotation);
+		State.getInstance().classTypeDefsAnnotations.put(tmp, classannotation);
 
 		clazz.getImports().add("org.hibernate.annotations.TypeDef");
 		clazz.getImports().add("org.hibernate.annotations.Parameter");
@@ -2097,7 +2105,7 @@ public class Core {
 
 			String parent = clazz.getEmbeddedFrom().getClassPackage() + "." + clazz.getEmbeddedFrom().getClassName();
 
-			classannotation = State.getInstance().customClassAnnotations.get(parent);
+			classannotation = State.getInstance().classTypeDefsAnnotations.get(parent);
 
 			classannotation =
 				String
@@ -2105,8 +2113,8 @@ public class Core {
 						"%s@TypeDef(name = \"enumType\", typeClass = "+valueType+") )",
 						classannotation);
 
-			State.getInstance().customClassAnnotations.put(parent, classannotation);
-			clazz.getEmbeddedFrom().getClassAnnotation().add(classannotation);
+			State.getInstance().classTypeDefsAnnotations.put(parent, classannotation);
+			clazz.getEmbeddedFrom().getClassTypedefsAnnotation().add(classannotation);
 			clazz.getEmbeddedFrom().getImports().add("org.hibernate.annotations.TypeDef");
 
 
