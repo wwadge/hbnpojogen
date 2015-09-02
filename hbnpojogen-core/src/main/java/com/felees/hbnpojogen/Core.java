@@ -2089,12 +2089,12 @@ public class Core {
 			valueType = "com.felees.hbnpojogen.persistence.impl.StringValuedEnumType.class";
 		}
 
-			classannotation =
-					String
-							.format(
-									"%s@TypeDef(name = \"enumType\", typeClass = " + valueType + ")",
-									classannotation);
-		State.getInstance().classTypeDefsAnnotations.put(tmp, classannotation);
+        String enumAnnotation = "@TypeDef(name = \"enumType\", typeClass = " + valueType + ")";
+        if (!classannotation.contains(enumAnnotation)) {
+            classannotation += enumAnnotation;
+        }
+
+       	State.getInstance().classTypeDefsAnnotations.put(tmp, classannotation);
 
 		clazz.getImports().add("org.hibernate.annotations.TypeDef");
 		clazz.getImports().add("org.hibernate.annotations.Parameter");
