@@ -1020,9 +1020,16 @@ implements Serializable {
 		} else if (State.getInstance().isEnableJDK8Support()){
 		    if (this.javaType.equalsIgnoreCase("LocalDateTime")){
 		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
+				if (State.getInstance().isEnableJacksonSupport()) {
+					result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.class)");
+				}
 		    }
 		    if (this.javaType.equalsIgnoreCase("LocalDate")){
 		        result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDate\")");
+				if (State.getInstance().isEnableJacksonSupport()) {
+
+					result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)");
+				}
 		    }
 		}
 
@@ -1103,9 +1110,17 @@ implements Serializable {
                 sb.append("\t@Column()");
             }
 			sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
+			if (State.getInstance().isEnableJacksonSupport()) {
+				sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = org.zalando.jackson.datatype.money.MonetaryAmountDeserializer.class)");
+				sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = org.zalando.jackson.datatype.money.MonetaryAmountSerializer.class)");
+			}
 		}
 		if (this.isCurrencyType()){
 			sb.append("\n\t@Type(type = \"currencyUnitType\")");
+			if (State.getInstance().isEnableJacksonSupport()) {
+				sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = org.zalando.jackson.datatype.money.CurrencyUnitDeserializer.class)");
+				sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = org.zalando.jackson.datatype.money.CurrencyUnitSerializer.class)");
+			}
 		}
 		if (this.isEncryptedType() && this.javaType.equals("String")){
 			sb.append("\n\t@Type(type = \"encryptedString\")");

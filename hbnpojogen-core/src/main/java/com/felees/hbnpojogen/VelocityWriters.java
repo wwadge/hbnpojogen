@@ -577,7 +577,7 @@ public class VelocityWriters {
 				tmpInterfaces = tmpInterfaces.substring(0, tmpInterfaces.length()-2);
 			}
 			context.put("interfacesToShow", tmpInterfaces);
-
+			context.put("enableJackson", State.getInstance().isEnableJacksonSupport());
 			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
 			context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);

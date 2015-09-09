@@ -41,8 +41,11 @@
 	
 	<!-- Enable this to use Joda dateTime instead of java.util.Date -->
 	<enableJodaSupport>false</enableJodaSupport>
-	
-	<!-- If enableJodaSupport is false and enableJDK8Support is true, we use java.util.LocalDate -->
+
+    <!-- Enable this to add annotations useful for serializing to JSON -->
+    <enableJacksonSupport>false</enableJacksonSupport>
+
+    <!-- If enableJodaSupport is false and enableJDK8Support is true, we use java.util.LocalDate -->
 	<enableJDK8Support>false</enableJDK8Support>
 	
 	<!--  If not disabled, generates a spring context containing mock objects for each repository

@@ -170,6 +170,9 @@ implements Serializable {
 	public boolean disableTestRollback = false;
 	/** If true, hibernate pojo gen state will be dumped to disk. */
 	public boolean enableStateSave = false;
+
+	/** If true, jackson annotations will be added to allow for serialization */
+	public boolean enableJacksonSupport = false;
 	/** If true, generate mockito context file. */
 	public boolean enableMockitoBeans = true;
 	public String mockitoFilename;
@@ -546,6 +549,14 @@ implements Serializable {
 		String catalog = SyncUtils.getTableCatalog(tableName);
 		String name = SyncUtils.getTableName(tableName);
 		return doObjectImport(catalog, name);
+	}
+
+	public boolean isEnableJacksonSupport() {
+		return enableJacksonSupport;
+	}
+
+	public void setEnableJacksonSupport(boolean enableJacksonSupport) {
+		this.enableJacksonSupport = enableJacksonSupport;
 	}
 
 

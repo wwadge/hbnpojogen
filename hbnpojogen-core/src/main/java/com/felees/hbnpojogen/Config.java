@@ -1,8 +1,6 @@
 package com.felees.hbnpojogen;
 
 
-import java.util.*;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.velocity.Template;
@@ -11,6 +9,8 @@ import org.jvnet.inflector.Noun;
 import org.jvnet.inflector.Rule;
 import org.jvnet.inflector.RuleBasedPluralizer;
 import org.jvnet.inflector.rule.RegexReplacementRule;
+
+import java.util.*;
 
 
 
@@ -633,6 +633,7 @@ public class Config {
         State.getInstance().disableEnglishPlural = Config.config.getString(Constants.DISABLE_ENGLISH_PLURAL, "false").equalsIgnoreCase("TRUE");
         State.getInstance().disableTestRollback = Config.config.getString("disableTestRollback", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableStateSave = Config.config.getString("enableStateSave", "false").equalsIgnoreCase("TRUE");
+        State.getInstance().enableJacksonSupport = Config.config.getString("enableJacksonSupport", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableMockitoBeans = Config.config.getString("enableMockitoBeans", "true").equalsIgnoreCase("TRUE");
 		State.getInstance().setMockitoFilename(Config.config.getString("enableMockitoBeans[@filename]", "beans.test.mockito.xml"));
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
