@@ -107,18 +107,12 @@ package ${packagename};
 #end
 #end
 #macro(oneToManyAnnotation $property)
-#if ($enableJackson == true)
-    @com.fasterxml.jackson.annotation.JsonManagedReference("#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}${property.oneToManyLink.propertyName}-$property.oneToManyLink.clazz.className")
-#end
  	@OneToMany( fetch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
 #if ($property.isOneToManyCascadeEnabledByConfig())
  	@org.hibernate.annotations.Cascade($property.getCascadeTypeOneToMany())
 #end
 #end
 #macro(manyToOneAnnotation $property)
-#if ($enableJackson == true)
-    @com.fasterxml.jackson.annotation.JsonBackReference("#if (${property.manyToOneLink.clazz.isEmbeddable()})id.#{end}${property.nicePropertyName}-${class.className}")
-#end
 	@ManyToOne( ${this.getManyToOneCascadeEnabled($property)}fetch = FetchType.#lazyManyToOne() )
 #if ($property.isManyToOneCascadeEnabledByConfig())
 	@org.hibernate.annotations.Cascade($property.getCascadeTypeManyToOne())
@@ -179,6 +173,7 @@ $classAnnotation
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
 #if ($enableJackson == true)
+@com.fasterxml.jackson.annotation.JsonIdentityInfo(generator = com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator.class, property="id",  scope =  ${class.className}.class)
 @com.fasterxml.jackson.annotation.JsonTypeInfo(use=com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS, include=com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY, property="_class")
 #end
 #if ( (${class.isGeneratedValueUUID()} == true))
