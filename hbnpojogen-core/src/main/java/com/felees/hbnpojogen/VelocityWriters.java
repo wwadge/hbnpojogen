@@ -497,7 +497,7 @@ public class VelocityWriters {
 				"\n\t\t\tparameters= {@Parameter(name=\"encryptorRegisteredName\", value=\"STRING_ENCRYPTOR\")}\n\t\t),\n";
 					clazz.getImports().add("org.hibernate.annotations.Parameter");
 
-				}
+				} 
 
 			if (!typedefs.isEmpty()){
 				typedefs = "@TypeDefs(value = {\n"+typedefs.substring(0, typedefs.lastIndexOf(","))+"\n})";
