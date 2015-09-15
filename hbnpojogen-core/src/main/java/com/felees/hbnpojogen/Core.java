@@ -99,7 +99,7 @@ public class Core {
 				ResultSet seqs = dbmd.getTables(tableObj.getDbCat(), tableObj.getDbSchema(), tableObj.getDbName()+"_"+col+"_seq", new String[] { "SEQUENCE" });
 				while (seqs.next()){
 					String sequenceName = seqs.getString("table_name");
-					tableObj.getPrimaryKeySequences().put(col, tableObj.getDbCat()+"."+tableObj.getDbSchema()+"."+sequenceName);
+					tableObj.getPrimaryKeySequences().put(col, State.getInstance().schemaRestrict > 0 ? tableObj.getDbCat()+"."+sequenceName : sequenceName);
 				}
 				indices++;
 			}
@@ -210,8 +210,12 @@ public class Core {
 //						sequenceName = sequenceName.substring(sequenceName.indexOf(".")+1);
 //					}
 //					System.out.println("cat : "+tableObj.getDbCat()+", schem: "+tableObj.getDbSchema()+", tbl: "+sequenceName+" def: "+defaultValue);
-					tableObj.getPrimaryKeySequences().put(colName, sequenceName.indexOf(".") > -1 ? tableObj.getDbCat()+"."+sequenceName : sequenceName);
+					if (State.getInstance().getSchemaRestrict() == 0){
+						tableObj.getPrimaryKeySequences().put(colName, sequenceName.substring(sequenceName.lastIndexOf(".")+1));
 
+					} else {
+						tableObj.getPrimaryKeySequences().put(colName, sequenceName.indexOf(".") > -1 && State.getInstance().schemaRestrict > 0 ? tableObj.getDbCat() + "." + sequenceName : sequenceName);
+					}
 				}
 
 				fo.setTableObj(tableObj); // link to the table this is coming
