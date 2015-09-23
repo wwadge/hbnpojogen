@@ -320,6 +320,15 @@ implements Serializable, Comparable<Clazz> {
 	 }
 
 
+	public TreeMap<String, PropertyObj> getAllPropertiesNoForwardLinks() {
+		TreeMap<String, PropertyObj> result = new TreeMap<String, PropertyObj>();
+		for (Entry<String, PropertyObj> entry : getAllProperties().entrySet()) {
+			if (!entry.getValue().isOneToNForwardLinkDisabled()) {
+				result.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return result;
+	}
 
 	 /**
 	  * Convenience - returns all normal + all extended properties in one TreeMap for cleaner
@@ -370,6 +379,9 @@ implements Serializable, Comparable<Clazz> {
 		 return filterAwayBackLinks(getProperties());
 	 }
 
+	public TreeMap<String, PropertyObj> getPropertiesNoBackLinksNoForwardLinks() {
+		return filterAwayForwardLinks(filterAwayBackLinks(getProperties()));
+	}
 
 
 	 /**
@@ -381,6 +393,14 @@ implements Serializable, Comparable<Clazz> {
 		 return filterAwayBackLinks(getPropertiesWithoutPFK());
 	 }
 
+	/**
+	 * Returns a list of all properties without primary foreign keys
+	 *
+	 * @return PropertiesWithoutPFK
+	 */
+	public TreeMap<String, PropertyObj> getPropertiesWithoutPFKNoBackLinksNoForwardLinks() {
+		return filterAwayForwardLinks(filterAwayBackLinks(getPropertiesWithoutPFK()));
+	}
 	 /**
 	  * Returns a list of all properties without primary foreign keys
 	  *
@@ -411,10 +431,21 @@ implements Serializable, Comparable<Clazz> {
 		 return result;
 	 }
 
+	public TreeMap<String, PropertyObj> filterAwayForwardLinks(TreeMap<String, PropertyObj> properties) {
+		TreeMap<String, PropertyObj> result = new TreeMap<String, PropertyObj>(new CaseInsensitiveComparator());
+
+		for (Entry<String, PropertyObj> prop : properties.entrySet()) {
+			if (!(prop.getValue().isOneToNForwardLinkDisabled())) {
+				result.put(prop.getKey(), prop.getValue());
+			}
+		}
+		return result;
+	}
 
 
 
-	 /**
+
+	/**
 	  * Returns true if one of the fields in this class is marked as autoincrement
 	  *
 	  * @return true if one of the fields in this class is marked as autoincrement

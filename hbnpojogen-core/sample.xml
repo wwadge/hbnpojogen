@@ -512,7 +512,17 @@ table section
 		<nobacklink from="*.*" to="*.country" from-field="*" />
 		<nobacklink from="schemaA.sometable" to="schemaB.linkedtable" from-field="somefield" />
 	</disableBackLinks>
-	
+
+	<!--  Use the disableForwardLinks section to specify that the generator
+should not generate the OneToMany side  in the case of one-to-many/many-to-one links.
+ * wildcards are allowed implying "any" (see examples) -->
+	<disableForwardLinks>
+		<noforwardlink from="schemaA.*" to="schemaB.*" from-field="*" />
+		<noforwardlink from="*.*" to="*.country" from-field="*" />
+		<noforwardlink from="schemaA.sometable" to="schemaB.linkedtable" from-field="somefield" />
+	</disableForwardLinks>
+
+
 	<!--  In rare cases you might wish to instruct the generator
 	to leave a FK as an integer (that is, don't follow the object just
 	as in the restrict case across multiple schemas. The following 

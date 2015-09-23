@@ -228,8 +228,12 @@ implements Serializable {
     /** prefix */
     public String propertyPlaceholderConfigurerPrefix;
     public boolean propertyPlaceholderConfigurerSuppressBean;
+
+
 	/** key = fromtable, value = TreeMap<ToTable string, fromField list>> */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> disableBackLinkTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
+	/** key = fromtable, value = TreeMap<ToTable string, fromField list>> */
+	private TreeMap<String, TreeMap<String, TreeSet<String>>> disableForwardLinkTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /** key = fromtable, value = TreeMap<ToTable string, fromField list>> */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> noFollowTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /** key = table, value = fields */
@@ -751,6 +755,13 @@ implements Serializable {
 		return libPath;
 	}
 
+	public TreeMap<String, TreeMap<String, TreeSet<String>>> getDisableForwardLinkTables() {
+		return disableForwardLinkTables;
+	}
+
+	public void setDisableForwardLinkTables(TreeMap<String, TreeMap<String, TreeSet<String>>> disableForwardLinkTables) {
+		this.disableForwardLinkTables = disableForwardLinkTables;
+	}
 
 
 	/**

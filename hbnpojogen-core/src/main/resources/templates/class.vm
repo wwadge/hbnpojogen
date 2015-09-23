@@ -60,7 +60,7 @@ package ${packagename};
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "$property.sequenceHibernateRef")
 #end
 #end	
-#if ( $property.OneToMany && (!( $class.embeddable || $class.isCompositePrimaryKey() )))
+#if ( $property.OneToMany && !$property.isOneToNForwardLinkDisabled() && (!( $class.embeddable || $class.isCompositePrimaryKey() )))
 #oneToManyAnnotation($property)
 #end
 #if ( $property.ManyToOne)
@@ -83,7 +83,7 @@ package ${packagename};
 #end
 #end
 #macro(prefix)
-#if ( $property.isBooleanField() && !$property.isIdField() )is#{else}get#end
+#if ( $property.booleanField() && !$property.isIdField() )is#{else}get#end
 #end
 ##
 #macro(doClassType)

@@ -117,6 +117,8 @@ public class Config {
         fillTestValuesList();
      // build the disable back links list
         fillDisableBackLinks();
+        fillDisableForwardLinks();
+        //
      // build the disable back links list
         fillNoFollowLinks();
         // build the noOutput list
@@ -248,7 +250,7 @@ public class Config {
 
         for (int i = 0; i < tmpSuffix.size(); i++) {
             String packageName = Config.config.getString(String.format("suffix.except(%d)[@package]", i), "*");
-            String className = Config.config.getString(String.format("suffix.except(%d)[@class]",  i), "*");
+            String className = Config.config.getString(String.format("suffix.except(%d)[@class]", i), "*");
             String suffix = Config.config.getString(String.format("suffix.except(%d)[@suffix]", i), "");
             state.put(packageName+"."+className, suffix);
         }
@@ -476,7 +478,32 @@ public class Config {
 
 	}
 
-	/**
+    private static void fillDisableForwardLinks() {
+        ArrayList<Object> tmpOne2One = (ArrayList<Object>) Config.config.getList("disableForwardLinks.noforwardlink[@from]");
+        for (int i = 0; i < tmpOne2One.size(); i++) {
+            String fromTable = Config.config.getString(String.format("disableForwardLinks.noforwardlink(%d)[@from]", i));
+            String toTable = Config.config.getString(String.format("disableForwardLinks.noforwardlink(%d)[@to]", i));
+            String fromField = Config.config.getString(String.format("disableForwardLinks.noforwardlink(%d)[@from-field]", i));
+
+            TreeMap<String, TreeSet<String>> entry = State.getInstance().getDisableForwardLinkTables().get(fromTable);
+
+            if (entry == null) {
+                // this is a new table we're seeing. Create an entry
+                entry = new TreeMap<String, TreeSet<String>>(new CaseInsensitiveComparator());
+                State.getInstance().getDisableForwardLinkTables().put(fromTable, entry);
+            }
+
+            TreeSet<String> fromFields = entry.get(fromTable);
+            if (fromFields == null){
+                fromFields = new TreeSet<String>();
+                entry.put(toTable, fromFields);
+            }
+            fromFields.add(fromField);
+        }
+
+    }
+
+    /**
     *
     */
    @SuppressWarnings("unchecked")

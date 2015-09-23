@@ -524,7 +524,7 @@ public class VelocityWriters {
 					imports.add(joinTable.getDstProperty().getClazz().getFullClassName());
 				}
 
-				for (PropertyObj property : clazz.getPropertiesNoBackLinks().values()) {
+				for (PropertyObj property : clazz.getPropertiesNoBackLinksNoForwardLinks().values()) {
 					String tmp = getClassLink(property);
 					if (tmp != null) {
 						imports.add(tmp);
@@ -591,7 +591,7 @@ public class VelocityWriters {
 				context.put("properties", clazz.getAllProperties());
 			}
 			else {
-				context.put("properties", clazz.getPropertiesWithoutPFKNoBackLinks());
+				context.put("properties", clazz.getPropertiesWithoutPFKNoBackLinksNoForwardLinks());
 			}
 			if (isInterface) {
 				Config.interfaceTemplate.merge(context, classWriter);

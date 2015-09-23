@@ -128,6 +128,10 @@ implements Serializable {
 	private boolean requiresManualSave;
 	/** Flagged from config to mark that this backlink is not requested. */
 	private boolean oneToNBackLinkDisabled;
+
+	/** Flagged from config to mark that this forward is not requested. */
+	private boolean oneToNForwardLinkDisabled;
+
 	/** If true, property has a @Valid annotation. */
 	private boolean validatorAnnotated;
 	/** The reference used internally within hibernate. */
@@ -147,6 +151,14 @@ implements Serializable {
 		return cyclicDependencyReplacementClazz;
 	}
 
+
+	public boolean isOneToNForwardLinkDisabled() {
+		return oneToNForwardLinkDisabled;
+	}
+
+	public void setOneToNForwardLinkDisabled(boolean oneToNForwardLinkDisabled) {
+		this.oneToNForwardLinkDisabled = oneToNForwardLinkDisabled;
+	}
 
 	public String getCascadeTypeManyToOne(){
 	    Set<String> cascade = getXToXCascadeType(State.getInstance().getManyToOneCascadeEnabled(), this.manyToOneLink);

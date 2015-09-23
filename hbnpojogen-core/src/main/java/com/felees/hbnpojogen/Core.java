@@ -1295,6 +1295,7 @@ public class Core {
 
 		processLinkTables();
 		disableBacklinks(classes);
+		disableForwardlinks(classes);
 
 
 
@@ -1449,6 +1450,42 @@ public class Core {
 	}
 
 
+	/**
+	 * Markup object model to flag disabled backlinks (via config). Backlinks will still exist in
+	 * this object model but we suppress it during code generation
+	 *
+	 * @param classes
+	 */
+	private static void disableForwardlinks(TreeMap<String, Clazz> classes) {
+		for (Clazz clazz : classes.values()) {
+			String tableName = clazz.getTableObj().getFullTableName();
+			TreeMap<String, TreeSet<String>> disableLink = State.getInstance().getDisableForwardLinkTables().get(tableName);
+
+			if (disableLink == null) {
+				disableLink = State.getInstance().getDisableForwardLinkTables().get(clazz.getTableObj().getDbCat() + ".*");
+				if (disableLink == null) {
+					disableLink = State.getInstance().getDisableForwardLinkTables().get("*." + clazz.getTableObj().getDbName());
+				}
+
+			}
+			if (disableLink != null) {
+				for (PropertyObj property : clazz.getAllProperties().values()) {
+
+					if (property.isOneToMany()) {
+						disableForwardLink(disableLink, property, property.getOneToManyLink());
+					}
+					if (property.isManyToMany()) {
+						disableForwardLink(disableLink, property, property.getManyToManyLink().getSrcProperty());
+					}
+					if (property.isOneToOne()) {
+						disableForwardLink(disableLink, property, property.getOneToOneLink());
+					}
+				}
+			}
+		}
+
+	}
+
 
 	/**
 	 * @param disableLink
@@ -1483,6 +1520,37 @@ public class Core {
 	}
 
 
+	/**
+	 * @param disableLink
+	 * @param property
+	 * @param link link to property
+	 */
+	private static void disableForwardLink(TreeMap<String, TreeSet<String>> disableLink, PropertyObj property, PropertyObj link) {
+		TreeSet<String> fieldName = disableLink.get(link.getClazz().getTableObj().getFullTableName());
+
+		// match FK table (considering wildcards)
+		if (fieldName == null) {
+			fieldName = disableLink.get(link.getClazz().getTableObj().getDbCat() + ".*");
+			if (fieldName == null) {
+				fieldName = disableLink.get("*." + link.getClazz().getTableObj().getDbName());
+			}
+		}
+
+		if (fieldName != null) {
+			// FK table matched, match field name now
+			if (fieldName.contains("*") || fieldName.contains(property.getFieldObj().getName())) {
+				// find the match on the inverse side and kill it off
+				for (PropertyObj search : property.getClazz().getProperties().values()) {
+					if ((search.isOneToMany() && search.equals(property)) ||
+							(search.isManyToMany() && search.getManyToManyLink().getDstProperty().equals(property)) ||
+							(search.isOneToOne() && search.isOneTooneInverseSide() && search.getOneToOneLink().equals(property))) {
+						search.setOneToNForwardLinkDisabled(true);
+
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * @param tableName
