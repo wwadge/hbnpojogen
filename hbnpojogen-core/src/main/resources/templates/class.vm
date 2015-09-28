@@ -91,7 +91,7 @@ package ${packagename};
 #end
 #macro(doManyToMany $property)
 #if ( $property.isManyToManyInverseSide() )
-	@ManyToMany( fetch = FetchType.#lazyManyToMany(), magppedBy = "${property.manyToManyLink.dstProperty.nicePropertyName}"#if ($property.isManyToManyCascadeEnabledByConfig()), cascade = { CascadeType.PERSIST, CascadeType.MERGE } #{end} )
+	@ManyToMany( fetch = FetchType.#lazyManyToMany(), mappedBy = "${property.manyToManyLink.dstProperty.nicePropertyName}"#if ($property.isManyToManyCascadeEnabledByConfig()), cascade = { CascadeType.PERSIST, CascadeType.MERGE } #{end} )
 #else
 	@ManyToMany#if ($property.isManyToManyCascadeEnabledByConfig())( fetch = FetchType.#lazyManyToMany(), cascade = { CascadeType.PERSIST, CascadeType.MERGE }  )#{end}
 
