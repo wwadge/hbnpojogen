@@ -680,7 +680,7 @@ public class VelocityHelper {
                             property.getFieldObj().getScale() + "), \"USD\")";
                 }
                 if (property.isCurrencyType()){
-                		return "javax.money.MonetaryCurrencies.getCurrency(\"USD\")";
+                		return "javax.money.Monetary.getCurrency(\"USD\")";
                 }
 
                 switch (fieldtype) {
