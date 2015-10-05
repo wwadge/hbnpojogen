@@ -360,6 +360,20 @@ public class VelocityWriters {
 
 	/**
 	 * @param targetFolder
+	 * @param catalog
+	 * @return a valid path
+	 */
+	private static String getAndCreateDataPoolFactoryInterfacePath(String targetFolder, String catalog) {
+		String config = SyncUtils.packageToDir(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY));
+		new File(targetFolder + "/" + config).mkdirs();
+
+		String result = targetFolder + "/" + config + "/" + "DataPoolFactory.java";
+		return result;
+
+	}
+
+	/**
+	 * @param targetFolder
 	 * @return a valid path
 	 */
 	private static String getAndCreateUtilPath(String targetFolder) {
@@ -1122,6 +1136,15 @@ public class VelocityWriters {
 
 				dataPoolFactoryTemplate.merge(context, daoFactoryWriter);
 				daoFactoryWriter.close();
+
+				dataPoolFactoryTemplate = Velocity.getTemplate("templates/dataPoolFactoryInterface.vm");
+				context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY));
+				tmp = getAndCreateDataPoolFactoryInterfacePath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", catalog);
+				daoFactoryWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+
+				dataPoolFactoryTemplate.merge(context, daoFactoryWriter);
+				daoFactoryWriter.close();
+
 			}
 		}
 		catch (Exception e) {
