@@ -13,6 +13,9 @@ public interface DataPoolFactory {
 	 */
 	String[] getDBCommitOrder();
 
+	/** As getDBCommitOrder but returns type safe classes instead. */
+	Class<?>[] getDBClassCommitOrder();
+
 	/**
 	 * @param className classname to return
 	 * @return the tabledeps for the given class name

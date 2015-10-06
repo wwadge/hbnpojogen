@@ -1122,13 +1122,18 @@ public class VelocityWriters {
 				context.put(PRETTYCATALOG, prettyCatalog);
 				context.put("tableDeps", State.getInstance().commitResult.getTableDeps().entrySet());
 				String commitOrder = "";
+				String classCommitOrder = "";
+
 				for (VelocityTable vt: State.getInstance().getCleanDbTables()){
 					commitOrder = commitOrder+"\""+vt.getValue().getClazz().getClassName()+"\", ";
+					classCommitOrder = classCommitOrder+vt.getValue().getClazz().getClassName()+".class, ";
 				}
 				if (commitOrder.length() > 2){
 					commitOrder=commitOrder.substring(0, commitOrder.length()-2);
+					classCommitOrder=classCommitOrder.substring(0, classCommitOrder.length()-2);
 				}
 				context.put("commitOrder", commitOrder);
+				context.put("classCommitOrder", classCommitOrder);
 
 				context.put("packagename", SyncUtils.getConfigPackage(catalog, PackageTypeEnum.FACTORY));
 				String tmp = getAndCreateDataPoolFactoryPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", catalog);

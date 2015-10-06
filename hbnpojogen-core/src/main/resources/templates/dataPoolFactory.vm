@@ -20,7 +20,10 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware,
 	/** Table commit order. */
     private static final Multimap<String, String> tableDeps = ArrayListMultimap.create();
 	/** DB commit order. */
-	private static final String[] commitOrder = new String[]{$commitOrder};
+	private static final String[] commitOrder = {$commitOrder};
+	/** DB commit order. */
+	private static final Class<?>[] classCommitOrder = {$classCommitOrder};
+
 #if ($hasImmutable && !$springData) 	
 	/** DataLayer handle. */
 	private static ${classes.values().iterator().next().getDataLayerInterfaceClassName()} dataLayer;
@@ -181,8 +184,16 @@ public class ${prettyCatalog}DataPoolFactory implements ApplicationContextAware,
 	public String[] getDBCommitOrder() {
 		return Arrays.copyOf(commitOrder, commitOrder.length);
 	}
-	
-	/**
+
+	/** Returns the commit order of this database.
+	* Useful for iterating through the classes for deletion in the right order.
+	* @return Class[] list of classes
+	*/
+	public Class<?>[] getDBClassCommitOrder() {
+		return Arrays.copyOf(classCommitOrder, classCommitOrder.length);
+	}
+
+/**
 	 * @param className classname to return
 	 * @return the tabledeps for the given class name
 	 */
