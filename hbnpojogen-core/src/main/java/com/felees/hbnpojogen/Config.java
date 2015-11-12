@@ -259,7 +259,7 @@ public class Config {
     }
 
     private static void fillCache(){
-        String defaultStrategy = Config.config.getString("cache[@default]", "");
+        String defaultStrategy = Config.config.getString("cache[@default]", "NONSTRICT_READ_WRITE");
         Map<String, String> state = State.getInstance().getClassCache();
 
         state.put("*", defaultStrategy);

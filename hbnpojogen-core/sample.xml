@@ -730,7 +730,7 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 	<!-- This adds @Cache to the top of each model object. The values correspond to CacheConcurrencyStrategy -->
 	<!--
 	<cache default="NONSTRICT_READ_WRITE">
-		<except package="yourpackage" class="yourclass" strategy="NONE" />
+		<except package="*" class="yourclass" strategy="NONE" />
 	</cache>
 	-->
 
