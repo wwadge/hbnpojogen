@@ -1292,7 +1292,7 @@ public class Core {
 		// Change to our custom suffixes if required. Do it here since
 		// at other points we might not have all the information in our hands
 		addSuffixes(classes);
-
+		addCache(classes);
 		processLinkTables();
 		disableBacklinks(classes);
 		disableForwardlinks(classes);
@@ -1386,8 +1386,32 @@ public class Core {
 		}
 	}
 
+	private static void addCache(TreeMap<String, Clazz> classes) {
+		for (Clazz clazz : classes.values()) {
+			clazz.setCacheStrategy(cacheMap(clazz.getClassPackage(), clazz.getClassName()));
+			clazz.getImports().add("org.hibernate.annotations.Cache");
+			clazz.getImports().add("org.hibernate.annotations.*");
+			clazz.getImports().add("org.hibernate.annotations.Parameter");
+		}
+	}
 
+	private static String cacheMap(String classPackage, String className) {
+		String strategy = State.getInstance().getClassCache().get(classPackage+"."+className);
+		if (strategy == null){
+			strategy = State.getInstance().getClassCache().get("*."+className);
+			if (strategy == null){
+				strategy = State.getInstance().getClassCache().get(classPackage+".*");
+				if (strategy == null) {
+					strategy = State.getInstance().getClassCache().get("*");
+				}
 
+			}
+		}
+		if (strategy == null) {
+			strategy = "";
+		}
+		return strategy;
+	}
 	/**
 	 *
 	 *

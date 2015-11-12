@@ -129,6 +129,7 @@ public class Config {
         fillFetchTypeList();
      // build the suffix list
         fillSuffix();
+        fillCache();
         fillFakeFK();
         fillCustomPluralization();
 
@@ -256,6 +257,24 @@ public class Config {
         }
 
     }
+
+    private static void fillCache(){
+        String defaultStrategy = Config.config.getString("cache[@default]", "");
+        Map<String, String> state = State.getInstance().getClassCache();
+
+        state.put("*", defaultStrategy);
+
+        ArrayList<Object> tmpStrategy = (ArrayList<Object>) Config.config.getList("cache.except[@package]");
+
+        for (int i = 0; i < tmpStrategy.size(); i++) {
+            String packageName = Config.config.getString(String.format("cache.except(%d)[@package]", i), "*");
+            String className = Config.config.getString(String.format("cache.except(%d)[@class]", i), "*");
+            String strategy = Config.config.getString(String.format("cache.except(%d)[@strategy]", i), "");
+            state.put(packageName+"."+className, strategy);
+        }
+
+    }
+
     /**
      */
     @SuppressWarnings("unchecked")

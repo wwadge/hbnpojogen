@@ -214,6 +214,7 @@ $classAnnotation
 	dynamicInsert = true, dynamicUpdate = true
 )
 #end
+@Cache(region = "${class.getFullClassName()}", usage = CacheConcurrencyStrategy.$class.cacheStrategy)
 #end
 #################################### END MACROS ####################
 #foreach( $import in $imports )
@@ -221,8 +222,7 @@ import $import;
 #end
 #set ($fullTypeOfId = "---")
 
-
-/** 
+/**
  * Object mapping for hibernate-handled table: ${class.tableObj.dbName}.
  * $class.TableObj.comment
  *
@@ -362,7 +362,6 @@ $classCustomCodeFields
 	public Class<?> getClassType() {
 		return ${class.className}.class;
 	}
-
 
 #foreach( $property in $properties )
 #doCalcFullType()

@@ -291,6 +291,17 @@ implements Serializable {
 	private String mavenGroupId = "";
 	/** Key = package/classname, value = suffix */
     public TreeMap<String, String> classSuffixes = new TreeMap<String, String>();
+
+	public TreeMap<String, String> getClassCache() {
+		return classCache;
+	}
+
+	public void setClassCache(TreeMap<String, String> classCache) {
+		this.classCache = classCache;
+	}
+
+	/** Key = package/classname, value = strategy */
+	public TreeMap<String, String> classCache = new TreeMap<String, String>();
 	/** Key = table, value = {Pattern, enabled} */
     public TreeMap<String, FakeFKPattern> fakeFK = new TreeMap<String, FakeFKPattern>();
     private TreeMap<String, HashSet<RelationItem>>  fakeFKmatched= new TreeMap<String, HashSet<RelationItem>> ();

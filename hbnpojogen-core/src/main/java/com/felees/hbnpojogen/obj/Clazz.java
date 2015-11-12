@@ -81,6 +81,9 @@ implements Serializable, Comparable<Clazz> {
 	/** From config file - just anything to be pasted on top of the class as annotation */
 	private Set<String> classAnnotation = new HashSet<String>();
 
+
+	private String cacheStrategy;
+
 	public Set<String> getClassTypedefsAnnotation() {
 		return classTypedefsAnnotation;
 	}
@@ -166,6 +169,9 @@ implements Serializable, Comparable<Clazz> {
 	}
 
 
+	public String getCacheStrategy() {
+		return cacheStrategy;
+	}
 
 	/**
 	 * Sets
@@ -2031,4 +2037,7 @@ implements Serializable, Comparable<Clazz> {
 		this.hiddenCurrencyProperties = hiddenCurrencyProperties;
 	}
 
+	public void setCacheStrategy(String cacheStrategy) {
+		this.cacheStrategy = cacheStrategy;
+	}
 }

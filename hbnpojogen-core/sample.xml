@@ -727,6 +727,13 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 	</suffix>
 	 -->
 
+	<!-- This adds @Cache to the top of each model object. The values correspond to CacheConcurrencyStrategy -->
+	<!--
+	<cache default="NONSTRICT_READ_WRITE">
+		<except package="yourpackage" class="yourclass" strategy="NONE" />
+	</cache>
+	-->
+
 
 <!-- The maven section affects the generated pom.xml. Note: You'll need
 to set enabled=true for any of this to take. If noArtifactVersions is set to true, the artifact references will not include a version so
