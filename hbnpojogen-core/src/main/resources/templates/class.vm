@@ -107,13 +107,20 @@ package ${packagename};
 #end
 #end
 #macro(oneToManyAnnotation $property)
- 	@OneToMany( fetch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
+#if ($enableJackson == true)
+    @com.fasterxml.jackson.annotation.JsonManagedReference("#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}${property.oneToManyLink.propertyName}-$property.oneToManyLink.clazz.className")
+#end
+@OneToMany( fetch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
 #if ($property.isOneToManyCascadeEnabledByConfig())
  	@org.hibernate.annotations.Cascade($property.getCascadeTypeOneToMany())
 #end
 #end
 #macro(manyToOneAnnotation $property)
-	@ManyToOne( ${this.getManyToOneCascadeEnabled($property)}fetch = FetchType.#lazyManyToOne() )
+#if ($enableJackson == true)
+@com.fasterxml.jackson.annotation.JsonBackReference("#if (${property.manyToOneLink.clazz.isEmbeddable()})id.#{end}${property.nicePropertyName}-${class.className}")
+#end
+
+@ManyToOne( ${this.getManyToOneCascadeEnabled($property)}fetch = FetchType.#lazyManyToOne() )
 #if ($property.isManyToOneCascadeEnabledByConfig())
 	@org.hibernate.annotations.Cascade($property.getCascadeTypeManyToOne())
 #end
@@ -551,12 +558,13 @@ $classCustomCodeFields
         final $class.className copy = ($class.className)super.clone();
 
 #foreach( $property in ${class.getPropertiesWithoutPFKNoBackLinks()} )
-#if ( ($property.OneToMany == true ) || ($property.ManyToMany == true) )
+#if ( (!$property.isOneToNForwardLinkDisabled()) && (($property.OneToMany == true ) || ($property.ManyToMany == true))  )
 		if (this.#prefix()${property.niceJavaName}() != null) {
 			copy.get${property.niceJavaName}().addAll(this.#prefix()${property.niceJavaName}());
 		}
-#else
+#else #if ( (!$property.isOneToNForwardLinkDisabled()) )
 		copy.set${property.niceJavaName}(this.#prefix()${property.niceJavaName}());
+#end
 #end
 #end
 		return copy;
