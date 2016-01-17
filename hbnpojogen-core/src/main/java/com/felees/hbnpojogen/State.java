@@ -69,14 +69,9 @@ implements Serializable {
 	/** Key = classname, value=Annotation text */
 	public TreeMap<String, String> customClassAnnotations = new TreeMap<String, String>(new CaseInsensitiveComparator());
 
-	public TreeMap<String, String> getClassTypeDefsAnnotations() {
 
-		return classTypeDefsAnnotations;
-	}
+	public boolean enableJacksonManagedReferences;
 
-	public void setClassTypeDefsAnnotations(TreeMap<String, String> classTypeDefsAnnotations) {
-		this.classTypeDefsAnnotations = classTypeDefsAnnotations;
-	}
 
 	/** Key = classname, value=Annotation text */
 	public TreeMap<String, String> classTypeDefsAnnotations = new TreeMap<String, String>(new CaseInsensitiveComparator());
@@ -731,6 +726,21 @@ implements Serializable {
 	}
 
 
+	public TreeMap<String, String> getClassTypeDefsAnnotations() {
+
+		return classTypeDefsAnnotations;
+	}
+
+	public void setClassTypeDefsAnnotations(TreeMap<String, String> classTypeDefsAnnotations) {
+		this.classTypeDefsAnnotations = classTypeDefsAnnotations;
+	}
+	public boolean isEnableJacksonManagedReferences() {
+		return enableJacksonManagedReferences;
+	}
+
+	public void setEnableJacksonManagedReferences(boolean enableJacksonManagedReferences) {
+		this.enableJacksonManagedReferences = enableJacksonManagedReferences;
+	}
 
 	/**
 	 * @param dbPassword the dbPassword to set

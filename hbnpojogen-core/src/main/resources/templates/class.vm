@@ -107,7 +107,7 @@ package ${packagename};
 #end
 #end
 #macro(oneToManyAnnotation $property)
-#if ($enableJackson == true)
+#if ($enableJackson == true && $enableJacksonManagedReference == true)
     @com.fasterxml.jackson.annotation.JsonManagedReference("#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}${property.oneToManyLink.propertyName}-$property.oneToManyLink.clazz.className")
 #end
 	@OneToMany( fetch = FetchType.#lazyOneToMany(), ${this.getOneToManyCascadeEnabled($property)}mappedBy = "#if (${property.oneToManyLink.clazz.isEmbeddable()})id.#{end}$property.oneToManyLink.propertyName"  )
@@ -116,7 +116,7 @@ package ${packagename};
 #end
 #end
 #macro(manyToOneAnnotation $property)
-#if ($enableJackson == true)
+#if ($enableJackson == true && $enableJacksonManagedReference == true)
 	@com.fasterxml.jackson.annotation.JsonBackReference("#if (${property.manyToOneLink.clazz.isEmbeddable()})id.#{end}${property.nicePropertyName}-${class.className}")
 #end
 

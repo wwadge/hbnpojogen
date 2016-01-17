@@ -680,6 +680,8 @@ public class Config {
         State.getInstance().disableTestRollback = Config.config.getString("disableTestRollback", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableStateSave = Config.config.getString("enableStateSave", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableJacksonSupport = Config.config.getString("enableJacksonSupport", "false").equalsIgnoreCase("TRUE");
+        State.getInstance().enableJacksonManagedReferences = Config.config.getBoolean("enableJacksonSupport[@managedReference]", false);
+
         State.getInstance().enableMockitoBeans = Config.config.getString("enableMockitoBeans", "true").equalsIgnoreCase("TRUE");
 		State.getInstance().setMockitoFilename(Config.config.getString("enableMockitoBeans[@filename]", "beans.test.mockito.xml"));
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");

@@ -1,25 +1,11 @@
 package com.felees.hbnpojogen;
 
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
+import com.felees.hbnpojogen.db.FieldObj;
+import com.felees.hbnpojogen.db.TableObj;
+import com.felees.hbnpojogen.obj.Clazz;
+import com.felees.hbnpojogen.obj.JoinTable;
+import com.felees.hbnpojogen.obj.PropertyObj;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
@@ -29,11 +15,12 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import com.felees.hbnpojogen.db.FieldObj;
-import com.felees.hbnpojogen.db.TableObj;
-import com.felees.hbnpojogen.obj.Clazz;
-import com.felees.hbnpojogen.obj.JoinTable;
-import com.felees.hbnpojogen.obj.PropertyObj;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 
@@ -592,6 +579,7 @@ public class VelocityWriters {
 			}
 			context.put("interfacesToShow", tmpInterfaces);
 			context.put("enableJackson", State.getInstance().isEnableJacksonSupport());
+			context.put("enableJacksonManagedReference", State.getInstance().isEnableJacksonManagedReferences());
 			context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
 			context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());
 			context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
