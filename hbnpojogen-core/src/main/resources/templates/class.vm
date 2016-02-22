@@ -246,7 +246,7 @@ $classCustomCodeFields
 	/** Use a WeakHashMap so entries will be garbage collected once all entities 
 		referring to a saved hash are garbage collected themselves. */
 	private static final Map<Serializable, ${class.getTypeOfId()}> SAVED_HASHES =
-		Collections.synchronizedMap(new WeakHashMap<Serializable, ${class.getTypeOfId()}>());
+		Collections.synchronizedMap(new WeakHashMap<>());
 	
 	/** hashCode temporary storage. */
 #if (${class.getTypeOfId()} == "Boolean")
@@ -266,10 +266,10 @@ $classCustomCodeFields
 #if ( $class.embeddable || $class.isCompositePrimaryKey() )
 #oneToManyAnnotation($property)
 #end
-	private Set<$property.JavaType> ${property.nicePropertyName} = new HashSet<${property.JavaType}>();
+	private Set<$property.JavaType> ${property.nicePropertyName} = new HashSet<>();
 #else
 #if ( $property.ManyToMany )
-	private Set<$property.manyToManyLink.dstProperty.clazz.className> ${property.nicePropertyName} = new HashSet<${property.manyToManyLink.dstProperty.clazz.className}>();
+	private Set<$property.manyToManyLink.dstProperty.clazz.className> ${property.nicePropertyName} = new HashSet<>();
 #else	
 #if	( $property.idField )
 #if ( $class.embeddable || $class.isCompositePrimaryKey() ) 
@@ -596,7 +596,6 @@ $classCustomCodeFields
 
 
 	/** Equals implementation. 
-	 * @see java.lang.Object#equals(java.lang.Object)
 	 * @param aThat Object to compare with
 	 * @return true/false
 	 */
