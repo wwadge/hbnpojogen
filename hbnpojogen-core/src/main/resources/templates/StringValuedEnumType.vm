@@ -166,7 +166,7 @@ public class StringValuedEnumType <T extends Enum>
     public void nullSafeSet(PreparedStatement st, Object value, int index)
     throws HibernateException, SQLException {
         if (value == null) {
-            st.setNull(index, Types.CHAR);
+            st.setNull(index, Types.INTEGER);
         } else {
         	if (pgEnum){
                 st.setObject( index, reflectGetValue(value), 1111 ); // 1111 = java.sql.Types "OTHER"

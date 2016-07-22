@@ -302,7 +302,7 @@
 #end
 	<context:component-scan base-package="test.${toplevel}"/>
 #if (!$embedPersistence)
-	<context:component-scan base-package="com.felees.hbnpojogen.persistence.impl.HibernateUtils"/>
+	<context:component-scan base-package="HibernateUtils"/>
 #end
 $additionalContextItems
 

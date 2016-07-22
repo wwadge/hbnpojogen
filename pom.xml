@@ -3,13 +3,37 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.felees</groupId>
+	<groupId>com.github.wwadge</groupId>
 	<artifactId>hbnpojogen</artifactId>
 	<version>1.4.32</version>
 	<packaging>pom</packaging>
 
 	<name>Hibernate POJO Generator</name>
 	<description>The parent project of Hibernate POJO Generator artifacts.</description>
+
+	<url>https://github.com/wwadge/hbnpojogen</url>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Wallace Wadge</name>
+			<email>wwadge@gmail.com</email>
+			<organization>Wallace Wadge</organization>
+			<organizationUrl>https://github.com/wwadge/hbnpojogen</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/wwadge/hbnpojogen.git</connection>
+		<developerConnection>scm:git:ssh://github.com:wwadge/hbnpojogen.git</developerConnection>
+		<url>https://github.com/wwadge/hbnpojogen</url>
+	</scm>
 
 	<modules>
 		<module>hbnpojogen-core</module>
@@ -20,12 +44,13 @@
 	<properties>
 		<hibernate.version>3.5.2-Final</hibernate.version>
 		<spring.version>2.5.6</spring.version>
+		<gpg.useagent>true</gpg.useagent>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.felees</groupId>
+				<groupId>com.github.wwadge</groupId>
 				<artifactId>hbnpojogen-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -154,15 +179,61 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
 		</plugins>
+
 	</build>
 
- <repositories>
-    <repository>
-      <id>repository.jboss.org-public</id>
-      <name>JBoss.org Maven repository</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public</url>
-    </repository>  
-</repositories>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

@@ -1,6 +1,6 @@
 package ${packagename};
 
-import com.felees.hbnpojogen.persistence.GenericDAO;
+import GenericDAO;
 import ${objpackagename};
 $importPK
 /**

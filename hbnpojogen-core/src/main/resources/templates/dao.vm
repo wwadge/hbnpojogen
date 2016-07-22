@@ -1,6 +1,6 @@
 package ${packagename};
 
-import com.felees.hbnpojogen.persistence.impl.GenericHibernateDaoImpl;
+import GenericHibernateDaoImpl;
 import ${objpackagename};
 import org.springframework.stereotype.Repository;
 import ${daoImport}.${class.className}Dao;

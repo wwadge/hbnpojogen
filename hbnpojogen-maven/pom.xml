@@ -5,7 +5,7 @@
 
 	<parent>
 		<artifactId>hbnpojogen</artifactId>
-		<groupId>com.felees</groupId>
+		<groupId>com.github.wwadge</groupId>
 		<version>1.4.32</version>
 	</parent>
 
@@ -21,7 +21,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.felees</groupId>
+			<groupId>com.github.wwadge</groupId>
 			<artifactId>hbnpojogen-core</artifactId>
 		</dependency>
 

@@ -47,7 +47,7 @@ public enum ${enumName} {
 	private static Map<String, ${enumName}> valueMap = new HashMap<String, ${enumName}>();
 #foreach ($other in $others.entrySet())
 	/** Construct a map for reverse lookup of $other.getKey(). */
-	private static Map<$other.getValue().getClass().getSimpleName(), ${enumName}> ${other.getKey()}Map = new HashMap<$other.getValue().getClass().getSimpleName(), ${enumName}>();
+	private static Map<$other.getValue().getClass().getSimpleName(), ${enumName}> ${other.getKey()}Map = new HashMap<>();
 #end
 
     static {

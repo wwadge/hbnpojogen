@@ -288,7 +288,7 @@
 
 #if (!$embedPersistence)
 		<dependency>
-			<groupId>com.felees</groupId>
+			<groupId>com.github.wwadge</groupId>
 			<artifactId>hbnpojogen-persistence</artifactId>
 #if ($doPomVersion)			
 			<version>$syncVersion</version>

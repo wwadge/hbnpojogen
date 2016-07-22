@@ -207,13 +207,13 @@ $classAnnotation
 #if ( (${class.isGeneratedValueCustom()} == true))
 @org.hibernate.annotations.GenericGenerator(
 	name = "hibernate-custom",
-	strategy = "com.felees.hbnpojogen.persistence.impl.CustomGeneratedId"
+	strategy = "CustomGeneratedId"
 )
 #end
 #if ( (${class.isGeneratedValueIDAware()} == true))
 @org.hibernate.annotations.GenericGenerator(
 	name = "hibernate-idaware",
-	strategy = "com.felees.hbnpojogen.persistence.impl.IDPresentAwareGenerator"
+	strategy = "IDPresentAwareGenerator"
 )
 #end
 #if ($class.isDynamicUpdatesInserts())
