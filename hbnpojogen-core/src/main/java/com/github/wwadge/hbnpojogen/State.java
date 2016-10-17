@@ -483,6 +483,16 @@ public class State
      */
     public TreeMap<String, String> classSuffixes = new TreeMap<String, String>();
 
+    public boolean isEnableJadiraSupport() {
+        return enableJadiraSupport;
+    }
+
+    public void setEnableJadiraSupport(boolean enableJadiraSupport) {
+        this.enableJadiraSupport = enableJadiraSupport;
+    }
+
+    public boolean enableJadiraSupport;
+
     public TreeMap<String, String> getClassCache() {
         return classCache;
     }

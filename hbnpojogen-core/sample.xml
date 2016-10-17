@@ -42,7 +42,10 @@
 	<!-- Enable this to use Joda dateTime instead of java.util.Date -->
 	<enableJodaSupport>false</enableJodaSupport>
 
-    <!-- Enable this to add annotations useful for serializing to JSON. ManagedReference determines @JsonManagedReference/@JsonBackReference -->
+	<!-- Enable this to use Jadira @Types instead of java.util.Date -->
+	<enableJadiraSupport>false</enableJadiraSupport>
+
+	<!-- Enable this to add annotations useful for serializing to JSON. ManagedReference determines @JsonManagedReference/@JsonBackReference -->
     <enableJacksonSupport managedReference="false">false</enableJacksonSupport>
 
     <!-- If enableJodaSupport is false and enableJDK8Support is true, we use java.util.LocalDate -->

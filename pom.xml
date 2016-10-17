@@ -5,7 +5,7 @@
 
 	<groupId>com.github.wwadge</groupId>
 	<artifactId>hbnpojogen</artifactId>
-	<version>1.4.32</version>
+	<version>1.4.33</version>
 	<packaging>pom</packaging>
 
 	<name>Hibernate POJO Generator</name>

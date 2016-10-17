@@ -1036,13 +1036,17 @@ public class PropertyObj
             }
         } else if (State.getInstance().isEnableJDK8Support()) {
             if (this.javaType.equalsIgnoreCase("LocalDateTime")) {
-                result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
+                if (State.getInstance().isEnableJadiraSupport()) {
+                    result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
+                }
                 if (State.getInstance().isEnableJacksonSupport()) {
                     result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.class)");
                 }
             }
             if (this.javaType.equalsIgnoreCase("LocalDate")) {
-                result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDate\")");
+                if (State.getInstance().isEnableJadiraSupport()) {
+                    result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDate\")");
+                }
                 if (State.getInstance().isEnableJacksonSupport()) {
 
                     result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)");

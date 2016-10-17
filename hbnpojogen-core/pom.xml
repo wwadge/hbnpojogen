@@ -9,7 +9,7 @@
 	<parent>
 		<artifactId>hbnpojogen</artifactId>
 		<groupId>com.github.wwadge</groupId>
-		<version>1.4.32</version>
+		<version>1.4.33</version>
 	</parent>
 
 	<name>Hibernate POJO Generator Core</name>

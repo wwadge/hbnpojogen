@@ -680,6 +680,7 @@ public class Config {
         State.getInstance().disableTestRollback = Config.config.getString("disableTestRollback", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableStateSave = Config.config.getString("enableStateSave", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableJacksonSupport = Config.config.getString("enableJacksonSupport", "false").equalsIgnoreCase("TRUE");
+        State.getInstance().enableJadiraSupport = Config.config.getString("enableJadiraSupport", "false").equalsIgnoreCase("TRUE");
         State.getInstance().enableJacksonManagedReferences = Config.config.getBoolean("enableJacksonSupport[@managedReference]", false);
 
         State.getInstance().enableMockitoBeans = Config.config.getString("enableMockitoBeans", "true").equalsIgnoreCase("TRUE");

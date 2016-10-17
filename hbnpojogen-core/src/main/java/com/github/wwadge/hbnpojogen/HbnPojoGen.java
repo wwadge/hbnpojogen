@@ -275,7 +275,7 @@ public class HbnPojoGen {
 
         long endTime = System.currentTimeMillis() - startTime;
         log("");
-        log("All done! Time taken: " + endTime / 1000 + " sec");
+        log("All done. Time taken: " + endTime / 1000 + " sec");
         // Save what we found out, for easier re-use in other libraries.
         if (State.getInstance().isEnableStateSave()) {
             log("Dumping state to disk as requested by config file");
