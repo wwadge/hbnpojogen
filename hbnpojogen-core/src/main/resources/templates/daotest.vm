@@ -297,7 +297,7 @@ public class DAOIntegrationTest {
 #end
 #end
 #end		
-		Assert.assertTrue(copy.get${property.javaName}()${bounce}$timebit / 1000 - ${class.tableObj.testHandle}.get${property.javaName}()${bounce}$timebit / 1000 < 100);
+		Assert.assertTrue(copy.get${property.javaName}() == null ? true : copy.get${property.javaName}()${bounce}$timebit / 1000 - ${class.tableObj.testHandle}.get${property.javaName}()${bounce}$timebit / 1000 < 100);
 #end
 #else
 #if ($property.ManyToMany)
