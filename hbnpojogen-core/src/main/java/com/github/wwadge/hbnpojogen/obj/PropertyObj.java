@@ -1035,7 +1035,7 @@ public class PropertyObj
                 result.add("@Type(type=\"org.jadira.usertype.dateandtime.joda.PersistentLocalDate\")");
             }
         } else if (State.getInstance().isEnableJDK8Support()) {
-            if (this.javaType.equalsIgnoreCase("LocalDateTime")) {
+            if (this.javaType.equalsIgnoreCase("OffsetDateTime")) {
                 if (State.getInstance().isEnableJadiraSupport()) {
                     result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
                 }

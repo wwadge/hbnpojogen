@@ -756,7 +756,7 @@ public class VelocityHelper {
                         } else {
                             if (State.getInstance().isEnableJDK8Support()) {
 
-                                returnValue = "BasicDataGenerator.generateDate().toLocalDateTime()";
+                                returnValue = "BasicDataGenerator.generateDate().toLocalDateTime().atOffset(java.time.ZoneOffset.UTC)";
                             } else {
                                 returnValue = "BasicDataGenerator.generateDate()";
 

@@ -1,5 +1,6 @@
 *.class
 
+**/*.xml.versionsBackup
 # Package Files #
 .MySCMServerInfo
 **/*.java.rej

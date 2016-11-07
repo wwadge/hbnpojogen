@@ -112,7 +112,7 @@ public class Constants {
      */
     static final String DATETIME = "DateTime";
 
-    static final String LOCALDATETIME = "LocalDateTime";
+    static final String OFFSETDATETIME = "OffsetDateTime";
     /**
      * Constant
      */

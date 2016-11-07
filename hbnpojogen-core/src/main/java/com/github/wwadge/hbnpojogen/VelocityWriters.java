@@ -1084,11 +1084,11 @@ public class VelocityWriters {
                                 if (property.isManyToOne()) {
                                     imports.add(property.getManyToOneLink().getClazz().getFullDataPoolFactory());
                                 }
-                                if (property.getJavaType().equals("DateTime") || property.getJavaType().equals("LocalDateTime")) {
+                                if (property.getJavaType().equals("DateTime") || property.getJavaType().equals("OffsetDateTime")) {
                                     if (State.getInstance().isEnableJodaSupport()) {
                                         imports.add("org.joda.time.DateTime");
                                     } else {
-                                        imports.add("java.time.LocalDateTime");
+                                        imports.add("java.time.OffsetDateTime");
 
                                     }
                                 }

@@ -1954,9 +1954,9 @@ public class Core {
                 }
 
 
-                if ((property.getJavaType() != null) && (property.getJavaType().equalsIgnoreCase(Constants.DATETIME) || property.getJavaType().equalsIgnoreCase(Constants.LOCALDATETIME))) {
+                if ((property.getJavaType() != null) && (property.getJavaType().equalsIgnoreCase(Constants.DATETIME) || property.getJavaType().equalsIgnoreCase(Constants.OFFSETDATETIME))) {
                     if (State.getInstance().isEnableJDK8Support()) {
-                        clazz.getImports().add("java.time.LocalDateTime");
+                        clazz.getImports().add("java.time.OffsetDateTime");
                     } else {
                         clazz.getImports().add("org.joda.time.DateTime");
 

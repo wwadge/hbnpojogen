@@ -276,7 +276,7 @@ public class DAOIntegrationTest {
 #if ($property.getJavaType().equals("DateTime"))
 #set($timebit = ".toDate().getTime()")
 #end
-#if ($property.getJavaType().equals("LocalDateTime"))
+#if ($property.getJavaType().equals("OffsetDateTime"))
 #set($timebit = ".getNano()")
 #end
 #if ($property.getJavaType().equals("LocalDate"))
@@ -289,7 +289,7 @@ public class DAOIntegrationTest {
 #if ($property.clazz.compositePrimaryKey && $property.idField)
 #set ($bounce = ".get" + ${property.fieldObj.property.javaName} + "()")
 
-#if ($property.fieldObj.property.getJavaType().equals("LocalDateTime"))
+#if ($property.fieldObj.property.getJavaType().equals("OffsetDateTime"))
 #set($timebit = ".getNano()")
 #else
 #if ($property.fieldObj.property.getJavaType().equals("DateTime"))

@@ -782,7 +782,7 @@ public class SyncUtils
                     result = "DateTime";
                 } else {
                     if (State.getInstance().isEnableJDK8Support()) {
-                        result = "LocalDateTime";
+                        result = "OffsetDateTime";
                     } else {
                         result = "Date";
                     }
