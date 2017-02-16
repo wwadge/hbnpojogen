@@ -290,7 +290,7 @@ public class Core {
                     // can later find out
                     // that
                     // this was an enum
-                    String name = SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)) + SyncUtils.upfirstChar(colName) + "Enum";
+                    String name = SyncUtils.upfirstChar(SyncUtils.getTableName(tableName)) + SyncUtils.upfirstChar(colName);
                     fo.setEnumName(SyncUtils.removeUnderscores(name));
                     fo.setEnumFilename(SyncUtils.removeUnderscores(name));
                     TreeMap<String, String> map = State.getInstance().enumMappings.get(tableObj.getDbCat() + "." + (tableObj.getDbSchema() == null ? "" : tableObj.getDbSchema()));

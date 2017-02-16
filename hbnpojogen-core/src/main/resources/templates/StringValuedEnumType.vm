@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.ParameterizedType;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import java.lang.reflect.InvocationTargetException;
 
 import static ${packagename}.StringValuedEnumReflect.*;
@@ -226,7 +226,7 @@ public class StringValuedEnumType <T extends Enum>
     }
 
     @Override
-    public Object nullSafeGet(ResultSet resultSet, String[] strings, SessionImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet resultSet, String[] strings, SharedSessionContractImplementor sessionImplementor, Object o) throws HibernateException, SQLException {
 
         if (pgEnum){
             Object object = resultSet.getObject(strings[0]);
@@ -257,7 +257,7 @@ public class StringValuedEnumType <T extends Enum>
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SessionImplementor sessionImplementor) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SharedSessionContractImplementor sessionImplementor) throws HibernateException, SQLException {
         if (value == null) {
             preparedStatement.setNull(index, Types.CHAR);
         } else {

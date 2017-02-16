@@ -1040,7 +1040,8 @@ public class PropertyObj
                     result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime\")");
                 }
                 if (State.getInstance().isEnableJacksonSupport()) {
-                    result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.class)");
+                    // Not needed as form jackson v2.8.5
+//                    result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.class)");
                 }
             }
             if (this.javaType.equalsIgnoreCase("LocalDate")) {
@@ -1048,8 +1049,8 @@ public class PropertyObj
                     result.add("@Type(type=\"org.jadira.usertype.dateandtime.threeten.PersistentLocalDate\")");
                 }
                 if (State.getInstance().isEnableJacksonSupport()) {
-
-                    result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)");
+                    // Not needed as form jackson v2.8.5
+//                    result.add("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using=com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)");
                 }
             }
         }
