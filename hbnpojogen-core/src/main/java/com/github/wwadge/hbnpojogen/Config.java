@@ -684,12 +684,14 @@ public class Config {
         State.getInstance().enableJacksonManagedReferences = Config.config.getBoolean("enableJacksonSupport[@managedReference]", false);
 
         State.getInstance().enableMockitoBeans = Config.config.getString("enableMockitoBeans", "true").equalsIgnoreCase("TRUE");
+        State.getInstance().enableUtilsBeans = Config.config.getString("enableUtilsBeans", "true").equalsIgnoreCase("TRUE");
         State.getInstance().setMockitoFilename(Config.config.getString("enableMockitoBeans[@filename]", "beans.test.mockito.xml"));
         State.getInstance().enableHibernateValidator = Config.config.getString("enableHibernateValidator", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setEnableJodaSupport(Config.config.getString("enableJodaSupport", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnableJDK8Support(Config.config.getString("enableJDK8Support", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnableSpringData(Config.config.getString("enableSpringData", "true").equalsIgnoreCase("TRUE"));
         State.getInstance().setSpringDataFactoryClass(Config.config.getString("enableSpringData[@factoryClass]", ""));
+        State.getInstance().setEnableSpringDataFactoryWrite(Config.config.getBoolean("enableSpringData[@writeFiles]", true));
         State.getInstance().setSpringDataRepoInterface(Config.config.getString("enableSpringData[@repoInterface]", " org.springframework.data.jpa.repository.JpaRepository"));
 
         State.getInstance().disableBackLinksInDataPoolFactory = Config.config.getString("disableBackLinksInDataPoolFactory", "false").equalsIgnoreCase("TRUE");

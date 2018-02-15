@@ -1500,15 +1500,17 @@ public class VelocityWriters {
             throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
         String[] utilClasses = {"StringValuedEnum", "StringValuedEnumReflect", "StringValuedEnumType", "IPojoGenEntity", "BasicDataGenerator"};
 
-        writeUtils(targetFolder, getAndCreateUtilPath(targetFolder), utilClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
-
+        if (State.getInstance().enableUtilsBeans) {
+            writeUtils(targetFolder, getAndCreateUtilPath(targetFolder), utilClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
+        }
         if (State.getInstance().enableMockitoBeans) {
             writeUtils(targetFolder, getAndCreateUtilPath(targetFolder), new String[]{"MockDatabase"}, SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL));
         }
         String[] repoClasses = {"CustomRepository", "CustomRepositoryImpl", "RepositoryFactoryBean"};
 
-        writeUtils(targetFolder, getAndCreateRepoFactoryPath(targetFolder), repoClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY));
-
+        if (State.getInstance().isEnableSpringDataFactoryWrite()) {
+            writeUtils(targetFolder, getAndCreateRepoFactoryPath(targetFolder), repoClasses, SyncUtils.getConfigPackage("", PackageTypeEnum.TABLE_REPO_FACTORY));
+        }
 
     }
 

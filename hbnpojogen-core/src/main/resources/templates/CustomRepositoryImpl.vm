@@ -6,7 +6,8 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
+import org.springframework.data.jpa.repository.support.QuerydslJpaRepository;
+import java.io.Serializable;
 
 import ${packagename}.CustomRepository;
 
@@ -18,7 +19,7 @@ import ${packagename}.CustomRepository;
  *
  */
 
-public class CustomRepositoryImpl<T, ID extends Serializable> extends QueryDslJpaRepository<T, ID> implements CustomRepository<T, ID> {
+public class CustomRepositoryImpl<T, ID extends Serializable> extends QuerydslJpaRepository<T, ID> implements CustomRepository<T, ID> {
 
 	/** Hold a reference to the entity manager, hibernate for eg */
 	private EntityManager entityManager;

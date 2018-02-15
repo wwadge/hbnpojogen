@@ -54,7 +54,10 @@
 	<!--  If not disabled, generates a spring context containing mock objects for each repository
 	for testing. Use the name tag to define the context filename. Default: true and filename set to beans.test.mockito.xml -->
 	<enableMockitoBeans filename="some.file.name.xml">true</enableMockitoBeans>
-	
+
+	<!--  If not disabled, generates some helper classes -->
+	<enableUtilsBeans>true</enableUtilsBeans>
+
 	<!--  Enable this to add @NotNull and @Length annotations where appropriate. 
 	Requires hibernate validator jar to be in your classpath. -->
 	<enableHibernateValidator>false</enableHibernateValidator>
@@ -243,7 +246,7 @@
 	 org.springframework.data.jpa.repository.JpaRepository to something else. Eg:
 	 repoInterface="com.my.CustomRepository"
 	-->
-	<enableSpringData factoryClass="com.som.factory.class.BeanName">true</enableSpringData>
+	<enableSpringData writeFiles="false" factoryClass="com.som.factory.class.BeanName">true</enableSpringData>
 	
 	<!-- If true, the resultant unit test will not contain code to delete all the tables prior to each test -->
 	<disableCleanTables>true</disableCleanTables>

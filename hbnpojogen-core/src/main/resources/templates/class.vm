@@ -173,7 +173,7 @@ $classAnnotation
 #if ( $class.superclass ) 
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
-@Data
+ @Data
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
@@ -231,6 +231,9 @@ import lombok.Data;
 #doClassMacros()
 #set ($implements =  "$interfacesToShow") 
 public #doClassType()class $class.className$this.doExtends($class) {
+
+	/** Serial Version UID. */
+	private static final long serialVersionUID = $serial;
 
 $classCustomCodeFields
 
@@ -291,6 +294,7 @@ $classCustomCodeFields
 #end
 #doAnnotations()
 	private $property.JavaType $property.propertyName;
+
 #else
 ##### The bug we're talking about below is: 
 ##### See http://opensource.atlassian.com/projects/hibernate/browse/HHH-2326?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#action_25739

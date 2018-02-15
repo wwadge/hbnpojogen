@@ -245,11 +245,13 @@ public class HbnPojoGen {
             VelocityWriters.writeSpringOverrideFile(targetFolder);
         }
 
-        log("Stage 10: Writing DAO Test classes");
-        VelocityWriters.writeOutDaoTestClass(targetFolder, State.getInstance().classes, commitOrder, srcFolder);
+        log("Stage 10: Writing DAO Test classes (skipped)");
+//        VelocityWriters.writeOutDaoTestClass(targetFolder, State.getInstance().classes, commitOrder, srcFolder);
 
-        log("Stage 11: Writing Data pool Factory classes");
-        VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
+
+
+            log("Stage 11: Writing Data pool Factory classes");
+            VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
 
         log("Stage 12: Writing Data layer helpers");
         VelocityWriters.writeOutDataLayerHelpers(targetFolder, State.getInstance().classes, State.getInstance().schemas);

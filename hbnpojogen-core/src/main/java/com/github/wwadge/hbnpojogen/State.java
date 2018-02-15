@@ -266,6 +266,7 @@ public class State
      * If true, generate mockito context file.
      */
     public boolean enableMockitoBeans = true;
+    public boolean enableUtilsBeans = true;
     public String mockitoFilename;
     /**
      * 0=MySQL, 1=MSSQL, 2=POSTGRESQL
@@ -313,7 +314,7 @@ public class State
     /**
      * Clean DB order. Only filled after writing test out. Used for dump state.
      */
-    private LinkedList<VelocityTable> cleanDbTables;
+    private LinkedList<VelocityTable> cleanDbTables = new LinkedList<VelocityTable>();
     /**
      * Table cycles for cleaning DB.
      */
@@ -336,6 +337,16 @@ public class State
     public boolean enableJDK8Support;
     public boolean enableSpringData;
     public String springDataFactoryClass = "";
+
+    public boolean isEnableSpringDataFactoryWrite() {
+        return enableSpringDataFactoryWrite;
+    }
+
+    public void setEnableSpringDataFactoryWrite(boolean enableSpringDataFactoryWrite) {
+        this.enableSpringDataFactoryWrite = enableSpringDataFactoryWrite;
+    }
+
+    private boolean enableSpringDataFactoryWrite = true;
     public String springDataRepoInterface = " org.springframework.data.jpa.repository.JpaRepository";
 
     /**
