@@ -251,8 +251,9 @@ public class HbnPojoGen {
 
 
             log("Stage 11: Writing Data pool Factory classes");
-            VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
-
+            if (!State.getInstance().isDisableDataPoolFactory()) {
+                VelocityWriters.writeOutDataPoolFactoryClass(State.getInstance().classes, targetFolder, State.getInstance().schemas);
+            }
         log("Stage 12: Writing Data layer helpers");
         VelocityWriters.writeOutDataLayerHelpers(targetFolder, State.getInstance().classes, State.getInstance().schemas);
 

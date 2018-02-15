@@ -695,6 +695,7 @@ public class Config {
         State.getInstance().setSpringDataRepoInterface(Config.config.getString("enableSpringData[@repoInterface]", " org.springframework.data.jpa.repository.JpaRepository"));
 
         State.getInstance().disableBackLinksInDataPoolFactory = Config.config.getString("disableBackLinksInDataPoolFactory", "false").equalsIgnoreCase("TRUE");
+        State.getInstance().disableDataPoolFactory = Config.config.getString("disableDataPoolFactory", "false").equalsIgnoreCase("TRUE");
         State.getInstance().setDisableLazyConnections(Config.config.getString("disableLazyConnections", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setEnablePropertyPlaceholderConfigurer(Config.config.getString("enablePropertyPlaceholderConfigurer", "false").equalsIgnoreCase("TRUE"));
         State.getInstance().setPropertyPlaceholderConfigurerPrefix(Config.config.getString("enablePropertyPlaceholderConfigurer[@prefix]", ""));

@@ -688,7 +688,10 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 	factory from returning objects with backlinks. The default is to make
 	calls such as obj.addXXX(B) rather than b.setXXX(obj) --> 
 	<disableBackLinksInDataPoolFactory>false</disableBackLinksInDataPoolFactory>
-	
+
+	<!-- If true, don't write the datapool factory classes -->
+	<disableDataPoolFactory>false</disableDataPoolFactory>
+
 	<!--  By default, the spring context file is setup to use lazy connections, that
 	is, using an @Transactional will only open a connection to the database
 	when a statement is actually sent to the DB. This improves performance but

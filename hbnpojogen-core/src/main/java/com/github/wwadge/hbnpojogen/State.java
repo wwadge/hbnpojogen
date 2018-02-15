@@ -357,6 +357,9 @@ public class State
      * disable backlinks in data pool factory
      */
     public boolean disableBackLinksInDataPoolFactory;
+
+
+    public boolean disableDataPoolFactory;
     /**
      * disable backlinks in data pool factory
      */
@@ -823,6 +826,13 @@ public class State
     }
 
 
+    public boolean isDisableDataPoolFactory() {
+        return disableDataPoolFactory;
+    }
+
+    public void setDisableDataPoolFactory(boolean disableDataPoolFactory) {
+        this.disableDataPoolFactory = disableDataPoolFactory;
+    }
     /**
      * @return the enableStateSave
      */
