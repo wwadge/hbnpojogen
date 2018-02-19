@@ -117,21 +117,8 @@ public class VelocityWriters {
     static {
         notForInterfaceImports.add("java.io.Serializable");
         notForInterfaceImports.add("java.util.HashSet");
-        notForInterfaceImports.add("javax.persistence.CascadeType");
-        notForInterfaceImports.add("javax.persistence.Column");
-        notForInterfaceImports.add("javax.persistence.Entity");
-        notForInterfaceImports.add("javax.persistence.GeneratedValue");
-        notForInterfaceImports.add("javax.persistence.SequenceGenerator");
-        notForInterfaceImports.add("javax.persistence.Basic");
+        notForInterfaceImports.add("javax.persistence.*");
 
-        notForInterfaceImports.add("javax.persistence.Id");
-        notForInterfaceImports.add("javax.persistence.ManyToMany");
-        notForInterfaceImports.add("javax.persistence.OneToMany");
-        notForInterfaceImports.add("javax.persistence.JoinColumn");
-        notForInterfaceImports.add("javax.persistence.JoinTable");
-        notForInterfaceImports.add("javax.persistence.FetchType");
-        notForInterfaceImports.add("javax.persistence.ManyToOne");
-        notForInterfaceImports.add("javax.persistence.Table");
         notForInterfaceImports.add("org.hibernate.annotations.Parameter");
         notForInterfaceImports.add("org.hibernate.annotations.Type");
         notForInterfaceImports.add("org.hibernate.annotations.TypeDef");
@@ -139,25 +126,17 @@ public class VelocityWriters {
         notForInterfaceImports.add("javax.persistence.Inheritance");
         notForInterfaceImports.add("javax.persistence.InheritanceType");
         notForInterfaceImports.add("javax.persistence.PrimaryKeyJoinColumn");
-        notForInterfaceImports.add("javax.persistence.GenerationType");
-        notForInterfaceImports.add("javax.persistence.OneToOne");
-        notForInterfaceImports.add("javax.persistence.Embeddable");
-        notForInterfaceImports.add("javax.persistence.EnumType");
-        notForInterfaceImports.add("javax.persistence.Enumerated");
-        notForInterfaceImports.add("javax.persistence.GenerationType");
         notForInterfaceImports.add("java.util.Arrays");
         notForInterfaceImports.add("org.hibernate.validator.Size");
         notForInterfaceImports.add("org.hibernate.validator.NotNull");
         notForInterfaceImports.add("org.hibernate.validator.NotEmpty");
         notForInterfaceImports.add("org.hibernate.validator.Valid");
-        notForInterfaceImports.add("com.ecs.persistence.validator.Mandatory");
         notForInterfaceImports.add("org.hibernate.proxy.HibernateProxy");
         notForInterfaceImports.add("java.util.Map");
         notForInterfaceImports.add("java.util.Collections");
         notForInterfaceImports.add("java.util.WeakHashMap");
-        notForInterfaceImports.add("javax.persistence.Transient");
         notForInterfaceImports.add("com.github.wwadge.hbnpojogen.persistence.validator.Mandatory");
-        notForInterfaceImports.add("com.github.wwadge.hbnpojogen.persistence.IPojoGenEntity");
+//        notForInterfaceImports.add("com.github.wwadge.hbnpojogen.persistence.IPojoGenEntity");
 
 
         for (Clazz clazz : State.getInstance().getClasses().values()) {
@@ -897,7 +876,7 @@ public class VelocityWriters {
 
                 imports.add("com.github.wwadge.hbnpojogen.persistence.IPojoGenEntity");
             } else {
-                imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
+//                imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
                 imports.add(SyncUtils.getConfigPackage(State.getInstance().tables.get(commit).getDbCat(), PackageTypeEnum.TABLE_REPO) + ".*");
             }
             // do not clean abstract classes - chrisp

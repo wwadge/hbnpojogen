@@ -76,7 +76,8 @@ package ${packagename};
 #end
 #if($property.enumType)
 #if ($class.TableObj.ContainsScrubbedEnum == true)
-	@Type(type = "enumType", parameters = {@Parameter(name = "enum", value = "${this.getEnumPackagePath($class)}.${fullType}"), @Parameter(name = "forPgSQL", value = "${this.isPGSQL()}")})
+##	@Type(type = "enumType", parameters = {@Parameter(name = "enum", value = "${this.getEnumPackagePath($class)}.${fullType}"), @Parameter(name = "forPgSQL", value = "${this.isPGSQL()}")})
+	@Enumerated(EnumType.STRING)
 #else
 	@Enumerated(EnumType.STRING)
 #end	
@@ -173,7 +174,7 @@ $classAnnotation
 #if ( $class.superclass ) 
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
- @Data
+ @Data @EqualsAndHashCode(callSuper=true)
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
@@ -224,7 +225,7 @@ $classAnnotation
 #foreach( $import in $imports )
 import $import;
 #end
-import lombok.Data;
+import lombok.*;
 
 #set ($fullTypeOfId = "---")
 
@@ -301,6 +302,7 @@ $classCustomCodeFields
 #if ( ! $property.isManyToMany() )
 	private $property.javaType $property.propertyName#if ( $property.idField && $property.fieldObj.autoInc && $property.composite) = $this.getHibernateBugWorkaround($property); // init for hibernate bug workaround#{else};#end
 #end
+
 #end
 #end
 #end

@@ -1929,9 +1929,9 @@ public class Core {
 
                         }
                     } else {
-                        clazz.getImports().add("javax.persistence.Enumerated");
-                        clazz.getImports().add("javax.persistence.EnumType");
                     }
+                    clazz.getImports().add("javax.persistence.Enumerated");
+                    clazz.getImports().add("javax.persistence.EnumType");
                 }
 
                 if (property.isArrayType()) {
@@ -2115,6 +2115,7 @@ public class Core {
      * @param tmp
      */
     private static void enumTypedefImport(TreeMap<String, Clazz> classes, Clazz clazz, String tmp) {
+
         String classannotation;
         classannotation = State.getInstance().classTypeDefsAnnotations.get(tmp);
 
@@ -2130,7 +2131,7 @@ public class Core {
 
         String enumAnnotation = "@TypeDef(name = \"enumType\", typeClass = " + valueType + ")";
         if (!classannotation.contains(enumAnnotation)) {
-            classannotation += enumAnnotation;
+      //      classannotation += enumAnnotation;
         }
 
         State.getInstance().classTypeDefsAnnotations.put(tmp, classannotation);
@@ -2164,6 +2165,7 @@ public class Core {
                 enumTypedefImport(classes, c, c.getClassPackage() + "." + c.getClassName());
             }
         }
+
     }
 
 
