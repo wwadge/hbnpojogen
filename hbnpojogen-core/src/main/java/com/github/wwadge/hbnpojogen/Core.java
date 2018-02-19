@@ -1809,7 +1809,7 @@ public class Core {
             if (!clazz.isSubclass()) {
                 if (!clazz.isEmbeddable()) {
                     if (State.getInstance().isEnableSpringData()) {
-                        clazz.getImports().add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
+//                        clazz.getImports().add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".IPojoGenEntity");
                     } else {
                         clazz.getImports().add("com.github.wwadge.hbnpojogen.persistence.IPojoGenEntity");
                     }

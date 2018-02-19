@@ -561,9 +561,9 @@ public class VelocityWriters {
                 interfacesToShow.add("Cloneable");
                 interfacesToShow.add("Serializable");
             }
-            if (!clazz.isEmbeddable() && !clazz.isSubclass()) {
-                interfacesToShow.add("IPojoGenEntity");
-            }
+//            if (!clazz.isEmbeddable() && !clazz.isSubclass()) {
+//                interfacesToShow.add("IPojoGenEntity");
+//            }
 
             if (!State.getInstance().isSkipModelInterfaces()) {
                 interfacesToShow.add("I" + clazz.getClassName());
