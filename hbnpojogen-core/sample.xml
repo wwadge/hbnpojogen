@@ -663,8 +663,9 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 	<currencyUnitFields typeOverride="com.your.custom.override.classType">
 		<field>schema.table.field</field>
 		<field>*.table.field</field>
-	</currencyUnitFields>	
-	
+	</currencyUnitFields>
+
+
 	<!-- Uses Jasypt to encrypt/decrypt string fields.
 	See: http://tomaszdziurko.pl/2013/07/transparently-persist-retrieve-encrypted-data-database/ 
 	
@@ -681,9 +682,14 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 		<field>schema.table.field</field>
 		<field>*.table.field</field>
 		<field except-for="*.sometable,someschema.sometable">someschema.sometable.somefieldname</field>
-	</encryptedFields>	
-	
-	
+	</encryptedFields>
+
+	<!-- Custom type override -->
+	<customTypes>
+		<field type="java.util.Currency">schema.table.field</field>
+	</customTypes>
+
+
 	<!-- Set disableBackLinksInDataPoolFactory to true to prevent the datapool
 	factory from returning objects with backlinks. The default is to make
 	calls such as obj.addXXX(B) rather than b.setXXX(obj) --> 

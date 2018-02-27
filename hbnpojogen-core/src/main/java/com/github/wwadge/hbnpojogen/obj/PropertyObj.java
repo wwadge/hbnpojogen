@@ -214,6 +214,8 @@ public class PropertyObj
      * if true, this is a money type
      */
     private boolean moneyType;
+    private boolean customType;
+
     /**
      * if true, this is a currency type
      */
@@ -1474,7 +1476,13 @@ public class PropertyObj
     public boolean isCurrencyType() {
         return this.currencyType;
     }
+    public boolean isCustomType() {
+        return this.customType;
+    }
 
+    public void setCustomType(boolean b){
+        this.customType = b;
+    }
     /**
      * Checks to see if this property has a match in the cascade list to return if enabled or disabled.
      *

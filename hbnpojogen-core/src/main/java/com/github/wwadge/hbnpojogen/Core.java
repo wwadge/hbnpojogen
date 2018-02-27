@@ -929,14 +929,17 @@ public class Core {
                         // topLevel + "." + projectName + ".enums.db." +
                         // co.getClassPackage()+"."+field.getValue().getEnumName()
 
-                        property.setJavaType(fieldObj.getEnumName());
-                        if (field.getValue().isFakeEnum()) {
-                            String tmp = Core.fixIdName(fieldName);
-                            property.setJavaName(SyncUtils.upfirstChar(tmp));
-                        } else {
-                            property.setJavaName(SyncUtils.upfirstChar(fieldName));
+                        if (!checkCustomType(fieldObj, property)) {
+
+                            property.setJavaType(fieldObj.getEnumName());
+                            if (field.getValue().isFakeEnum()) {
+                                String tmp = Core.fixIdName(fieldName);
+                                property.setJavaName(SyncUtils.upfirstChar(tmp));
+                            } else {
+                                property.setJavaName(SyncUtils.upfirstChar(fieldName));
+                            }
+                            property.setEnumType(true);
                         }
-                        property.setEnumType(true);
                         break;
 
                     case COMPOSITE_MANY_TO_ONE:
@@ -1084,6 +1087,8 @@ public class Core {
                             co.getImports().add("org.jasypt.hibernate4.type.EncryptedStringType");
                             property.setEncrypted(true);
                         }
+
+                        checkCustomType(fieldObj, property);
 
                         if (fieldObj.isMoneyType()) {
                             co.getImports().add(State.getInstance().getCustomMoneyType());
@@ -1274,6 +1279,28 @@ public class Core {
         }
 
 
+    }
+
+    private static boolean checkCustomType(FieldObj fieldObj, PropertyObj property) {
+        if (fieldObj.isCustomType()){
+            property.setCustomType(true);
+            String dottedName = fieldObj.getTableObj().getDbSchema()+"."+fieldObj.getTableObj().getDbName() + "." + fieldObj.getName();
+
+            String javaName = State.getInstance().getCustomTypes().get(dottedName);
+            if (javaName == null){
+                javaName  = State.getInstance().getCustomTypes().get("*.*."+fieldObj.getName());
+            }
+            if (javaName == null){
+                javaName = State.getInstance().getCustomTypes().get("*."+fieldObj.getTableObj().getDbName()+"."+fieldObj.getName());
+            }
+
+
+            property.setJavaType(javaName);
+
+            property.setEnumType(false);
+            return true;
+        }
+        return false;
     }
 
     /**

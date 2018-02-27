@@ -626,6 +626,18 @@ public class FieldObj implements Serializable {
 
     }
 
+    public boolean isCustomType() {
+        String fname = this.getName();
+        return checkCustomType("*.*." + fname) ||
+                checkCustomType("*." + this.getProperty().getClazz().getTableObj().getDbName() + "." + fname) ||
+                checkCustomType(this.getProperty().getClazz().getTableObj().getDbCat() + ".*." + fname) ||
+
+                checkCustomType("*." + this.getProperty().getClazz().getTableObj().getDbName() + ".*") ||
+                checkCustomType(this.getProperty().getClazz().getTableObj().getDbCat() + ".*.*");
+
+
+    }
+
     /**
      * @param string
      * @return
@@ -650,6 +662,17 @@ public class FieldObj implements Serializable {
         }
 
         return false;
+    }
+
+    /**
+     * @param string
+     * @return
+     */
+    private boolean checkCustomType(String check) {
+        boolean customType = false;
+        String fname = this.getName();
+
+        return  State.getInstance().getCustomTypes().containsKey(check);
     }
 
 }

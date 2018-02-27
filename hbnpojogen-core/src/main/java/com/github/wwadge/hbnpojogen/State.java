@@ -190,6 +190,7 @@ public class State
      * Fields to encrypt. Key = field, value = exception list
      */
     public TreeMap<String, List<String>> encryptList = new TreeMap<String, List<String>>(new CaseInsensitiveComparator());
+    public TreeMap<String, String> customTypes = new TreeMap<String, String>(new CaseInsensitiveComparator());
     /**
      * Fields to ignore during generation. Key = field, value = exception list
      */
@@ -2586,6 +2587,14 @@ public class State
      */
     public TreeMap<String, List<String>> getEncryptList() {
         return encryptList;
+    }
+
+
+    /**
+     * @return the encryptList
+     */
+    public TreeMap<String, String> getCustomTypes() {
+        return customTypes;
     }
 
 

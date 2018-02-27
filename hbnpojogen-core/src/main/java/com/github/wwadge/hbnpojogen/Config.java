@@ -139,6 +139,7 @@ public class Config {
         fillEqualityExcludes();
         fillTransientFields();
         fillMoneyFields();
+        fillCustomTypeFields();
         fillCurrencyFields();
         fillEncryptedFields();
         fillUniqueKeys();
@@ -180,6 +181,15 @@ public class Config {
         State.getInstance().setCustomCurrencyUnitType(Config.config.getString("currencyUnitFields[@typeOverride]", "org.jadira.usertype.moneyandcurrency.moneta.PersistentCurrencyUnit"));
 
     }
+
+    private static void fillCustomTypeFields() {
+
+        List<String> tmp = Config.config.getList("customTypes.field");
+        for (int i = 0; i < tmp.size(); i++) {
+            State.getInstance().customTypes.put(tmp.get(i).toUpperCase(), Config.config.getString(String.format("customTypes.field(%d)[@type]", i), ""));
+        }
+    }
+
 
     private static void fillEncryptedFields() {
 //        ArrayList<String> enc = (ArrayList<String>) Config.config.getList("encryptedFields.field");
