@@ -76,8 +76,7 @@ package ${packagename};
 #end
 #if($property.enumType)
 #if ($class.TableObj.ContainsScrubbedEnum == true)
-##	@Type(type = "enumType", parameters = {@Parameter(name = "enum", value = "${this.getEnumPackagePath($class)}.${fullType}"), @Parameter(name = "forPgSQL", value = "${this.isPGSQL()}")})
-	@Enumerated(EnumType.STRING)
+	@Type(type = "enumType", parameters = {@Parameter(name = "enumClass", value = "${this.getEnumPackagePath($class)}.${fullType}")})
 #else
 	@Enumerated(EnumType.STRING)
 #end	

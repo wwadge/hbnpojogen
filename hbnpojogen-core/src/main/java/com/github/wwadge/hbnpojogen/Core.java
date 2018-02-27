@@ -2123,15 +2123,18 @@ public class Core {
             classannotation = "";
         }
         String valueType;
+//        @Type(type = "org.jadira.usertype.corejava.enumerated.PersistentEnumAsPostgreSQLEnum", parameters = {
+//                @org.hibernate.annotations.Parameter(name = "enumClass", value = "com.akcegroup.account.core.model.generated.enums.db.MerchantDetailStatus3d")
+//        })
         if (State.getInstance().isEnableSpringData()) {
-            valueType = SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnumType.class";
+            valueType = "org.jadira.usertype.corejava.enumerated.PersistentEnumAsPostgreSQLEnum.class"; //  "// SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".StringValuedEnumType.class";
         } else {
             valueType = "com.github.wwadge.hbnpojogen.persistence.impl.StringValuedEnumType.class";
         }
 
         String enumAnnotation = "@TypeDef(name = \"enumType\", typeClass = " + valueType + ")";
         if (!classannotation.contains(enumAnnotation)) {
-      //      classannotation += enumAnnotation;
+            classannotation += enumAnnotation;
         }
 
         State.getInstance().classTypeDefsAnnotations.put(tmp, classannotation);
@@ -2150,7 +2153,7 @@ public class Core {
             classannotation =
                     String
                             .format(
-                                    "%s@TypeDef(name = \"enumType\", typeClass = " + valueType + ") )",
+                                    "%s@TypeDef(name = \"enumClass\", enumClass = " + valueType + ") )",
                                     classannotation);
 
             State.getInstance().classTypeDefsAnnotations.put(parent, classannotation);
@@ -2256,7 +2259,6 @@ public class Core {
 
     /**
      * @param bounceClass
-     * @param bounceMappings
      * @param srcProperty
      * @param srcPropertyBounce
      * @param dstProperty

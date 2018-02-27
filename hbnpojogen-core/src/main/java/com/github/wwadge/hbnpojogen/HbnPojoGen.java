@@ -239,7 +239,7 @@ public class HbnPojoGen {
             VelocityWriters.writeSpringApplicationContext(targetFolder, State.getInstance().classes, dbCatalog);
         }
 //        VelocityWriters.writeAntBuildFile(targetFolder, dbCatalog);
-        VelocityWriters.writeEHCache(targetFolder);
+//        VelocityWriters.writeEHCache(targetFolder);
         VelocityWriters.writeUtils(targetFolder);
         if (!State.getInstance().isPropertyPlaceholderConfigurerSuppressBean()) {
             VelocityWriters.writeSpringOverrideFile(targetFolder);
