@@ -125,7 +125,7 @@ package ${packagename};
 	@org.hibernate.annotations.Cascade($property.getCascadeTypeManyToOne())
 #end
 #if ( ${property.getManyToOneKey().keyLinks.size()} == 1)
-	@JoinColumn(name = "${property.getManyToOneKey().keyLinks.entrySet().iterator().next().getKey()}"#if (${property.isNaturalManyToOneLink()}), referencedColumnName = "$property.getManyToOneKey().keyLinks.entrySet().iterator().next().getValue()"#end, nullable = $property.isNullable() #if($class.embeddable), insertable = false, updatable = false #end)
+	@JoinColumn(name = "${property.getManyToOneKey().keyLinks.entrySet().iterator().next().getKey()}", referencedColumnName = "$property.getManyToOneKey().keyLinks.entrySet().iterator().next().getValue()", nullable = $property.isNullable() #if($class.embeddable), insertable = false, updatable = false #end)
 #else
 	@JoinColumns({
 #foreach ($join in ${property.getManyToOneKey().keyLinks.entrySet()})
