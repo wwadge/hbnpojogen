@@ -3,6 +3,8 @@ package com.github.wwadge.hbnpojogen.obj;
 
 import com.github.wwadge.hbnpojogen.*;
 import com.github.wwadge.hbnpojogen.db.TableObj;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 import java.io.Serializable;
 import java.util.*;
@@ -1171,6 +1173,18 @@ public class Clazz
         return result;
     }
 
+    public final String excludesFromEquals(){
+        List<String> e = Lists.newArrayList();
+        for (Entry<String, PropertyObj>  properyObj: getProperties().entrySet()){
+            if (properyObj.getValue().isOneToMany()){
+                e.add("\""+properyObj.getValue().getNicePropertyName()+"\"");
+            }
+        }
+        if (!e.isEmpty()) {
+            return ", exclude = {"+Joiner.on(",").join(e)+"}";
+        }
+        return "";
+    }
 
     /**
      * Expand class name, if potential clash

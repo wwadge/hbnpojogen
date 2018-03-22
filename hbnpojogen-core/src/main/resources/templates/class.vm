@@ -173,7 +173,7 @@ $classAnnotation
 #if ( $class.superclass ) 
 @Inheritance(strategy = InheritanceType.JOINED)
 #end
- @Data @EqualsAndHashCode(callSuper=true)
+ @Data @EqualsAndHashCode(callSuper=true$class.excludesFromEquals() )
 #if ( (${class.isEmbeddable()} == false) && ((${this.isDifferentCase($class)} == true) || (${this.hasUnderscores($class)} == true) || ( (${this.isSchemaRestricted()} == true)  )))
 @Table(name = "$class.tableObj.dbName"#if(!$restrictCatalog), catalog = "$class.tableObj.dbCat", schema = "$class.tableObj.dbSchema"#end)
 #end
