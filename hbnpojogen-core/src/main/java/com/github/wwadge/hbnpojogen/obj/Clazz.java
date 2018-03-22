@@ -1173,6 +1173,18 @@ public class Clazz
         return result;
     }
 
+    public final String lombokToStringCalculate(){
+        List<String> e = Lists.newArrayList();
+        for (Entry<String, PropertyObj>  properyObj: getProperties().entrySet()){
+            if (properyObj.getValue().isOneToMany()){
+                e.add("\""+properyObj.getValue().getNicePropertyName()+"\"");
+            }
+        }
+        if (!e.isEmpty()) {
+            return "@ToString(exclude = {"+Joiner.on(",").join(e)+"})";
+        }
+        return "";
+    }
     public final String excludesFromEquals(){
         List<String> e = Lists.newArrayList();
         for (Entry<String, PropertyObj>  properyObj: getProperties().entrySet()){
