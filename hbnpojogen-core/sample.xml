@@ -637,8 +637,14 @@ should not generate the OneToMany side  in the case of one-to-many/many-to-one l
 	class. -->
 	<equalityExcludes>
 		<field>*.*.audit_created_by</field>
-	</equalityExcludes>	
-	
+	</equalityExcludes>
+
+	<!-- Specify any fields to ignore in the toString method of each generated
+class. -->
+	<toStringExcludes>
+		<field>*.*.audit_created_by</field>
+	</toStringExcludes>
+
 	<!-- Specify any fields to mark as being transient. Transient fields
 	aren't saved and are ignored in tests. This is useful for marking
 	up fields that are derived in the DB eg by means of a stored procedure

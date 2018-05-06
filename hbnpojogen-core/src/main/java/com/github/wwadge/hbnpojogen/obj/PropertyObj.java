@@ -1742,6 +1742,15 @@ public class PropertyObj
 
     }
 
+    public boolean isExcludedFromToString() {
+        String fname = this.getFieldObj().getName();
+        Set<String> excludes = State.getInstance().getToStringExcludes();
+        return excludes.contains("*.*." + fname) ||
+                excludes.contains("*." + this.clazz.getTableObj().getDbName() + "." + fname) ||
+                excludes.contains(this.clazz.getTableObj().getDbCat() + ".*." + fname);
+
+    }
+
     public boolean isTransientField() {
         String fname = this.getFieldObj().getName();
         Set<String> transientField = State.getInstance().getTransientFields();

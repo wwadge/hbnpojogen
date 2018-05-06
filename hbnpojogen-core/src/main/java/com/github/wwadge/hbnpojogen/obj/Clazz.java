@@ -1176,7 +1176,7 @@ public class Clazz
     public final String lombokToStringCalculate(){
         List<String> e = Lists.newArrayList();
         for (Entry<String, PropertyObj>  properyObj: getProperties().entrySet()){
-            if (properyObj.getValue().isOneToMany()){
+            if (properyObj.getValue().isOneToMany() || properyObj.getValue().isExcludedFromToString()){
                 e.add("\""+properyObj.getValue().getNicePropertyName()+"\"");
             }
         }
@@ -1188,7 +1188,7 @@ public class Clazz
     public final String excludesFromEquals(){
         List<String> e = Lists.newArrayList();
         for (Entry<String, PropertyObj>  properyObj: getProperties().entrySet()){
-            if (properyObj.getValue().isOneToMany()){
+            if (properyObj.getValue().isOneToMany() || properyObj.getValue().isExcludedFromEquality()){
                 e.add("\""+properyObj.getValue().getNicePropertyName()+"\"");
             }
         }

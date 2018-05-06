@@ -160,6 +160,9 @@ public class State
     private Map<String, Boolean> immutableTables = new TreeMap<String, Boolean>(new CaseInsensitiveComparator());
 
     private Set<String> equalityExcludes = new HashSet<String>();
+
+
+    private Set<String> toStringExcludes = new HashSet<String>();
     /**
      * set of transient fields.
      */
@@ -1154,6 +1157,14 @@ public class State
         return preExecList;
     }
 
+
+    public Set<String> getToStringExcludes() {
+        return toStringExcludes;
+    }
+
+    public void setToStringExcludes(Set<String> toStringExcludes) {
+        this.toStringExcludes = toStringExcludes;
+    }
 
     /**
      * @param preExecList the preExecList to set

@@ -137,6 +137,7 @@ public class Config {
         fillCustomPluralization();
 
         fillEqualityExcludes();
+        fillToStringExcludes();
         fillTransientFields();
         fillMoneyFields();
         fillCustomTypeFields();
@@ -161,6 +162,12 @@ public class Config {
 
         ArrayList<String> excludes = (ArrayList<String>) Config.config.getList("equalityExcludes.field");
         State.getInstance().getEqualityExcludes().addAll(excludes);
+    }
+
+    private static void fillToStringExcludes() {
+
+        ArrayList<String> excludes = (ArrayList<String>) Config.config.getList("toStringExcludes.field");
+        State.getInstance().getToStringExcludes().addAll(excludes);
     }
 
     private static void fillTransientFields() {
