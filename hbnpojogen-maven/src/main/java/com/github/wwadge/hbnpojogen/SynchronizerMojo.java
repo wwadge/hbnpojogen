@@ -23,7 +23,7 @@ public class SynchronizerMojo extends AbstractMojo {
      * The name of the XML config file to use. If you omit this, attempt to load hbnpojogen.config.xml
      * from the classpath.
      *
-     * @parameter expression="${configFile}"
+     * @parameter property="configFile"
      * @optional
      */
     protected String configFile;
@@ -31,7 +31,7 @@ public class SynchronizerMojo extends AbstractMojo {
     /**
      * The artifactId of the child that will contain the generated sources.
      *
-     * @parameter expression="${modelArtifactId}"
+     * @parameter property="modelArtifactId"
      * @required
      */
     protected String modelArtifactId;
@@ -39,7 +39,7 @@ public class SynchronizerMojo extends AbstractMojo {
     /**
      * The project object model.
      *
-     * @parameter expression="${project}"
+     * @parameter property="project"
      * @readonly
      * @required
      */
@@ -48,7 +48,7 @@ public class SynchronizerMojo extends AbstractMojo {
     /**
      * ipaddress to use as source (override).
      *
-     * @parameter expression="${ip}"
+     * @parameter property="ip"
      * @optional
      */
     protected String ip;
@@ -61,7 +61,7 @@ public class SynchronizerMojo extends AbstractMojo {
     /**
      * If this is declared, the model generation will start.
      *
-     * @parameter expression="${generateModel}"
+     * @parameter property="generateModel"
      * @optional
      */
     protected Boolean generateModel;
