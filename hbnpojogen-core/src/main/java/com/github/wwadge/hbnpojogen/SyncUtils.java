@@ -1021,6 +1021,35 @@ public class SyncUtils
         return result;
     }
 
+    public static String mapOpenApiType(PropertyObj propertyObj) {
+        String result = "";
+        switch (propertyObj.getJavaType()) {
+            case "Boolean": return "boolean";
+            case "Byte" :
+            case "Integer":
+            case "Long":
+            case "Double":
+            case "java.math.BigDecimal":
+                return "number";
+
+            case "String":
+                return "string";
+            case "LocalDate":
+            case "Date":
+                result = "string";
+                propertyObj.setOpenApiFormat("date");
+                break;
+            case "OffsetDateTime":
+                result = "string";
+                propertyObj.setOpenApiFormat("date-time");
+                break;
+            default:
+                result = "Object";
+                break;
+        }
+        return result;
+    }
+
 
     /**
      * Results of getCommitOrder

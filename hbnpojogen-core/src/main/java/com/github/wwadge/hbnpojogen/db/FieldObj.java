@@ -613,6 +613,21 @@ public class FieldObj implements Serializable {
                 currencyFields.contains(this.getProperty().getClazz().getTableObj().getDbCat() + ".*." + fname);
     }
 
+    public boolean isOpenApiReadOnlyField() {
+        String fname = this.getName();
+        Set<String> fields = State.getInstance().getOpenApiReadOnlyFields();
+        return fields.contains("*.*." + fname) ||
+                fields.contains("*." + this.getProperty().getClazz().getTableObj().getDbName() + "." + fname) ||
+                fields.contains(this.getProperty().getClazz().getTableObj().getDbCat() + ".*." + fname);
+    }
+
+    public boolean isOpenApiWriteOnlyField() {
+        String fname = this.getName();
+        Set<String> fields = State.getInstance().getOpenApiWriteOnlyFields();
+        return fields.contains("*.*." + fname) ||
+                fields.contains("*." + this.getProperty().getClazz().getTableObj().getDbName() + "." + fname) ||
+                fields.contains(this.getProperty().getClazz().getTableObj().getDbCat() + ".*." + fname);
+    }
 
     public boolean isEncryptedType() {
         String fname = this.getName();

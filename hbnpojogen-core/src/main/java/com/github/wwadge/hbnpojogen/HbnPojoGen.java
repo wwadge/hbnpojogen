@@ -274,6 +274,11 @@ public class HbnPojoGen {
             VelocityWriters.writeOutMockitoBean(targetFolder, State.getInstance().classes, State.getInstance().schemas);
         }
 
+        log("Stage 16: Writing openApi schemas"+ (State.getInstance().isEnableOpenApiSchemas() ? "" : " [disabled]"));
+        if (State.getInstance().isEnableOpenApiSchemas()) {
+            VelocityWriters.writeOpenApiSchemas(targetFolder, State.getInstance().classes);
+        }
+
         printStatistics(State.getInstance().classes, ignoredTables);
 
         long endTime = System.currentTimeMillis() - startTime;

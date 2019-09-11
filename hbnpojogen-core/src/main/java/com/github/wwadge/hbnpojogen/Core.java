@@ -911,6 +911,7 @@ public class Core {
                             co.getImports().add("javax.persistence.Id");
                         }
                         property.setJavaType(SyncUtils.mapSQLType(fieldObj));
+                        property.setOpenApiType("number"); // but overridden in template
 
                         if (property.getJavaType().equals("String")) {
                             property.setLength(fieldObj.getLength());
@@ -932,6 +933,9 @@ public class Core {
                         if (!checkCustomType(fieldObj, property)) {
 
                             property.setJavaType(fieldObj.getEnumName());
+                            property.setOpenApiType("string");
+                            property.setOpenApiEnumValues(Arrays.asList(field.getValue().getEnumValues()));
+
                             if (field.getValue().isFakeEnum()) {
                                 String tmp = Core.fixIdName(fieldName);
                                 property.setJavaName(SyncUtils.upfirstChar(tmp));
@@ -1062,6 +1066,8 @@ public class Core {
                         break;
                     case NORMAL_FIELD:
                         property.setJavaType(SyncUtils.mapSQLType(fieldObj));
+                        property.setOpenApiType(SyncUtils.mapOpenApiType(property));
+
                         if (fieldObj.getName().endsWith("_currency")) {
                             FieldObj f = tobj.getFields().get(fieldObj.getName().substring(0, fieldObj.getName().lastIndexOf("_currency")));
                             if (f != null && f.isMoneyType()) {

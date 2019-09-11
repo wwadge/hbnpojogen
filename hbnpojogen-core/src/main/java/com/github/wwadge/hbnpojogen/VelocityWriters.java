@@ -333,6 +333,15 @@ public class VelocityWriters {
         return result;
     }
 
+    private static String getAndCreateOpenApiPath(String targetFolder, Clazz clazz) {
+        PackageTypeEnum type = PackageTypeEnum.OPENAPI_SCHEMA;
+        String config = State.getInstance().getOpenApiOutputDir();
+        new File(config).mkdirs();
+
+        String result = config + "/" + clazz.getClassName();
+        result += ".yaml";
+        return result;
+    }
 
     /**
      * @param targetFolder
@@ -468,7 +477,7 @@ public class VelocityWriters {
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    public static void writeClass(final String projectName, final Clazz clazz, final PrintWriter classWriter, boolean isInterface)
+    public static void writeClass(final String projectName, final Clazz clazz, final PrintWriter classWriter, boolean isInterface, boolean isOpenApiSchema)
             throws IOException, NoSuchAlgorithmException {
         if (!Core.skipSchemaWrite(clazz)) {
 
@@ -597,6 +606,8 @@ public class VelocityWriters {
             }
             if (isInterface) {
                 Config.interfaceTemplate.merge(context, classWriter);
+            } else if (isOpenApiSchema) {
+                Config.templateOpenApiSchema.merge(context, classWriter);
             } else {
                 Config.template.merge(context, classWriter);
             }
@@ -753,13 +764,13 @@ public class VelocityWriters {
 
 
                 // Write Class
-                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false);
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, false);
 
 
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, false);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
-                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, false);
+                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, false, false);
                 }
 
 
@@ -795,12 +806,12 @@ public class VelocityWriters {
 
 
                 // Write Class
-                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, true);
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, true, false);
 
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, true);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
-                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, true);
+                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, true, false);
                 }
 
 
@@ -810,6 +821,22 @@ public class VelocityWriters {
         }
     }
 
+    public static void writeOpenApiSchemas(final String targetFolder, TreeMap<String, Clazz> classes)
+            throws IOException, Exception {
+
+
+        for (Clazz co : classes.values()) {
+            if (!co.isHiddenJoinTable() && !Core.skipSchemaWrite(co)) {
+                // System.out.println(co.getClassName());
+                String tmp = getAndCreateOpenApiPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co);
+                PrintWriter classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+
+                // Write Class
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, true);
+
+            }
+        }
+    }
     /**
      * Writes out the unit test
      *

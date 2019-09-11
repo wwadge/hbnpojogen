@@ -51,5 +51,6 @@ public enum PackageTypeEnum implements Serializable {
      * Constant.
      */
     DAOIMPL,
-    ENUM_TARGET_BASE
+    ENUM_TARGET_BASE,
+    OPENAPI_SCHEMA;
 }

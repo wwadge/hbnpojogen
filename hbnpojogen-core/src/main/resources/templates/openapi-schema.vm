@@ -1,0 +1,34 @@
+$class.className:
+	type: object
+	properties:
+#foreach( $property in $properties )
+#if ( !$property.oneToMany && !$property.manyToMany )
+		$property.propertyName:
+#if ($property.isIdField() || $property.isManyToOne())
+			$ref: "#/components/schemas/EntityId"
+#else
+			type: $property.openApiType
+#end
+#if ( $property.openApiFormat)
+			format: $property.openApiFormat
+#end
+#if ( !$property.isNullable() && !$property.isIdField() && !$property.isManyToOne())
+			nullable: false
+#end
+#if ( $property.isOpenApiReadOnlyField() && !$property.isIdField() && !$property.isManyToOne())
+			readOnly: true
+#end
+#if ( $property.openApiWriteOnlyField && !$property.isIdField() && !$property.isManyToOne())
+			writeOnly: true
+#end
+#if ( $property.openApiEnumValues)
+			enum: $property.openApiEnumValues
+#end
+#if ( $property.length)
+			maxLength: $property.length
+#end
+#if ( !$property.getFieldComment().equals(""))
+			decription: $property.getFieldComment()
+#end
+#end
+#end

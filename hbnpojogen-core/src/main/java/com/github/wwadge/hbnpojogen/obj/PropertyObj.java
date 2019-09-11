@@ -222,6 +222,23 @@ public class PropertyObj
     private boolean currencyType;
     private boolean encryptedType;
 
+
+    private String openApiType;
+    private List<String> openApiEnumValues;
+    private String openApiFormat;
+
+
+    public List<String> getOpenApiEnumValues() {
+        return openApiEnumValues;
+    }
+
+    public void setOpenApiEnumValues(List<String> openApiEnumValues) {
+        this.openApiEnumValues = openApiEnumValues;
+    }
+
+    public String getFieldComment(){
+        return this.fieldObj.getComment().trim();
+    }
     /**
      * Gets
      *
@@ -253,6 +270,14 @@ public class PropertyObj
     public String getCascadeTypeOneToMany() {
         Set<String> cascade = getXToXCascadeType(State.getInstance().getOneToManyCascadeEnabled(), this.OneToManyLink);
         return getCascadeTypeXtoX(cascade);
+    }
+
+    public String getOpenApiType() {
+        return openApiType;
+    }
+
+    public void setOpenApiType(String openApiType) {
+        this.openApiType = openApiType;
     }
 
     /**
@@ -432,6 +457,13 @@ public class PropertyObj
         return result;
     }
 
+    public String getOpenApiFormat() {
+        return openApiFormat;
+    }
+
+    public void setOpenApiFormat(String openApiFormat) {
+        this.openApiFormat = openApiFormat;
+    }
 
     /**
      * Convenience function. Return true if the manyToOne link is eventually pointing back to an instance of the same class
@@ -1809,6 +1841,13 @@ public class PropertyObj
         return this.hiddenCurrencyField;
     }
 
+    public boolean isOpenApiReadOnlyField(){
+        return this.fieldObj.isOpenApiReadOnlyField();
+    }
+
+    public boolean isOpenApiWriteOnlyField(){
+        return this.fieldObj.isOpenApiWriteOnlyField();
+    }
 
     /**
      * @param hiddenCurrencyField the hiddenCurrencyField to set

@@ -29,6 +29,7 @@ public class Config {
      * config
      */
     public static Template template;
+    public static Template templateOpenApiSchema;
     /**
      * config
      */
@@ -67,6 +68,7 @@ public class Config {
         Velocity.init(p);
 
         template = Velocity.getTemplate("templates/class.vm");
+        templateOpenApiSchema = Velocity.getTemplate("templates/openapi-schema.vm");
         interfaceTemplate = Velocity.getTemplate("templates/classIface.vm");
         repoTemplate = Velocity.getTemplate("templates/classRepo.vm");
 
@@ -143,6 +145,7 @@ public class Config {
         fillCustomTypeFields();
         fillCurrencyFields();
         fillEncryptedFields();
+        fillOpenApiFields();
         fillUniqueKeys();
 
         // switch config get List here:
@@ -201,6 +204,7 @@ public class Config {
     private static void fillEncryptedFields() {
 //        ArrayList<String> enc = (ArrayList<String>) Config.config.getList("encryptedFields.field");
 
+
         List<String> tmp = Config.config.getList("encryptedFields.field");
         for (int i = 0; i < tmp.size(); i++) {
             State.getInstance().encryptList.put(tmp.get(i).toUpperCase(), Config.config.getList(String.format("encryptedFields.field(%d)[@except-for]", i), new LinkedList<String>()));
@@ -208,6 +212,22 @@ public class Config {
 
 
 //        State.getInstance().getEncryptedFields().addAll(enc);
+    }
+
+
+    private static void fillOpenApiFields() {
+
+        ArrayList<String> tmp = (ArrayList<String>) Config.config.getList("openApi.writeOnlyField");
+        State.getInstance().getOpenApiWriteOnlyFields().addAll(tmp);
+
+        ArrayList<String> tmp2 = (ArrayList<String>) Config.config.getList("openApi.readOnlyField");
+        State.getInstance().getOpenApiReadOnlyFields().addAll(tmp2);
+
+        State.getInstance().setEnableOpenApiSchemas(Config.config.getBoolean("openApi[@enabled]", false));
+        State.getInstance().setOpenApiOutputDir(Config.config.getString("openApi[@outputDir]", "openapi-schemas"));
+
+
+
     }
 
     /**

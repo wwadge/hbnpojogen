@@ -690,6 +690,12 @@ class. -->
 		<field except-for="*.sometable,someschema.sometable">someschema.sometable.somefieldname</field>
 	</encryptedFields>
 
+	<!-- Enable support for writing out schema .yaml files for including in an openapi spec -->
+	<openApi enabled="true" outputDir="openapi-schemas">
+		<writeOnlyField>schema.table.field</writeOnlyField>
+		<readOnlyField>schema.table.field</readOnlyField>
+	</openApi>
+
 	<!-- Custom type override -->
 	<customTypes>
 		<field type="java.util.Currency">schema.table.field</field>

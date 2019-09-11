@@ -74,7 +74,7 @@ public class State
      */
     public TreeMap<String, Clazz> classes = new TreeMap<String, Clazz>(new CaseInsensitiveComparator());
     /**
-     * Key = classname, value=<propertyName, Annotations>
+     * Key = classname, value=propertyName, Annotations
      */
     public TreeMap<String, TreeMap<String, CustomAnnotations>> customAnnotations =
             new TreeMap<String, TreeMap<String, CustomAnnotations>>(new CaseInsensitiveComparator());
@@ -127,11 +127,11 @@ public class State
     public TreeMap<String, TreeMap<String, String>> cyclicTableExclusionListTables =
             new TreeMap<String, TreeMap<String, String>>(new CaseInsensitiveComparator());
     /**
-     * rename field section. Key = schema, value = <src table.fieldname, (new name:inversename)>>
+     * rename field section. Key = schema, value = src table.fieldname, (new name:inversename)
      */
     public TreeMap<String, TreeMap<String, String>> renameFieldMap = new TreeMap<String, TreeMap<String, String>>(new CaseInsensitiveComparator());
     /**
-     * enum treat as links map. Key = schema, value = <src table.fieldname, dst table.fieldname>>
+     * enum treat as links map. Key = schema, value = src table.fieldname, dst table.fieldname
      */
     public TreeMap<String, TreeMap<String, EnumMapping>> enumAsLinkMaps = new TreeMap<String, TreeMap<String, EnumMapping>>();
     /**
@@ -176,6 +176,11 @@ public class State
      * set of transient fields.
      */
     private Set<String> currencyFields = new HashSet<String>();
+    private Set<String> openApiReadOnlyFields = new HashSet<String>();
+
+
+
+    private Set<String> openApiWriteOnlyFields = new HashSet<String>();
 //	private Set<String> encryptedFields = new HashSet<String>();
     /**
      * prepopulate stuff
@@ -226,7 +231,7 @@ public class State
 
     /**
      * Key = schema name, Value =
-     * <table.field, new enum name>
+     * table.field, new enum name
      */
     public TreeMap<String, TreeMap<String, String>> enumMappings = new TreeMap<String, TreeMap<String, String>>(new CaseInsensitiveComparator());
     /**
@@ -270,8 +275,15 @@ public class State
      * If true, generate mockito context file.
      */
     public boolean enableMockitoBeans = true;
+
+
+
+    public boolean enableOpenApiSchemas = true;
+    public String openApiOutputDir = "openapi-schemas";
     public boolean enableUtilsBeans = true;
     public String mockitoFilename;
+
+
     /**
      * 0=MySQL, 1=MSSQL, 2=POSTGRESQL
      */
@@ -380,15 +392,15 @@ public class State
 
 
     /**
-     * key = fromtable, value = TreeMap<ToTable string, fromField list>>
+     * key = fromtable, value = TreeMap ToTable string, fromField list
      */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> disableBackLinkTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /**
-     * key = fromtable, value = TreeMap<ToTable string, fromField list>>
+     * key = fromtable, value = TreeMap ToTable string, fromField list
      */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> disableForwardLinkTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /**
-     * key = fromtable, value = TreeMap<ToTable string, fromField list>>
+     * key = fromtable, value = TreeMap ToTable string, fromField list
      */
     private TreeMap<String, TreeMap<String, TreeSet<String>>> noFollowTables = new TreeMap<String, TreeMap<String, TreeSet<String>>>(new CaseInsensitiveComparator());
     /**
@@ -540,6 +552,13 @@ public class State
         return fakeFKmatched;
     }
 
+    public String getOpenApiOutputDir() {
+        return openApiOutputDir;
+    }
+
+    public void setOpenApiOutputDir(String openApiOutputDir) {
+        this.openApiOutputDir = openApiOutputDir;
+    }
 
     public void setFakeFKmatched(TreeMap<String, HashSet<RelationItem>> fakeFKmatched) {
         this.fakeFKmatched = fakeFKmatched;
@@ -775,7 +794,13 @@ public class State
         this.enableJacksonSupport = enableJacksonSupport;
     }
 
+    public boolean isEnableOpenApiSchemas() {
+        return enableOpenApiSchemas;
+    }
 
+    public void setEnableOpenApiSchemas(boolean enableOpenApiSchemas) {
+        this.enableOpenApiSchemas = enableOpenApiSchemas;
+    }
     /**
      * @param catalog
      * @param tableName
@@ -875,7 +900,21 @@ public class State
     public final String getDbIP() {
         return dbIP;
     }
+    public Set<String> getOpenApiReadOnlyFields() {
+        return openApiReadOnlyFields;
+    }
 
+    public void setOpenApiReadOnlyFields(Set<String> openApiReadOnlyFields) {
+        this.openApiReadOnlyFields = openApiReadOnlyFields;
+    }
+
+    public Set<String> getOpenApiWriteOnlyFields() {
+        return openApiWriteOnlyFields;
+    }
+
+    public void setOpenApiWriteOnlyFields(Set<String> openApiWriteOnlyFields) {
+        this.openApiWriteOnlyFields = openApiWriteOnlyFields;
+    }
 
     /**
      * @param dbIP the dbIP to set
