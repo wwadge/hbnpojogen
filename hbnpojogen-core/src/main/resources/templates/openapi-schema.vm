@@ -4,17 +4,22 @@ $class.className:
 #foreach( $property in $properties )
 #if ( !$property.oneToMany && !$property.manyToMany )
         $property.propertyName:
+#if ( $property.isRefField() )
+            allOf:
+                - $property.computedOpenApiType
+#else
             $property.computedOpenApiType
+#end
 #if ( $property.openApiFormat)
             format: $property.openApiFormat
 #end
-#if ( !$property.isNullable() && !$property.isIdField() && !$property.isManyToOne())
+#if ( !$property.isNullable() )
             nullable: false
 #end
-#if ( $property.isOpenApiReadOnlyField() && !$property.isIdField() && !$property.isManyToOne())
+#if ( $property.isOpenApiReadOnlyField() )
             readOnly: true
 #end
-#if ( $property.openApiWriteOnlyField && !$property.isIdField() && !$property.isManyToOne())
+#if ( $property.openApiWriteOnlyField )
             writeOnly: true
 #end
 #if ( $property.openApiEnumValues)
@@ -88,9 +93,9 @@ paths:
         put: &updateanchor
             tags:
                 - $class.className.toLowerCase()
-            summary: Create a new $class.className.toLowerCase()
+            summary: Update a  $class.className.toLowerCase()
             description: ""
-            operationId: create$class.className
+            operationId: update$class.className
             requestBody:
                 content:
                     application/json:

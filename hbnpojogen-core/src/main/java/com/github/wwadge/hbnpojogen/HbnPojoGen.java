@@ -277,6 +277,7 @@ public class HbnPojoGen {
         log("Stage 16: Writing openApi schemas"+ (State.getInstance().isEnableOpenApiSchemas() ? "" : " [disabled]"));
         if (State.getInstance().isEnableOpenApiSchemas()) {
             VelocityWriters.writeOpenApiSchemas(targetFolder, State.getInstance().classes);
+            VelocityWriters.writeOutOpenApiPaths(State.getInstance().classes);
         }
 
         printStatistics(State.getInstance().classes, ignoredTables);

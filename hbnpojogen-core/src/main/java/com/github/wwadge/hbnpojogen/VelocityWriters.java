@@ -1165,6 +1165,41 @@ public class VelocityWriters {
         }
     }
 
+    /**
+     * Write out the data pool factory
+     *
+     * @param classes
+     * @param targetFolder
+     * @param catalogs
+     * @throws IOException
+     * @throws ResourceNotFoundException
+     * @throws ParseErrorException
+     * @throws MethodInvocationException
+     * @throws Exception
+     */
+    public static void writeOutOpenApiPaths(TreeMap<String, Clazz> classes)
+            throws ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
+
+        try {
+            Template dataPoolFactoryTemplate = Velocity.getTemplate("templates/openapi-allpaths.vm");
+
+            VelocityContext context = new VelocityContext();
+
+            context.put(PROJECTNAME, State.getInstance().projectName);
+            context.put(CLASSES, classes);
+            context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
+            context.put(TOPLEVEL, State.getInstance().topLevel);
+
+
+            PrintWriter factoryWriter = new PrintWriter(new BufferedWriter(new FileWriter(State.getInstance().getOpenApiOutputDir()+"/_path_snippet.yaml", false)));
+            dataPoolFactoryTemplate.merge(context, factoryWriter);
+            factoryWriter.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Write out the spring configuration

@@ -1,0 +1,10 @@
+# This is just a convenience snippet to help you cut and paste the urls you care about
+paths:
+#foreach ( $class in $classes )
+#if (!$class.isHiddenJoinTable())
+    /$class.className.toLowerCase():
+        $ref: "./openapi-schemas/${class.className}.yaml#/paths/getall_post"
+    /$class.className.toLowerCase()/{id}:
+        $ref: "./openapi-schemas/${class.className}.yaml#/paths/getone_put"
+#end
+#end
