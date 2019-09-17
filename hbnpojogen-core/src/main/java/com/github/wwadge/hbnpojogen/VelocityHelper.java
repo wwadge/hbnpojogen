@@ -177,6 +177,9 @@ public class VelocityHelper {
         return returnValue;
     }
 
+    public static String openApiCommon(){
+        return State.getInstance().getOpenApiCommonDir();
+    }
 
     public String doExtends(Clazz clazz) {
         TreeSet<String> entries = new TreeSet<String>();

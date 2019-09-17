@@ -280,6 +280,14 @@ public class State
 
     public boolean enableOpenApiSchemas = true;
     public String openApiOutputDir = "openapi-schemas";
+
+
+
+    public String openApiExternalIdSchema;
+
+
+    public String openApiCommonDir;
+
     public boolean enableUtilsBeans = true;
     public String mockitoFilename;
 
@@ -824,6 +832,13 @@ public class State
         objstream.close();
     }
 
+    public String getOpenApiExternalIdSchema() {
+        return openApiExternalIdSchema;
+    }
+
+    public void setOpenApiExternalIdSchema(String openApiExternalIdSchema) {
+        this.openApiExternalIdSchema = openApiExternalIdSchema;
+    }
 
     /**
      * @param filename String - The jar containing the serialization file to be loaded
@@ -1004,6 +1019,13 @@ public class State
         this.topLevel = topLevel;
     }
 
+    public String getOpenApiCommonDir() {
+        return openApiCommonDir;
+    }
+
+    public void setOpenApiCommonDir(String openApiCommonDir) {
+        this.openApiCommonDir = openApiCommonDir;
+    }
 
     /**
      * @return the libPath

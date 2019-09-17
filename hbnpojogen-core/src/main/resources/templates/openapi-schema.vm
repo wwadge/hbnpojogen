@@ -1,34 +1,195 @@
 $class.className:
-	type: object
-	properties:
+    type: object
+    properties:
 #foreach( $property in $properties )
 #if ( !$property.oneToMany && !$property.manyToMany )
-		$property.propertyName:
-#if ($property.isIdField() || $property.isManyToOne())
-			$ref: "#/components/schemas/EntityId"
-#else
-			type: $property.openApiType
-#end
+        $property.propertyName:
+            $property.computedOpenApiType
 #if ( $property.openApiFormat)
-			format: $property.openApiFormat
+            format: $property.openApiFormat
 #end
 #if ( !$property.isNullable() && !$property.isIdField() && !$property.isManyToOne())
-			nullable: false
+            nullable: false
 #end
 #if ( $property.isOpenApiReadOnlyField() && !$property.isIdField() && !$property.isManyToOne())
-			readOnly: true
+            readOnly: true
 #end
 #if ( $property.openApiWriteOnlyField && !$property.isIdField() && !$property.isManyToOne())
-			writeOnly: true
+            writeOnly: true
 #end
 #if ( $property.openApiEnumValues)
-			enum: $property.openApiEnumValues
+            enum: $property.openApiEnumValues
 #end
 #if ( $property.length)
-			maxLength: $property.length
+            maxLength: $property.length
 #end
 #if ( !$property.getFieldComment().equals(""))
-			decription: $property.getFieldComment()
+            description: $property.getFieldComment()
 #end
 #end
 #end
+
+paths:
+    getOne:
+            get: &getoneanchor
+                tags:
+                    - $class.className.toLowerCase()
+                summary: Get $class.className.toLowerCase() by Id
+                description: "Get a single record associated with the given ID"
+                operationId: get${class.className}ById
+                parameters:
+                    - name: $class.className.toLowerCase()Id
+                      in: path
+                      description: ID of $class.className.toLowerCase()
+                      required: true
+                      x-encrypted-id: true
+                      schema:
+                          type: string
+                responses:
+                    "200":
+                        description: Request accepted
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/$class.className"
+                    "400":
+                        $ref: "${this.openApiCommon()}#/responses/Standard400Response"
+                    "401":
+                        $ref: "${this.openApiCommon()}#/responses/Standard401Response"
+                    "403":
+                        $ref: "${this.openApiCommon()}#/responses/Standard403Response"
+                    "404":
+                        $ref: "${this.openApiCommon()}#/responses/Standard404Response"
+    create:
+        post: &postanchor
+            tags:
+                - $class.className.toLowerCase()
+            summary: Create a new $class.className.toLowerCase()
+            description: ""
+            operationId: create$class.className
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/$class.className"
+                required: true
+            responses:
+                "201":
+                    $ref: "${this.openApiCommon()}#/responses/Standard201Response"
+                "400":
+                    $ref: "${this.openApiCommon()}#/responses/Standard400Response"
+                "401":
+                    $ref: "${this.openApiCommon()}#/responses/Standard401Response"
+                "403":
+                    $ref: "${this.openApiCommon()}#/responses/Standard403Response"
+                "409":
+                    $ref: "${this.openApiCommon()}#/responses/Standard409Response"
+    update:
+        put: &updateanchor
+            tags:
+                - $class.className.toLowerCase()
+            summary: Create a new $class.className.toLowerCase()
+            description: ""
+            operationId: create$class.className
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/$class.className"
+                required: true
+            responses:
+                "201":
+                    $ref: "${this.openApiCommon()}#/responses/Standard200Response"
+                "400":
+                    $ref: "${this.openApiCommon()}#/responses/Standard400Response"
+                "401":
+                    $ref: "${this.openApiCommon()}#/responses/Standard401Response"
+                "403":
+                    $ref: "${this.openApiCommon()}#/responses/Standard403Response"
+                "409":
+                    $ref: "${this.openApiCommon()}#/responses/Standard409Response"
+    delete:
+        get: &deleteanchor
+            tags:
+                - $class.className.toLowerCase()
+            summary: Deletes $class.className.toLowerCase() by Id
+            description: "Deletes a single record associated with the given ID"
+            operationId: delete${class.className}ById
+            parameters:
+                - name: $class.className.toLowerCase()Id
+                  in: path
+                  description: ID of $class.className.toLowerCase()
+                  required: true
+                  x-encrypted-id: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Request accepted
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/$class.className"
+                "400":
+                    $ref: "${this.openApiCommon()}#/responses/Standard400Response"
+                "401":
+                    $ref: "${this.openApiCommon()}#/responses/Standard401Response"
+                "403":
+                    $ref: "${this.openApiCommon()}#/responses/Standard403Response"
+                "404":
+                    $ref: "${this.openApiCommon()}#/responses/Standard404Response"
+    getAll:
+        get: &getallanchor
+            tags:
+                - $class.className.toLowerCase()
+            summary: Get list of $class.getNiceClassName().toLowerCase()
+            operationId: get$class.getNiceClassName()
+            parameters:
+                - $ref: "${this.openApiCommon()}#/components/parameters/pageParam"
+                - $ref: "${this.openApiCommon()}#/components/parameters/sizeParam"
+                - in: query
+                  name: sort
+                  x-ignore-param: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Request accepted
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/$class.className"
+                "400":
+                    $ref: "${this.openApiCommon()}#/responses/Standard400Response"
+                "401":
+                    $ref: "${this.openApiCommon()}#/responses/Standard401Response"
+                "403":
+                    $ref: "${this.openApiCommon()}#/responses/Standard403Response"
+                "404":
+                    $ref: "${this.openApiCommon()}#/responses/Standard404Response"
+            x-querydsl-binding: QueryDslBinder
+            x-payload-class: Page
+
+
+    getone_put:
+        get: *getoneanchor
+        put: *updateanchor
+    getone_delete:
+        get: *getoneanchor
+        delete: *deleteanchor
+    getall_post:
+        get: *getallanchor
+        post: *postanchor
+    post_delete:
+        post: *postanchor
+        delete: *deleteanchor
+    put_delete:
+        put: *updateanchor
+        delete: *deleteanchor
+    getone_put_delete:
+        get: *getoneanchor
+        put: *updateanchor
+        delete: *deleteanchor
+

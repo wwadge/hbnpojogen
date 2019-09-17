@@ -224,6 +224,8 @@ public class Config {
         State.getInstance().getOpenApiReadOnlyFields().addAll(tmp2);
 
         State.getInstance().setEnableOpenApiSchemas(Config.config.getBoolean("openApi[@enabled]", false));
+        State.getInstance().setOpenApiExternalIdSchema(Config.config.getString("openApi[@externalIdSchema]", null));
+        State.getInstance().setOpenApiCommonDir(Config.config.getString("openApi[@commonDir]", ""));
         State.getInstance().setOpenApiOutputDir(Config.config.getString("openApi[@outputDir]", "openapi-schemas"));
 
 

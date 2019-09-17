@@ -690,8 +690,10 @@ class. -->
 		<field except-for="*.sometable,someschema.sometable">someschema.sometable.somefieldname</field>
 	</encryptedFields>
 
-	<!-- Enable support for writing out schema .yaml files for including in an openapi spec -->
-	<openApi enabled="true" outputDir="openapi-schemas">
+	<!-- Enable support for writing out schema .yaml files for including in an openapi spec. If externalIdSchema is set, then
+	 IDs will refer to an external schema so as to allow alternate mappings eg encrypted IDs. Common dir is used to set
+	  where internal references can be found eg "./openapi-common" which contains a file called Common.yaml which contains page schemas -->
+	<openApi enabled="true" outputDir="openapi-schemas" externalIdSchema="./EntityId.yaml#/EntityId" commonDir="./some/path/">
 		<writeOnlyField>schema.table.field</writeOnlyField>
 		<readOnlyField>schema.table.field</readOnlyField>
 	</openApi>

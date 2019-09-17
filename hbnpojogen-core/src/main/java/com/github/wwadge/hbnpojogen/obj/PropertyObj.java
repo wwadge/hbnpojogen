@@ -1880,6 +1880,21 @@ public class PropertyObj
         return this.encryptedType;
     }
 
+    public String getComputedOpenApiType(){
+        String suffix = "";
+        if ( isOpenApiReadOnlyField()) {
+            suffix += "ReadOnly";
+        }
+        if ( isOpenApiWriteOnlyField()) {
+            suffix += "WriteOnly";
+        }
+        if (((isIdField() || isManyToOne()) && (State.getInstance().getOpenApiExternalIdSchema() != null))){
+            return "$ref: \""+ State.getInstance().getOpenApiExternalIdSchema() + suffix +"\"";
+        }
+
+        return "type: "+openApiType;
+
+    }
 
     /**
      * @param encryptedType the encryptedType to set
