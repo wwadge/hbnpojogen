@@ -36,7 +36,7 @@ public class ${class.className}ApiDelegateImpl extends AbstractCommonCrudService
 
     @Override
     public Page<${class.className}Dto> get${class.niceClassName}(Predicate predicate, Pageable pageable, Sort sortable, HttpHeaders headers, Principal principal) {
-        return get${class.niceClassName}(predicate, pageable, sortable, headers, principal);
+        return load(predicate, pageable, sortable, ${class.className}Dto.class, principal);
     }
 
     @Override
