@@ -30,6 +30,7 @@ public class Config {
      */
     public static Template template;
     public static Template templateOpenApiSchema;
+    public static Template templateOpenApiDelegate;
     /**
      * config
      */
@@ -69,6 +70,7 @@ public class Config {
 
         template = Velocity.getTemplate("templates/class.vm");
         templateOpenApiSchema = Velocity.getTemplate("templates/openapi-schema.vm");
+        templateOpenApiDelegate = Velocity.getTemplate("templates/openapi-delegate.vm");
         interfaceTemplate = Velocity.getTemplate("templates/classIface.vm");
         repoTemplate = Velocity.getTemplate("templates/classRepo.vm");
 
@@ -227,6 +229,8 @@ public class Config {
         State.getInstance().setOpenApiExternalIdSchema(Config.config.getString("openApi[@externalIdSchema]", null));
         State.getInstance().setOpenApiCommonDir(Config.config.getString("openApi[@commonDir]", ""));
         State.getInstance().setOpenApiOutputDir(Config.config.getString("openApi[@outputDir]", "openapi-schemas"));
+        State.getInstance().setOpenApiCommonPackage(Config.config.getString("openApi[@commonPackage]", "com.toplevel"));
+        State.getInstance().setOpenApiDelegateOutputDir(Config.config.getString("openApi[@delegateOutputDir]", null));
 
 
 

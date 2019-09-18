@@ -38,7 +38,7 @@ paths:
     getOne:
             get: &getoneanchor
                 tags:
-                    - $class.className.toLowerCase()
+                    - $class.className
                 summary: Get $class.className.toLowerCase() by Id
                 description: "Get a single record associated with the given ID"
                 operationId: get${class.className}ById
@@ -68,7 +68,7 @@ paths:
     create:
         post: &postanchor
             tags:
-                - $class.className.toLowerCase()
+                - $class.className
             summary: Create a new $class.className.toLowerCase()
             description: ""
             operationId: create$class.className
@@ -80,7 +80,11 @@ paths:
                 required: true
             responses:
                 "201":
-                    $ref: "${this.openApiCommon()}#/responses/Standard201Response"
+                    description:  The request has been fulfilled and has resulted in one or more new resources being created.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/$class.className"
                 "400":
                     $ref: "${this.openApiCommon()}#/responses/Standard400Response"
                 "401":
@@ -92,7 +96,7 @@ paths:
     update:
         put: &updateanchor
             tags:
-                - $class.className.toLowerCase()
+                - $class.className
             summary: Update a  $class.className.toLowerCase()
             description: ""
             operationId: update$class.className
@@ -116,7 +120,7 @@ paths:
     delete:
         get: &deleteanchor
             tags:
-                - $class.className.toLowerCase()
+                - $class.className
             summary: Deletes $class.className.toLowerCase() by Id
             description: "Deletes a single record associated with the given ID"
             operationId: delete${class.className}ById
@@ -146,7 +150,7 @@ paths:
     getAll:
         get: &getallanchor
             tags:
-                - $class.className.toLowerCase()
+                - $class.className
             summary: Get list of $class.getNiceClassName().toLowerCase()
             operationId: get$class.getNiceClassName()
             parameters:

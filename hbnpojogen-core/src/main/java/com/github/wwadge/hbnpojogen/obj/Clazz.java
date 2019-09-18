@@ -3,6 +3,7 @@ package com.github.wwadge.hbnpojogen.obj;
 
 import com.github.wwadge.hbnpojogen.*;
 import com.github.wwadge.hbnpojogen.db.TableObj;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
@@ -567,6 +568,9 @@ public class Clazz
     }
 
 
+    public String toKebabCase(){
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, this.className);
+    }
     /**
      * Returns The plural name of this class' property name
      *

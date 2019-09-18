@@ -692,8 +692,9 @@ class. -->
 
 	<!-- Enable support for writing out schema .yaml files for including in an openapi spec. If externalIdSchema is set, then
 	 IDs will refer to an external schema so as to allow alternate mappings eg encrypted IDs. Common dir is used to set
-	  where internal references can be found eg "./openapi-common" which contains a file called Common.yaml which contains page schemas -->
-	<openApi enabled="true" outputDir="openapi-schemas" externalIdSchema="./EntityId.yaml#/EntityId" commonDir="./some/path/">
+	  where internal references can be found eg "./openapi-common" which contains a file called Common.yaml which contains page schemas
+	   If delegateOutputDir is set, we also generate some delegates intended for use with an openapi generator (will not overwrite existing classes) -->
+	<openApi enabled="true" commonPackage="com.toplevel.common" outputDir="openapi-schemas" delegateOutputDir="delegates" externalIdSchema="./EntityId.yaml#/EntityId" commonDir="./some/path/" >
 		<writeOnlyField>schema.table.field</writeOnlyField>
 		<readOnlyField>schema.table.field</readOnlyField>
 	</openApi>

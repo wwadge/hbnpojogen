@@ -283,6 +283,13 @@ public class State
 
 
 
+    public String openApiDelegateOutputDir ;
+
+
+    public String openApiCommonPackage = "";
+
+
+
     public String openApiExternalIdSchema;
 
 
@@ -748,7 +755,13 @@ public class State
     public final TreeMap<String, TreeSet<String>> getOneToOneTables() {
         return this.oneToOneTables;
     }
+    public String getOpenApiDelegateOutputDir() {
+        return openApiDelegateOutputDir;
+    }
 
+    public void setOpenApiDelegateOutputDir(String openApiDelegateOutputDir) {
+        this.openApiDelegateOutputDir = openApiDelegateOutputDir;
+    }
 
     /**
      * @param oneToOneTables the oneToOneTables to set
@@ -1692,6 +1705,13 @@ public class State
     public final void setRenameFieldMap(
             TreeMap<String, TreeMap<String, String>> renameFieldMap) {
         this.renameFieldMap = renameFieldMap;
+    }
+    public String getOpenApiCommonPackage() {
+        return openApiCommonPackage;
+    }
+
+    public void setOpenApiCommonPackage(String openApiCommonPackage) {
+        this.openApiCommonPackage = openApiCommonPackage;
     }
 
     /**

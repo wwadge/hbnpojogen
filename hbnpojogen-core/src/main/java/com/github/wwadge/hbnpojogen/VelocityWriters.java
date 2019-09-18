@@ -333,13 +333,18 @@ public class VelocityWriters {
         return result;
     }
 
-    private static String getAndCreateOpenApiPath(String targetFolder, Clazz clazz) {
+    private static String getAndCreateOpenApiPath(String targetFolder, Clazz clazz, boolean isDelegate) {
         PackageTypeEnum type = PackageTypeEnum.OPENAPI_SCHEMA;
-        String config = State.getInstance().getOpenApiOutputDir();
+        String config = isDelegate ? State.getInstance().getOpenApiDelegateOutputDir() : State.getInstance().getOpenApiOutputDir() ;
+
         new File(config).mkdirs();
 
-        String result = config + "/" + clazz.getClassName();
-        result += ".yaml";
+        String result = config + "/" + clazz.getClassName() + (isDelegate ? "ApiDelegateImpl" : "");
+        if (isDelegate){
+            result += ".java";
+        } else {
+            result += ".yaml";
+        }
         return result;
     }
 
@@ -477,7 +482,7 @@ public class VelocityWriters {
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    public static void writeClass(final String projectName, final Clazz clazz, final PrintWriter classWriter, boolean isInterface, boolean isOpenApiSchema)
+    public static void writeClass(final String projectName, final Clazz clazz, final PrintWriter classWriter, boolean isInterface, boolean isOpenApiSchema, boolean isDelegate)
             throws IOException, NoSuchAlgorithmException {
         if (!Core.skipSchemaWrite(clazz)) {
 
@@ -595,6 +600,7 @@ public class VelocityWriters {
             context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());
             context.put("restrictCatalog", State.getInstance().dbMode == 1 || State.getInstance().schemaRestrict == 0);
             context.put("isSubtypeGenerationEnabled", !State.getInstance().disableSubtypeEnumGeneration);
+            context.put("openapiCommonPackage", State.getInstance().getOpenApiCommonPackage());
             MessageDigest hash = MessageDigest.getInstance("MD5");
 
 
@@ -606,8 +612,10 @@ public class VelocityWriters {
             }
             if (isInterface) {
                 Config.interfaceTemplate.merge(context, classWriter);
-            } else if (isOpenApiSchema) {
+            } else if (isOpenApiSchema && !isDelegate) {
                 Config.templateOpenApiSchema.merge(context, classWriter);
+            } else if (isDelegate) {
+                Config.templateOpenApiDelegate.merge(context, classWriter);
             } else {
                 Config.template.merge(context, classWriter);
             }
@@ -764,13 +772,13 @@ public class VelocityWriters {
 
 
                 // Write Class
-                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, false);
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, false, false);
 
 
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, false);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
-                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, false, false);
+                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, false, false, false);
                 }
 
 
@@ -806,12 +814,12 @@ public class VelocityWriters {
 
 
                 // Write Class
-                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, true, false);
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, true, false, false);
 
                 if (co.getEmbeddableClass() != null) {
                     tmp = getAndCreateClassPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true, true);
                     classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
-                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, true, false);
+                    VelocityWriters.writeClass(State.getInstance().projectName, co.getEmbeddableClass(), classWriter, true, false, false);
                 }
 
 
@@ -828,12 +836,21 @@ public class VelocityWriters {
         for (Clazz co : classes.values()) {
             if (!co.isHiddenJoinTable() && !Core.skipSchemaWrite(co)) {
                 // System.out.println(co.getClassName());
-                String tmp = getAndCreateOpenApiPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co);
+                String tmp = getAndCreateOpenApiPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, false);
                 PrintWriter classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
 
                 // Write Class
-                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, true);
+                VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, true, false);
 
+                if (State.getInstance().getOpenApiDelegateOutputDir() != null) {
+                    tmp = getAndCreateOpenApiPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", co, true);
+
+                    // Write Class
+                    if (!new File(tmp).exists()) {
+                        classWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+                        VelocityWriters.writeClass(State.getInstance().projectName, co, classWriter, false, true, true);
+                    }
+                }
             }
         }
     }

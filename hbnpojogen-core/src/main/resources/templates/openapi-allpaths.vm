@@ -2,9 +2,9 @@
 paths:
 #foreach ( $class in $classes )
 #if (!$class.isHiddenJoinTable())
-    /$class.className.toLowerCase():
+    /$class.toKebabCase():
         $ref: "./openapi-schemas/${class.className}.yaml#/paths/getall_post"
-    /$class.className.toLowerCase()/{id}:
+    /$class.toKebabCase()/{id}:
         $ref: "./openapi-schemas/${class.className}.yaml#/paths/getone_put"
 #end
 #end
