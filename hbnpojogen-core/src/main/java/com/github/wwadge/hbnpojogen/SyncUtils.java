@@ -1027,7 +1027,11 @@ public class SyncUtils
             case "Boolean": return "boolean";
             case "Byte" :
             case "Integer":
+                propertyObj.setOpenApiFormat("int32");
+                return "integer";
             case "Long":
+                propertyObj.setOpenApiFormat("int64");
+                return "integer";
             case "Double":
             case "java.math.BigDecimal":
                 return "number";
