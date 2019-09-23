@@ -278,6 +278,7 @@ public class HbnPojoGen {
         if (State.getInstance().isEnableOpenApiSchemas()) {
             VelocityWriters.writeOpenApiSchemas(targetFolder, State.getInstance().classes);
             VelocityWriters.writeOutOpenApiPaths(State.getInstance().classes);
+            VelocityWriters.writeOutOpenApiTest(State.getInstance().classes, targetFolder);
         }
 
         printStatistics(State.getInstance().classes, ignoredTables);

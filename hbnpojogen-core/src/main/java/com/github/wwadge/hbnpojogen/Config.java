@@ -234,8 +234,9 @@ public class Config {
         State.getInstance().setOpenApiOutputDir(Config.config.getString("openApi[@outputDir]", "openapi-schemas"));
         State.getInstance().setOpenApiCommonPackage(Config.config.getString("openApi[@commonPackage]", "com.toplevel"));
         State.getInstance().setOpenApiDelegateOutputDir(Config.config.getString("openApi[@delegateOutputDir]", null));
-
-
+        State.getInstance().setOpenApiTestForAsciiDocDir(Config.config.getString("openApi[@testForAsciiDocDir]", null));
+        State.getInstance().setTestForAsciiDocPackage(Config.config.getString("openApi[@testForAsciiDocPackage]", null));
+        State.getInstance().setAsciiDocTemplateDir(Config.config.getString("openApi[@asciiDocTemplateDir]", null));
 
     }
 

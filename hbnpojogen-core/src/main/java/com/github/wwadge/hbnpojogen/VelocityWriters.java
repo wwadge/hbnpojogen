@@ -1047,7 +1047,7 @@ public class VelocityWriters {
                 if (Core.skipSchemaWrite(catalog)) {
                     continue;
                 }
-                catalog = SyncUtils.removeUnderscores(catalog);
+                catalog = SyncUtils.removeUnderscores(catalog.replace("-", "_"));
                 TreeSet<String> imports = new TreeSet<String>(new CaseInsensitiveComparator());
                 //                if (Core.skipSchemaWrite(cat)){
                 imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.OBJECT) + ".*");
@@ -1055,7 +1055,7 @@ public class VelocityWriters {
 
                 if (State.getInstance().isEnableSpringData()) {
                     imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
-                    imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
+//                    imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
 
                 } else {
                     imports.add("com.github.wwadge.hbnpojogen.randomlib.data.dataGeneration.BasicDataGenerator");
@@ -1087,16 +1087,20 @@ public class VelocityWriters {
                             imports.add("org.springframework.data.domain.PageRequest");
                         }
                     }
-                    if (co.getValue().getClassPackage().equalsIgnoreCase(catalog)) {
+                    if (true /*co.getValue().getClassPackage().equalsIgnoreCase(catalog) */) {
                         tmpClasses.put(co.getKey(), co.getValue());
 
+                        if ( (! co.getValue().isHiddenJoinTable()) && (!co.getValue().getClassType().equals("abstract") )) {
+
+                            imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.OBJECT) + "." + co.getValue().getClassName());
+                        }
                         for (PropertyObj property : co.getValue().getAllPropertiesWithoutPFK().values()) {
                             if (!property.isNullable()) {
                                 if (!property.isAutoInc()) {
 
                                     if (State.getInstance().isEnableSpringData()) {
                                         imports.add(SyncUtils.getConfigPackage(catalog, PackageTypeEnum.TABLE_REPO) + ".*");
-                                        imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
+//                                        imports.add(SyncUtils.getConfigPackage("", PackageTypeEnum.UTIL) + ".BasicDataGenerator");
 
                                     } else {
                                         imports.add("com.github.wwadge.hbnpojogen.randomlib.data.dataGeneration.BasicDataGenerator");
@@ -1218,7 +1222,54 @@ public class VelocityWriters {
         }
     }
 
-    /**
+    public static void writeOutOpenApiTest(TreeMap<String, Clazz> classes, String targetFolder)
+            throws ResourceNotFoundException, ParseErrorException, MethodInvocationException, Exception {
+
+        try {
+            Template dataPoolFactoryTemplate = Velocity.getTemplate("templates/openapi-test.vm");
+            Template generatedDocsTemplate = Velocity.getTemplate("templates/openapi-reference-docs.vm");
+            VelocityContext context = new VelocityContext();
+
+            context.put(PROJECTNAME, State.getInstance().projectName);
+            context.put(CLASSES, classes);
+            context.put(THIS, new VelocityHelper(State.getInstance().defaultTestValues));
+            context.put(TOPLEVEL, State.getInstance().topLevel);
+            context.put("packageToUse", State.getInstance().testForAsciiDocPackage);
+            context.put("openapiCommonPackage", State.getInstance().getOpenApiCommonPackage());
+
+            String tmp = State.getInstance().getOpenApiTestForAsciiDocDir();
+            if (tmp != null && !tmp.equals("")) {
+                new File(tmp).mkdirs();
+
+                if (!new File(tmp, "GeneratedDocsTest.java").exists()) {
+                    PrintWriter factoryWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp + "/GeneratedDocsTest.java", false)));
+                    dataPoolFactoryTemplate.merge(context, factoryWriter);
+                    factoryWriter.close();
+                } else {
+                    System.out.println("Skipping GeneratedDocsTest.java because it already exists");
+                }
+
+            }
+
+            tmp = State.getInstance().getAsciiDocTemplateDir();
+            if (tmp != null && !tmp.equals("")) {
+                new File(tmp).mkdirs();
+
+
+                    PrintWriter factoryWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp + "/generated-docs.adoc", false)));
+                    generatedDocsTemplate.merge(context, factoryWriter);
+                    factoryWriter.close();
+
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**x
      * Write out the spring configuration
      *
      * @param targetFolder

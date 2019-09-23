@@ -52,6 +52,14 @@ public class State
      * config
      */
     public String topLevel;
+
+
+
+    public String testForAsciiDocPackage;
+
+
+
+    public String asciiDocTemplateDir;
     /**
      * config
      */
@@ -285,6 +293,8 @@ public class State
 
     public String openApiDelegateOutputDir ;
 
+
+    public String openApiTestForAsciiDocDir;
 
     public String openApiCommonPackage = "";
 
@@ -807,6 +817,13 @@ public class State
         return doObjectImport(catalog, name);
     }
 
+    public String getAsciiDocTemplateDir() {
+        return asciiDocTemplateDir;
+    }
+
+    public void setAsciiDocTemplateDir(String asciiDocTemplateDir) {
+        this.asciiDocTemplateDir = asciiDocTemplateDir;
+    }
     public boolean isEnableJacksonSupport() {
         return enableJacksonSupport;
     }
@@ -822,6 +839,15 @@ public class State
     public void setEnableOpenApiSchemas(boolean enableOpenApiSchemas) {
         this.enableOpenApiSchemas = enableOpenApiSchemas;
     }
+
+    public String getOpenApiTestForAsciiDocDir() {
+        return openApiTestForAsciiDocDir;
+    }
+
+    public void setOpenApiTestForAsciiDocDir(String openApiTestForAsciiDocDir) {
+        this.openApiTestForAsciiDocDir = openApiTestForAsciiDocDir;
+    }
+
     /**
      * @param catalog
      * @param tableName
@@ -1406,7 +1432,13 @@ public class State
     public final void setDisableEnglishPlural(boolean disableEnglishPlural) {
         this.disableEnglishPlural = disableEnglishPlural;
     }
+    public String getTestForAsciiDocPackage() {
+        return testForAsciiDocPackage;
+    }
 
+    public void setTestForAsciiDocPackage(String testForAsciiDocPackage) {
+        this.testForAsciiDocPackage = testForAsciiDocPackage;
+    }
 
     /**
      * @return the disableTestRollback
