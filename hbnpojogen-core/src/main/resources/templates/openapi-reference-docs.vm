@@ -1,13 +1,13 @@
 = Generated Docs
 Generated Docs;
-  :doctype: book
-  :icons: font
-  :source-highlighter: highlightjs
-  :toc: left
-  :toclevels: 4
-  :sectlinks:
-  :operation-curl-request-title: Example request
-  :operation-http-response-title: Example response
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
 
 
 [[overview]]
