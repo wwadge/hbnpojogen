@@ -465,11 +465,13 @@ public class VelocityWriters {
     }
 
 
-    public static long bytesToLong(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(100);
-        buffer.put(bytes);
-        buffer.flip();//need flip
-        return buffer.getLong();
+    public static long bytesToLong(byte[] b) {
+        long result = 0;
+        for (int i = 0; i < 8; i++) {
+            result <<= 8;
+            result |= (b[i] & 0xFF);
+        }
+        return result;
     }
 
     /**
