@@ -52,6 +52,14 @@ public class State
      * config
      */
     public String topLevel;
+
+
+
+    public String testForAsciiDocPackage;
+
+
+
+    public String asciiDocTemplateDir;
     /**
      * config
      */
@@ -280,6 +288,15 @@ public class State
 
     public boolean enableOpenApiSchemas = true;
     public String openApiOutputDir = "openapi-schemas";
+
+
+
+    public String openApiDelegateOutputDir ;
+
+
+    public String openApiTestForAsciiDocDir;
+
+    public String openApiCommonPackage = "";
 
 
 
@@ -748,7 +765,13 @@ public class State
     public final TreeMap<String, TreeSet<String>> getOneToOneTables() {
         return this.oneToOneTables;
     }
+    public String getOpenApiDelegateOutputDir() {
+        return openApiDelegateOutputDir;
+    }
 
+    public void setOpenApiDelegateOutputDir(String openApiDelegateOutputDir) {
+        this.openApiDelegateOutputDir = openApiDelegateOutputDir;
+    }
 
     /**
      * @param oneToOneTables the oneToOneTables to set
@@ -794,6 +817,13 @@ public class State
         return doObjectImport(catalog, name);
     }
 
+    public String getAsciiDocTemplateDir() {
+        return asciiDocTemplateDir;
+    }
+
+    public void setAsciiDocTemplateDir(String asciiDocTemplateDir) {
+        this.asciiDocTemplateDir = asciiDocTemplateDir;
+    }
     public boolean isEnableJacksonSupport() {
         return enableJacksonSupport;
     }
@@ -809,6 +839,15 @@ public class State
     public void setEnableOpenApiSchemas(boolean enableOpenApiSchemas) {
         this.enableOpenApiSchemas = enableOpenApiSchemas;
     }
+
+    public String getOpenApiTestForAsciiDocDir() {
+        return openApiTestForAsciiDocDir;
+    }
+
+    public void setOpenApiTestForAsciiDocDir(String openApiTestForAsciiDocDir) {
+        this.openApiTestForAsciiDocDir = openApiTestForAsciiDocDir;
+    }
+
     /**
      * @param catalog
      * @param tableName
@@ -1393,7 +1432,13 @@ public class State
     public final void setDisableEnglishPlural(boolean disableEnglishPlural) {
         this.disableEnglishPlural = disableEnglishPlural;
     }
+    public String getTestForAsciiDocPackage() {
+        return testForAsciiDocPackage;
+    }
 
+    public void setTestForAsciiDocPackage(String testForAsciiDocPackage) {
+        this.testForAsciiDocPackage = testForAsciiDocPackage;
+    }
 
     /**
      * @return the disableTestRollback
@@ -1692,6 +1737,13 @@ public class State
     public final void setRenameFieldMap(
             TreeMap<String, TreeMap<String, String>> renameFieldMap) {
         this.renameFieldMap = renameFieldMap;
+    }
+    public String getOpenApiCommonPackage() {
+        return openApiCommonPackage;
+    }
+
+    public void setOpenApiCommonPackage(String openApiCommonPackage) {
+        this.openApiCommonPackage = openApiCommonPackage;
     }
 
     /**

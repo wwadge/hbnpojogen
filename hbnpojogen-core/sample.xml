@@ -692,8 +692,226 @@ class. -->
 
 	<!-- Enable support for writing out schema .yaml files for including in an openapi spec. If externalIdSchema is set, then
 	 IDs will refer to an external schema so as to allow alternate mappings eg encrypted IDs. Common dir is used to set
-	  where internal references can be found eg "./openapi-common" which contains a file called Common.yaml which contains page schemas -->
-	<openApi enabled="true" outputDir="openapi-schemas" externalIdSchema="./EntityId.yaml#/EntityId" commonDir="./some/path/">
+	  where internal references can be found eg "./openapi-common" which contains a file called Common.yaml which contains page schemas
+	   If delegateOutputDir is set, we also generate some delegates intended for use with an openapi generator (will not overwrite existing classes)
+	    if testForAsciiDocPackage is set, we also generate a skeleton to invoke a test per table to make asciidoc calls. The code assumes an abstract class to inherit from. Here's a reference implementation
+
+
+@TestPropertySource(properties = {
+        "spring.flyway.enabled = false",
+        "spring.jpa.hibernate.ddl-auto = create",
+        "spring.jpa.database = HSQL",
+        "spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.HSQLDialect",
+        "spring.datasource.driverClassName = org.hsqldb.jdbcDriver",
+        "spring.datasource.url = jdbc:hsqldb:mem:crud_demo",
+        "spring.datasource.username = sa",
+        "spring.datasource.password =",
+        "spring.jpa.properties.hibernate.default_schema = ",
+        "spring.endpoints.actuator.enabled=false",
+        "spring.cache.type=NONE"
+})
+
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.HSQL)
+@FixMethodOrder
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = true)
+@AutoConfigureRestDocs(outputDir = "build/generated-snippets", uriHost = "api.domain.com", uriPort = 443)
+public abstract class AbstractGenericTest {
+
+    @Getter @Autowired
+    protected MockMvc mockMvc;
+
+    @Autowired
+    EntityIdUtils entityIdUtils;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    @Autowired
+    private WebApplicationContext context;
+
+
+    protected ResultActions executePostCall(String url, String request, String documentTitle, RequestFieldsSnippet requestFieldsSnippet) throws Exception{
+        return getMockMvc().perform(
+                RestDocumentationRequestBuilders.post(url)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+        )
+                .andDo(document(documentTitle,
+                        requestFieldsSnippet))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    protected ResultActions executeGetCall(String url, Object[] urlVars, String documentTitle, ResponseFieldsSnippet responseFieldsSnippet, PathParametersSnippet pathParametersSnippet) throws Exception{
+        ResultActions resultActions = getMockMvc().perform(
+                RestDocumentationRequestBuilders.get(url, urlVars)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andDo(MockMvcResultHandlers.print());
+
+        if (pathParametersSnippet == null) {
+            resultActions.andDo(document(documentTitle, responseFieldsSnippet));
+        }else{
+            resultActions.andDo(document(documentTitle, pathParametersSnippet, responseFieldsSnippet));
+        }
+
+        return resultActions;
+    }
+
+    protected ResultActions executePutCall(String url, Object[] urlVars, String request, String documentTitle, PathParametersSnippet pathParametersSnippet) throws Exception{
+        return getMockMvc().perform(
+                RestDocumentationRequestBuilders.put(url, urlVars)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+        )
+                .andDo(document(documentTitle, pathParametersSnippet))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    protected ResultActions executeDeleteCall(String url, Object[] urlVars, String documentTitle, PathParametersSnippet pathParametersSnippet) throws Exception{
+        return getMockMvc().perform(
+                RestDocumentationRequestBuilders.delete(url, urlVars)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andDo(document(documentTitle, pathParametersSnippet))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
+
+    protected FieldDescriptor[] createStandardDtoFieldDescriptors(String name){
+        return createStandardDtoFieldDescriptors(name, false);
+    }
+
+    protected FieldDescriptor[] createStandardDtoFieldDescriptors(String name, boolean delete){
+        FieldDescriptor[] tempFieldDescriptors = {
+                fieldWithPath("id").description("ID of " + name),
+                fieldWithPath("createdAt").description("The Date/time the " + name + " was created"),
+                fieldWithPath("updatedAt").description("The Date/time the " + name + " was last updated"),
+        };
+
+        List<FieldDescriptor> fieldDescriptors = Arrays.asList(tempFieldDescriptors);
+
+        if (delete){
+            fieldDescriptors.add(fieldWithPath("deletedAt").description("The Date/time the " + name + " was deleted"));
+        }
+
+        return fieldDescriptors.toArray(new FieldDescriptor[0]);
+    }
+
+    protected FieldDescriptor[]
+            standardListFieldDescriptors = {
+            fieldWithPath("pageable").description("The request is pageable"),
+            fieldWithPath("pageable.sort").description("Sorting options"),
+            fieldWithPath("pageable.sort.empty").ignored(),
+            fieldWithPath("pageable.sort.sorted").description("The content is sorted"),
+            fieldWithPath("pageable.sort.unsorted").description("The content is unsorted"),
+            fieldWithPath("pageable.offset").description("The current offset of results"),
+            fieldWithPath("pageable.pageSize").description("The size of each page"),
+            fieldWithPath("pageable.pageNumber").description("The current page number"),
+            fieldWithPath("pageable.paged").description("The response has been paged."),
+            fieldWithPath("pageable.unpaged").description("The response has not been paged"),
+            fieldWithPath("sort").description("Sorting options"),
+            fieldWithPath("sort.sorted").description("The content is sorted"),
+            fieldWithPath("sort.empty").ignored(),
+            fieldWithPath("empty").ignored(),
+            fieldWithPath("sort.unsorted").description("The content is unsorted"),
+            fieldWithPath("first").description("Whether the current page is the first page"),
+            fieldWithPath("last").description("Whether the current page is the last page"),
+            fieldWithPath("totalPages").description("Total number of response pages"),
+            fieldWithPath("totalElements").description("Total number of items in the response"),
+            fieldWithPath("size").description("The size of each page"),
+            fieldWithPath("number").description("The current page number"),
+            fieldWithPath("numberOfElements").description("The number of items in the current page"),
+    };
+
+
+    protected RestDocumentationResultHandler getDefaultDocs() {
+        return getDefaultDocs("{methodName}");
+    }
+
+    protected RestDocumentationResultHandler getDefaultDocs(String title) {
+        return document(title,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()));
+    }
+
+
+    protected static class ConstrainedFields {
+
+        protected final ConstraintDescriptions constraintDescriptions;
+
+        public ConstrainedFields(Class<?> input) {
+            this.constraintDescriptions = new ConstraintDescriptions(input);
+        }
+
+        public FieldDescriptor withPath(String path) {
+            return fieldWithPath(path).attributes(key("constraints").value(StringUtils
+                    .collectionToDelimitedString(this.constraintDescriptions
+                            .descriptionsForProperty(path), ". ")));
+        }
+    }
+
+
+    public ResultActions retrieve(String url, Long userId, Class<?> responseDtoClass, String documentTitle, ResponseFieldsSnippet responseFieldsSnippet) throws Exception {
+        return retrieve(url, userId, responseDtoClass, documentTitle, responseFieldsSnippet, null);
+    }
+
+    public ResultActions retrieve(String url, Long userId, Class<?> responseDtoClass, String documentTitle, ResponseFieldsSnippet responseFieldsSnippet, PathParametersSnippet pathParametersSnippet) throws Exception{
+        String encryptedUserId = entityIdUtils.encrypt(EntityId.of(userId));
+
+        ResultActions resultActions = executeGetCall(url, new String[]{encryptedUserId}, documentTitle, responseFieldsSnippet, pathParametersSnippet)
+                .andExpect(status().isOk());
+
+        MvcResult mvcResult = resultActions.andReturn();
+        HashMap<?, ?> response = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), HashMap.class);
+
+
+        if (response.get("id") != null){
+            assertEquals((String)entityIdUtils.decrypt(encryptedUserId), entityIdUtils.decrypt((String)response.get("id").toString()));
+        } else   if (response.get("content") != null){
+//            assertEquals(entityIdUtils.decrypt(encryptedUserId, String.class), entityIdUtils.decrypt(((List<HashMap<String, String>>)(response.get("content"))).get(0).get("id").toString(), String.class));
+
+        }
+
+        return resultActions;
+    }
+
+    public void retrieveList(String url, int totalElements, String documentTitle, ResponseFieldsSnippet responseFieldsSnippet) throws Exception {
+        retrieveList(url, totalElements, documentTitle, responseFieldsSnippet, null);
+    }
+
+    public void retrieveList(String url, int totalElements, String documentTitle, ResponseFieldsSnippet responseFieldsSnippet, PathParametersSnippet pathParametersSnippet) throws Exception{
+        executeGetCall(url, new String[]{}, documentTitle, responseFieldsSnippet, pathParametersSnippet)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("totalElements").value(totalElements))
+        ;
+    }
+
+    @SuppressWarnings("all")
+    public <T extends JpaRepository> void createNew(String url, String requestToSend, T baseService, String documentTitle, RequestFieldsSnippet requestFieldsSnippet) throws Exception {
+        MvcResult mvcResult = executePostCall(url, requestToSend, documentTitle, requestFieldsSnippet)
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrlPattern("**" + url + "*"))
+                .andReturn();
+
+        String id = mvcResult.getResponse().getRedirectedUrl().substring(mvcResult.getResponse().getRedirectedUrl().lastIndexOf("/") + 1);
+        Long userId = EntityId.of((String)entityIdUtils.decrypt(id)).toLong();
+        BaseObject entity = (BaseObject)baseService.getOne(userId);
+
+        assertTrue("The new item was not inserted in the database.", entity != null);
+        assertEquals(userId, entity.getId());
+    }
+
+}
+
+
+	     -->
+	<openApi enabled="true" asciiDocTemplateDir="some/output/dir" commonPackage="com.toplevel.common" outputDir="openapi-schemas"  testForAsciiDocPackage="com.foo.bar.generated" testForAsciiDocDir="../src/main/java/" delegateOutputDir="delegates" externalIdSchema="./EntityId.yaml#/EntityId" commonDir="./some/path/" >
 		<writeOnlyField>schema.table.field</writeOnlyField>
 		<readOnlyField>schema.table.field</readOnlyField>
 	</openApi>

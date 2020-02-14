@@ -3,8 +3,10 @@ package com.github.wwadge.hbnpojogen.obj;
 
 import com.github.wwadge.hbnpojogen.*;
 import com.github.wwadge.hbnpojogen.db.TableObj;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -567,6 +569,9 @@ public class Clazz
     }
 
 
+    public String toKebabCase(){
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, this.className);
+    }
     /**
      * Returns The plural name of this class' property name
      *
@@ -734,6 +739,58 @@ public class Clazz
         return result;
     }
 
+
+    public String generateJsonExample(){
+        String res = "{";
+        for (PropertyObj propertyObj: getOpenApiTestProperties()){
+            res += "\""+propertyObj.getPropertyName()+"\":";
+            if (propertyObj.getOpenApiType() != null) {
+                switch (propertyObj.getOpenApiType()) {
+                    case "boolean":
+                        res += "true";
+                        break;
+                    case "integer":
+                        res += "1";
+                        break;
+                    case "number":
+                        res += "1.0";
+                        break;
+                    case "string":
+                        if (propertyObj.getOpenApiFormat() != null) {
+                            switch (propertyObj.getOpenApiFormat()) {
+                                case "date":
+                                    res += "\"2019-01-01\"";
+                                    break;
+                                case "date-time":
+                                    res += "\"2019-01-01T00:00:00Z\"";
+                                    break;
+                                default:
+                                    res += "\""+generateRandomString(propertyObj.getLength())+"\"";
+                                    break;
+                            }
+                        } else {
+                            res += "\""+generateRandomString(propertyObj.getLength())+"\"";
+                            break;
+                        }
+
+
+                }
+            } else {
+                if (propertyObj.isManyToOne()){
+                    res += "\"VFpDZk9IWmpGVUFTTGhSd2kxZUdxZz09\"";
+                }
+                res += "";
+            }
+            res += ",";
+        }
+        res += "}";
+        res = res.replace(",}", "}").replaceAll("\"", "\\\\\"");
+        return res;
+    }
+
+    private String generateRandomString(Integer length) {
+        return RandomStringUtils.random(Math.min(length, 20), true, false);
+    }
 
     /**
      * Sets the properties linked to this class
@@ -1198,6 +1255,12 @@ public class Clazz
         return "";
     }
 
+    public Set<PropertyObj> getOpenApiTestProperties(){
+        Set<PropertyObj> set = new HashSet<>();
+         getProperties().values().stream().filter(p -> !p.isIdField() && !p.isOpenApiReadOnlyField()).forEach(set::add);
+
+         return set;
+    }
     /**
      * Expand class name, if potential clash
      *
@@ -1265,6 +1328,9 @@ public class Clazz
         return SyncUtils.upfirstChar(this.classPackage) + "DataPoolFactory";
     }
 
+    public final String getDataPoolFactoryImpl() {
+        return SyncUtils.upfirstChar(SyncUtils.removeUnderscores(this.getTableObj().getDbCat().replace("-", "_")) + "DataPoolFactory");
+    }
 
     /**
      * Returns the full classname path of this class datapoolfactory (convenience function)

@@ -1,0 +1,165 @@
+= Generated Docs
+Generated Docs;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+
+[[overview]]
+== Introduction
+
+
+Welcome to Docs!
+
+
+This guide will assist you in integrating with our services as quickly as possible; if you already know the basics
+you may wish to refer to our http://docs.domain.com/index.html[Quick reference API guide] instead.
+
+=== Overview
+
+
+Wherever possible, we recommend you use the higher-level APIs we provide for your target platform such as Android or iOS but
+at the heart of all interactions with our API lies a simple RESTful API that supports the creation, retrieval,
+and deletion of various resources as described below. The API authorizes access using http://tools.ietf.org/html/rfc6749[OAuth 2.0] and will
+therefore expect most calls to be authenticated to succeed. All calls are made to either a live environment at http://api.domain.com
+or a testing environment at http://apisandbox.domain.com that you may use for integration testing purposes.
+
+You make calls using standard HTTP conventions in http://www.json.org[JSON] format and expect the same format back for all
+API responses whether successful or not. Errors are communicated via standard HTTP error codes as per REST convention as well as via error fields in responses.
+
+
+
+[[overview-http-verbs]]
+==== HTTP verbs
+
+The API tries to adhere as closely as possible to standard HTTP and REST conventions in its
+  use of HTTP verbs. For example:
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+==== HTTP status codes
+
+Following the same REST conventions, the API makes use of the following error codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `401 Unauthorized`
+| The request was not authorized for the given bearer token or username/password.
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+----
+----
+
+
+
+[[auth]]
+== Authentication
+
+
+[NOTE]
+====
+Remember to contact our support department to provide you with the appropriate credentials.
+====
+
+Authentication to the platform is based around http://tools.ietf.org/html/rfc6749[OAuth 2.0]. We strongly recommend using
+existing client-side libraries to deal with all your authentication details.
+
+Before you make any other call, you must first authenticate in order to obtain a token -- this token is then used in all
+subsequent calls to the platform.
+
+
+The REST URL to invoke via a POST request is ``https://api.domain.com/auth`` and requires you to post the client credentials as assigned to you by your
+account manager. These assigned ``clientId`` and ``clientSecret`` are passed along the
+``Authorization: Bearer`` header.
+
+
+[source,bash,role="primary"]
+
+----
+$ curl -X POST \
+https://api.domain.com/auth \
+  -H 'content-type: application/json' \
+  -d '{"grant_type":"password","username": "yourAssignedUsername","password":"yourAssignedPassword",  "client_id": "123456"}'
+
+----
+
+The response would be in this http://tools.ietf.org/html/rfc6749#section-4.4.3[standard JSON document format] from the OAuth 2.0 specification.
+[source,bash,role="primary"]
+----
+{
+ {
+     "access_token": "eyJ0eX...",
+     "expires_in": 86400,
+     "token_type": "Bearer"
+ }
+}
+----
+
+
+=== Invoking the API
+
+For any subsequent API call, include the access token returned in the authorization call as in the following example:
+
+[source,bash,role="primary"]
+
+----
+
+$ curl --header "Authorization: Bearer eyJ0eX" 'https://...'
+----
+
+[[resources]]
+
+
+#foreach ( $class in $classes )
+#if (!$class.isHiddenJoinTable())
+
+=== Create ${class.className}
+
+operation::add${class.className}[snippets='curl-request,http-request,http-response,request-fields']
+
+
+=== Get multiple ${class.niceClassName}
+
+operation::get${class.niceClassName}[snippets='curl-request,http-request,http-response,response-fields']
+
+=== Get single ${class.className}
+
+You may fetch a single ${class.className} via the following API call.
+
+operation::getSingle${class.className}[snippets='curl-request,http-request,http-response,response-fields']
+
+#end
+#end

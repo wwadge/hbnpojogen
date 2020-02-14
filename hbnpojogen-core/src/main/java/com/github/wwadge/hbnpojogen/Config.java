@@ -1,6 +1,7 @@
 package com.github.wwadge.hbnpojogen;
 
 
+import com.google.common.base.MoreObjects;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.velocity.Template;
@@ -11,6 +12,8 @@ import org.jvnet.inflector.RuleBasedPluralizer;
 import org.jvnet.inflector.rule.RegexReplacementRule;
 
 import java.util.*;
+
+import static com.google.common.base.MoreObjects.firstNonNull;
 
 
 /**
@@ -30,6 +33,7 @@ public class Config {
      */
     public static Template template;
     public static Template templateOpenApiSchema;
+    public static Template templateOpenApiDelegate;
     /**
      * config
      */
@@ -69,6 +73,7 @@ public class Config {
 
         template = Velocity.getTemplate("templates/class.vm");
         templateOpenApiSchema = Velocity.getTemplate("templates/openapi-schema.vm");
+        templateOpenApiDelegate = Velocity.getTemplate("templates/openapi-delegate.vm");
         interfaceTemplate = Velocity.getTemplate("templates/classIface.vm");
         repoTemplate = Velocity.getTemplate("templates/classRepo.vm");
 
@@ -227,8 +232,11 @@ public class Config {
         State.getInstance().setOpenApiExternalIdSchema(Config.config.getString("openApi[@externalIdSchema]", null));
         State.getInstance().setOpenApiCommonDir(Config.config.getString("openApi[@commonDir]", ""));
         State.getInstance().setOpenApiOutputDir(Config.config.getString("openApi[@outputDir]", "openapi-schemas"));
-
-
+        State.getInstance().setOpenApiCommonPackage(Config.config.getString("openApi[@commonPackage]", "com.toplevel"));
+        State.getInstance().setOpenApiDelegateOutputDir(Config.config.getString("openApi[@delegateOutputDir]", null));
+        State.getInstance().setOpenApiTestForAsciiDocDir(Config.config.getString("openApi[@testForAsciiDocDir]", null));
+        State.getInstance().setTestForAsciiDocPackage(Config.config.getString("openApi[@testForAsciiDocPackage]", null));
+        State.getInstance().setAsciiDocTemplateDir(Config.config.getString("openApi[@asciiDocTemplateDir]", null));
 
     }
 
@@ -695,13 +703,13 @@ public class Config {
         }
         State.getInstance().customDialect = Config.config.getString("dbType[@dialect]", null);
         State.getInstance().dbIP = Config.config.getString(Constants.DATABASE_IP);
-        State.getInstance().dbCatalog = Config.config.getString(Constants.DATABASE_CATALOG);
-        State.getInstance().dbSchema = Config.config.getString(Constants.DATABASE_SCHEMA);
+        State.getInstance().dbCatalog = firstNonNull(System.getenv("jdbc_schema"), Config.config.getString(Constants.DATABASE_CATALOG));
+        State.getInstance().dbSchema = firstNonNull(System.getenv("jdbc_schema"), Config.config.getString(Constants.DATABASE_SCHEMA));
         if (State.getInstance().dbSchema == null) {
             State.getInstance().dbSchema = "public";
         }
-        State.getInstance().dbUsername = Config.config.getString(Constants.DATABASE_USERNAME);
-        State.getInstance().dbPassword = Config.config.getString(Constants.DATABASE_PASSWORD);
+        State.getInstance().dbUsername = firstNonNull(System.getenv("jdbc_username"), Config.config.getString(Constants.DATABASE_USERNAME));
+        State.getInstance().dbPassword = firstNonNull(System.getenv("jdbc_password"), Config.config.getString(Constants.DATABASE_PASSWORD));
         String path = Config.config.getString(Constants.SOURCE_TARGET);
         State.getInstance().setSourceTarget(path);
         State.getInstance().setConnectionPool(Config.config.getString("connectionPool", "HIKARICP").toUpperCase());
@@ -709,7 +717,7 @@ public class Config {
 
         State.getInstance().projectName = Config.config.getString(Constants.PROJECT_NAME);
         HbnPojoGen.driver = Config.config.getString(Constants.DRIVER);
-        HbnPojoGen.jdbcConnection = Config.config.getString(Constants.JDBC_CONNECTION_STRING);
+        HbnPojoGen.jdbcConnection = firstNonNull(System.getenv("jdbc_url"), Config.config.getString(Constants.JDBC_CONNECTION_STRING));
         State.getInstance().topLevel = Config.config.getString(Constants.TOP_LEVEL);
         State.getInstance().libPath = Config.config.getString(Constants.LIB_PATH);
         State.getInstance().disableUnderscoreConversion = Config.config.getString(Constants.DISABLE_UNDERSCORE_CONVERSION, "false").equalsIgnoreCase("TRUE");
