@@ -9,7 +9,7 @@
 	<parent>
 		<artifactId>hbnpojogen</artifactId>
 		<groupId>com.github.wwadge</groupId>
-		<version>1.5.12</version>
+		<version>1.5.13</version>
 	</parent>
 
 	<name>Hibernate POJO Generator Persistence Library</name>

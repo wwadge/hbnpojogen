@@ -272,9 +272,15 @@ $classCustomCodeFields
 #if ( $class.embeddable || $class.isCompositePrimaryKey() )
 #oneToManyAnnotation($property)
 #end
+#if ($enableLombokBuilderPattern == true)
+    @Builder.Default
+#end
 	private Set<$property.JavaType> ${property.nicePropertyName} = new HashSet<>();
 #else
 #if ( $property.ManyToMany )
+#if ($enableLombokBuilderPattern == true)
+    @Builder.Default
+#end
 	private Set<$property.manyToManyLink.dstProperty.clazz.className> ${property.nicePropertyName} = new HashSet<>();
 #else	
 #if	( $property.idField )
