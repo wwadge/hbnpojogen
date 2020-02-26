@@ -518,7 +518,6 @@ public class VelocityWriters {
 
             }
             if (State.getInstance().isEnableLombokBuilderPattern()){
-                clazz.getImports().add("lombok.*");
                 classAnnotations += "@Builder @NoArgsConstructor @AllArgsConstructor";
 
             }
