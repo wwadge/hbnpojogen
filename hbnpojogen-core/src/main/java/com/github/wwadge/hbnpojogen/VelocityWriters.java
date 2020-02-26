@@ -16,7 +16,6 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -518,6 +517,11 @@ public class VelocityWriters {
                 clazz.getImports().add("org.hibernate.annotations.Parameter");
 
             }
+            if (State.getInstance().isEnableLombokBuilderPattern()){
+                clazz.getImports().add("lombok.builder");
+                classAnnotations += "@Builder";
+
+            }
 
             if (!typedefs.isEmpty()) {
                 typedefs = "@TypeDefs(value = {\n" + typedefs.substring(0, typedefs.lastIndexOf(",")) + "\n})";
@@ -597,6 +601,7 @@ public class VelocityWriters {
             }
             context.put("interfacesToShow", tmpInterfaces);
             context.put("enableJackson", State.getInstance().isEnableJacksonSupport());
+            context.put("enableLombokBuilderPattern", State.getInstance().isEnableLombokBuilderPattern());
             context.put("enableJacksonManagedReference", State.getInstance().isEnableJacksonManagedReferences());
             context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
             context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());

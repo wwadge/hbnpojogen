@@ -238,7 +238,10 @@
 	and the relevant hibernate generator class files are copied over to the target folder. This
 	allows for integration with other tools. -->
 	<enableStateSave>true</enableStateSave>
-	
+
+	<!-- If enabled, we add @Builder support for generated models. -->
+	<enableLombokBuilderPattern>true</enableLombokBuilderPattern>
+
 	<!--  If enabled, we make use of spring jpa instead of our custom code.  
 	pass in factoryClass="com.some.factory.class.BeanName" as an attribute if you wish to
 	override the default spring factory.
@@ -304,7 +307,10 @@
 	Setup your custom annotations using the <annotations> section
 	classname eg: mycompany.Foo (don't use com.xon.mycompany.Foo, just use
 	the schemaname in camelcase without underscores followed by your classname).
-	You may also use wildcards in the classname definition eg *.yourclass, yourschema.* or *.* 
+	You may also use wildcards in the classname definition eg *.yourclass, yourschema.* or *.*
+
+	The symbol in <extends> section: "!", if present, will be replaced with the PK type of the class eg BaseEntity<!> will become BaseEntity<Long> or BaseEntity<Integer> as appropriate
+
 	-->
 <!--
  	<annotations>
