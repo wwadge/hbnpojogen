@@ -230,7 +230,7 @@ import lombok.*;
 
 #doClassMacros()
 #set ($implements =  "$interfacesToShow") 
-public #doClassType()class $class.className$this.doExtends($class) implements $implements {
+public #doClassType()class $class.className$this.doExtends($class) #if (!$implements.trim().equals(""))implements $implements#end {
 
 	/** Serial Version UID. */
 	private static final long serialVersionUID = $serial;
