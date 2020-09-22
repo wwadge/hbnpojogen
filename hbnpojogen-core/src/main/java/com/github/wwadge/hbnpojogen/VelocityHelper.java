@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 
 /**
@@ -188,7 +189,11 @@ public class VelocityHelper {
             entries.add(clazz.getExtendsFrom().getClazz().getClassName());
         }
 
-        entries.addAll(clazz.getCustomExtends());
+
+        entries.addAll(        clazz.getCustomExtends().stream()
+                .map(p -> p.replace("!", clazz.getTypeOfId()))
+                .collect(Collectors.toList())
+                );
 
 
         String result = "";

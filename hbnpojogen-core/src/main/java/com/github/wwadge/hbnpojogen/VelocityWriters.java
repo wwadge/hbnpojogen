@@ -15,12 +15,26 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import java.io.*;
-import java.nio.ByteBuffer;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 /**
@@ -518,6 +532,10 @@ public class VelocityWriters {
                 clazz.getImports().add("org.hibernate.annotations.Parameter");
 
             }
+            if (State.getInstance().isEnableLombokBuilderPattern()){
+                classAnnotations += "@Builder @NoArgsConstructor @AllArgsConstructor";
+
+            }
 
             if (!typedefs.isEmpty()) {
                 typedefs = "@TypeDefs(value = {\n" + typedefs.substring(0, typedefs.lastIndexOf(",")) + "\n})";
@@ -597,6 +615,7 @@ public class VelocityWriters {
             }
             context.put("interfacesToShow", tmpInterfaces);
             context.put("enableJackson", State.getInstance().isEnableJacksonSupport());
+            context.put("enableLombokBuilderPattern", State.getInstance().isEnableLombokBuilderPattern());
             context.put("enableJacksonManagedReference", State.getInstance().isEnableJacksonManagedReferences());
             context.put("skipInterface", State.getInstance().isSkipModelInterfaces());
             context.put("classCustomCodeFields", StringUtils.isBlank(clazz.getClassCustomCodeFields()) ? "" : clazz.getClassCustomCodeFields());
@@ -1857,7 +1876,7 @@ public class VelocityWriters {
                     String name = field.getValue().getEnumName();
 
                     String tmp = getAndCreateEnumPath(targetFolder + "/" + State.getInstance().getSrcFolder() + "/", catalog, name);
-                    PrintWriter enumWriter = new PrintWriter(new BufferedWriter(new FileWriter(tmp, false)));
+                    PrintWriter enumWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmp, false), StandardCharsets.UTF_8)));
 
                     VelocityContext context = new VelocityContext();
                     context.put(PROJECTNAME, State.getInstance().projectName);

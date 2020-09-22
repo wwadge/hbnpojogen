@@ -233,7 +233,7 @@ import lombok.*;
 
 #doClassMacros()
 #set ($implements =  "$interfacesToShow") 
-public #doClassType()class $class.className$this.doExtends($class) implements $implements {
+public #doClassType()class $class.className$this.doExtends($class) #if (!$implements.trim().equals(""))implements $implements#end {
 
 	/** Serial Version UID. */
 	private static final long serialVersionUID = $serial;
@@ -275,9 +275,15 @@ $classCustomCodeFields
 #if ( $class.embeddable || $class.isCompositePrimaryKey() )
 #oneToManyAnnotation($property)
 #end
+#if ($enableLombokBuilderPattern == true)
+    @Builder.Default
+#end
 	private Set<$property.JavaType> ${property.nicePropertyName} = new HashSet<>();
 #else
 #if ( $property.ManyToMany )
+#if ($enableLombokBuilderPattern == true)
+    @Builder.Default
+#end
 	private Set<$property.manyToManyLink.dstProperty.clazz.className> ${property.nicePropertyName} = new HashSet<>();
 #else	
 #if	( $property.idField )

@@ -147,8 +147,10 @@ public class Core {
 
                 }
 
+                String tblNameNoCatalog = SyncUtils.getTableName(tableName);
                 if (State.getInstance().ignoreFieldList.containsKey("*.*." + colName) || State.getInstance().ignoreFieldList.containsKey(tableName + ".*") ||
-                        State.getInstance().ignoreFieldList.containsKey(tableName + "." + colName)) {
+                        State.getInstance().ignoreFieldList.containsKey(tblNameNoCatalog + "." + colName)
+                || State.getInstance().ignoreFieldList.containsKey("*."+tblNameNoCatalog + "." + colName)) {
 
                     List<String> exceptions = State.getInstance().ignoreFieldList.get("*.*." + colName);
                     if (exceptions == null) {

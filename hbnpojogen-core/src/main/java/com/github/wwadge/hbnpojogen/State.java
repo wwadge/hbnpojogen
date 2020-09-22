@@ -274,6 +274,8 @@ public class State
      * If true, hibernate pojo gen state will be dumped to disk.
      */
     public boolean enableStateSave = false;
+    public boolean enableLombokBuilderPattern = false;
+
 
     /**
      * If true, jackson annotations will be added to allow for serialization
@@ -993,6 +995,109 @@ public class State
         this.dbCatalog = dbCatalog;
     }
 
+    public String getDbSchema() {
+        return dbSchema;
+    }
+
+    public void setDbSchema(String dbSchema) {
+        this.dbSchema = dbSchema;
+    }
+
+    public void setCustomTypes(TreeMap<String, String> customTypes) {
+        this.customTypes = customTypes;
+    }
+
+    public boolean isDisableSubtypeEnumGeneration() {
+        return disableSubtypeEnumGeneration;
+    }
+
+    public void setDisableSubtypeEnumGeneration(boolean disableSubtypeEnumGeneration) {
+        this.disableSubtypeEnumGeneration = disableSubtypeEnumGeneration;
+    }
+
+    public boolean isEnableLombokBuilderPattern() {
+        return enableLombokBuilderPattern;
+    }
+
+    public void setEnableLombokBuilderPattern(boolean enableLombokBuilderPattern) {
+        this.enableLombokBuilderPattern = enableLombokBuilderPattern;
+    }
+
+    public boolean isEnableUtilsBeans() {
+        return enableUtilsBeans;
+    }
+
+    public void setEnableUtilsBeans(boolean enableUtilsBeans) {
+        this.enableUtilsBeans = enableUtilsBeans;
+    }
+
+    public static String getCustomDialect() {
+        return customDialect;
+    }
+
+    public static void setCustomDialect(String customDialect) {
+        State.customDialect = customDialect;
+    }
+
+    public boolean isDisableBackLinksInDataPoolFactory() {
+        return disableBackLinksInDataPoolFactory;
+    }
+
+    public void setDisableBackLinksInDataPoolFactory(boolean disableBackLinksInDataPoolFactory) {
+        this.disableBackLinksInDataPoolFactory = disableBackLinksInDataPoolFactory;
+    }
+
+    public void setVersionCheckOrderBy(TreeMap<String, String> versionCheckOrderBy) {
+        this.versionCheckOrderBy = versionCheckOrderBy;
+    }
+
+    public void setOneToManyCascadeEnabled(TreeMap<String, CascadeState> oneToManyCascadeEnabled) {
+        this.oneToManyCascadeEnabled = oneToManyCascadeEnabled;
+    }
+
+    public void setManyToOneCascadeEnabled(TreeMap<String, CascadeState> manyToOneCascadeEnabled) {
+        this.manyToOneCascadeEnabled = manyToOneCascadeEnabled;
+    }
+
+    public void setManyToManyCascadeEnabled(TreeMap<String, CascadeState> manyToManyCascadeEnabled) {
+        this.manyToManyCascadeEnabled = manyToManyCascadeEnabled;
+    }
+
+    public void setOneToOneCascadeEnabled(TreeMap<String, CascadeState> oneToOneCascadeEnabled) {
+        OneToOneCascadeEnabled = oneToOneCascadeEnabled;
+    }
+
+    public void setOneToManyLazyEnabled(TreeMap<String, Boolean> oneToManyLazyEnabled) {
+        this.oneToManyLazyEnabled = oneToManyLazyEnabled;
+    }
+
+    public void setManyToOneLazyEnabled(TreeMap<String, Boolean> manyToOneLazyEnabled) {
+        this.manyToOneLazyEnabled = manyToOneLazyEnabled;
+    }
+
+    public void setManyToManyLazyEnabled(TreeMap<String, Boolean> manyToManyLazyEnabled) {
+        this.manyToManyLazyEnabled = manyToManyLazyEnabled;
+    }
+
+    public void setOneToOneLazyEnabled(TreeMap<String, Boolean> oneToOneLazyEnabled) {
+        OneToOneLazyEnabled = oneToOneLazyEnabled;
+    }
+
+    public TreeMap<String, Set<String>> getVersionGTE() {
+        return versionGTE;
+    }
+
+    public void setVersionGTE(TreeMap<String, Set<String>> versionGTE) {
+        this.versionGTE = versionGTE;
+    }
+
+    public boolean isUseLDAP() {
+        return useLDAP;
+    }
+
+    public void setSkipModelInterfaces(boolean skipModelInterfaces) {
+        this.skipModelInterfaces = skipModelInterfaces;
+    }
 
     /**
      * @return the dbUsername
