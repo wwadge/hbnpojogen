@@ -219,7 +219,7 @@ $classAnnotation
 	dynamicInsert = true, dynamicUpdate = true
 )
 #end
-#if ($class.cacheStrategy != null)
+#if ( !$class.getCacheStrategy().equals("") )
 @Cache(region = "${class.getFullClassName()}", usage = CacheConcurrencyStrategy.$class.cacheStrategy)
 #end
 #end

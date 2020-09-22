@@ -120,7 +120,7 @@ public class Clazz
     private Set<String> classAnnotation = new HashSet<String>();
 
 
-    private String cacheStrategy;
+    private String cacheStrategy = "";
 
     public Set<String> getClassTypedefsAnnotation() {
         return classTypedefsAnnotation;
