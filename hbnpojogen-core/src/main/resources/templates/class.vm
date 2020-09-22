@@ -219,6 +219,9 @@ $classAnnotation
 	dynamicInsert = true, dynamicUpdate = true
 )
 #end
+#if ($class.cacheStrategy != null)
+@Cache(region = "${class.getFullClassName()}", usage = CacheConcurrencyStrategy.$class.cacheStrategy)
+#end
 #end
 #################################### END MACROS ####################
 #foreach( $import in $imports )
