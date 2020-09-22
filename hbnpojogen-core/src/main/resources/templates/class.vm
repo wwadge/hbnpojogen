@@ -220,7 +220,7 @@ $classAnnotation
 )
 #end
 #if ( !$class.getCacheStrategy().equals("") )
-@Cache(region = "${class.getFullClassName()}", usage = CacheConcurrencyStrategy.$class.cacheStrategy)
+@Cache(region = "${class.getFullClassName()}", usage = CacheConcurrencyStrategy.$class.cacheStrategy) /* $class.getCacheStrategy() */
 #end
 #end
 #################################### END MACROS ####################

@@ -982,7 +982,7 @@ public abstract class AbstractGenericTest {
 
 	<!-- This adds @Cache to the top of each model object. The values correspond to CacheConcurrencyStrategy -->
 	<!--
-	<cache default="NONSTRICT_READ_WRITE">
+	<cache default="NONSTRICT_READ_WRITE" enabled="false">
 		<except package="*" class="yourclass" strategy="NONE" />
 	</cache>
 	-->
