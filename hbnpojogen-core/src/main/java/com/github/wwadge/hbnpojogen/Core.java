@@ -51,7 +51,7 @@ public class Core {
         // importedKeys
         // so let's fetch them now
         for (String tableName : commitOrder) {
-            //      System.out.println(tableName);
+                  System.out.println(tableName);
             if (checkInIgnoreList(tableName)) {
                 continue;
             }
