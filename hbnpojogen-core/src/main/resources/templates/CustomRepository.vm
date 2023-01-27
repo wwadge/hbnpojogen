@@ -27,7 +27,7 @@ public interface CustomRepository<T, ID extends Serializable> extends JpaReposit
      * @return the managed instance that the state was merged to
      * @throws IllegalArgumentException if instance is not an
      *         entity or is a removed entity
-     * @throws javax.persistence.TransactionRequiredException if invoked on a
+     * @throws jakarta.persistence.TransactionRequiredException if invoked on a
      *         container-managed entity manager of type
      *         <code>PersistenceContextType.TRANSACTION</code> and there is
      *         no transaction

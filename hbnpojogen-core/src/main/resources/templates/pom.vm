@@ -51,7 +51,7 @@
     <artifactId>querydsl-jpa</artifactId>
                 <exclusions>
                 <exclusion>
-                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <groupId>org.hibernate.jakarta.persistence</groupId>
 			<!-- Hibernate 4.1 uses jpa-2.1 -->
                     <artifactId>hibernate-jpa-2.0-api</artifactId>
                 </exclusion>
@@ -205,7 +205,7 @@
 		</dependency>
 
 		<dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
+            <groupId>org.hibernate.jakarta.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
 #if ($doPomVersion)			
             <version>1.0.0.Final</version>

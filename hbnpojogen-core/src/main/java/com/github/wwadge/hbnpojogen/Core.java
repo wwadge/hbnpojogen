@@ -760,11 +760,11 @@ public class Core {
             co.setTableObj(tobj); // convenience linking
             tobj.setClazz(co); // convenience linking
 
-            co.getImports().add("javax.persistence.Entity");
+            co.getImports().add("jakarta.persistence.Entity");
 
 
             if ((State.getInstance().schemaRestrict != 0) || (co.getTableObj().getDbName().indexOf('_') >= 0) || !co.getClassName().equals(co.getTableObj().getDbName())) {
-                co.getImports().add("javax.persistence.Table");
+                co.getImports().add("jakarta.persistence.Table");
             }
             Iterator<Entry<String, FieldObj>> fields = tobj.getFields().entrySet().iterator();
 
@@ -803,13 +803,13 @@ public class Core {
                         property.setPropertyName("id");
                         property.setClazz(co);
                         property.setComposite(true);
-                        co.getImports().add("javax.persistence.Id");
+                        co.getImports().add("jakarta.persistence.Id");
 
                         // link to a new class, containing our embedded object
                         embed = new Clazz();
                         embed.setEmbeddedFrom(co); // back link
                         embed.getImports().add("java.io.Serializable");
-                        embed.getImports().add("javax.persistence.Embeddable");
+                        embed.getImports().add("jakarta.persistence.Embeddable");
                         co.setEmbeddableClass(embed);
                         embed.setEmbeddable(true);
                         embed.setTableObj(co.getTableObj());
@@ -838,7 +838,7 @@ public class Core {
                 switch (property.getPropertyMeta(inEmbedMode)) {
 
                     case PRIMARY_FOREIGN_KEY:
-                        co.getImports().add("javax.persistence.PrimaryKeyJoinColumn");
+                        co.getImports().add("jakarta.persistence.PrimaryKeyJoinColumn");
 
                         // co.setSubclass(true);
                         co.setExtendingProperty(property);
@@ -874,7 +874,7 @@ public class Core {
                     case PRIMARY_FIELD:
 
                         if (property.isAutoInc()) {
-                            co.getImports().add("javax.persistence.GeneratedValue");
+                            co.getImports().add("jakarta.persistence.GeneratedValue");
 
                             Entry<String, GeneratorEnum> defaultGenerator = State.getInstance().generators.get("DEFAULT").getTables().get("*").getFields().firstEntry();
                             String defaultPattern = defaultGenerator.getKey().replace("${DB}", property.getClazz().getTableObj().getDbName());
@@ -889,8 +889,8 @@ public class Core {
                                 property.setGeneratorType(GeneratorEnum.SEQUENCE);
                                 property.setSequenceName(seq);
                                 property.setSequenceHibernateRef(property.getClazz().getClassPropertyName() + SyncUtils.upfirstChar(property.getFieldObj().getName()) + "Generator");
-                                co.getImports().add("javax.persistence.SequenceGenerator");
-                                co.getImports().add("javax.persistence.GenerationType");
+                                co.getImports().add("jakarta.persistence.SequenceGenerator");
+                                co.getImports().add("jakarta.persistence.GenerationType");
                             } else {
                                 property.setGeneratorType(GeneratorEnum.AUTO);
 
@@ -910,7 +910,7 @@ public class Core {
                         if (!inEmbedMode) {
                             fieldName = "id";
                             property.setIdField(true);
-                            co.getImports().add("javax.persistence.Id");
+                            co.getImports().add("jakarta.persistence.Id");
                         }
                         property.setJavaType(SyncUtils.mapSQLType(fieldObj));
                         property.setOpenApiType("number"); // but overridden in template
@@ -951,8 +951,8 @@ public class Core {
                     case COMPOSITE_MANY_TO_ONE:
                         property.setManyToOne(true);
                         property.setCompositeManyToOne(true);
-                        co.getImports().add("javax.persistence.FetchType");
-                        co.getImports().add("javax.persistence.ManyToOne");
+                        co.getImports().add("jakarta.persistence.FetchType");
+                        co.getImports().add("jakarta.persistence.ManyToOne");
 
                         for (KeyObj keyObj : tobj.getImportedKeys().values()) {
                             if (keyObj.getKeyLinks().containsKey(field.getKey())) {
@@ -988,10 +988,10 @@ public class Core {
                                 // topLevel + "." + projectName + ".model.obj." +
                                 // SyncUtils.removeUnderscores(getTableCatalog(targetTable))+"."+SyncUtils.upfirstChar(SyncUtils.removeUnderscores(getTableName(targetTable)))
                                 parentClass.getImports().add(State.getInstance().doObjectImport(targetTable));
-                                parentClass.getImports().add("javax.persistence.OneToMany");
-                                parentClass.getImports().add("javax.persistence.FetchType");
+                                parentClass.getImports().add("jakarta.persistence.OneToMany");
+                                parentClass.getImports().add("jakarta.persistence.FetchType");
                                 if (externalProperty.isOneToManyCascadeEnabledByConfig()) {
-                                    parentClass.getImports().add("javax.persistence.CascadeType");
+                                    parentClass.getImports().add("jakarta.persistence.CascadeType");
                                 }
                                 parentClass.getImports().add("java.util.HashSet");
                                 parentClass.getImports().add("java.util.Set");
@@ -999,15 +999,15 @@ public class Core {
                             }
                         }
                         if (property.isManyToOneCascadeEnabledByConfig()) {
-                            co.getImports().add("javax.persistence.CascadeType");
+                            co.getImports().add("jakarta.persistence.CascadeType");
                         }
 
                         break;
                     case ONE_TO_ONE_FIELD:
                         property.setOneToOne(true);
                         property.setManyToOne(true); // we'll switch this off later
-                        co.getImports().add("javax.persistence.FetchType");
-                        co.getImports().add("javax.persistence.OneToOne");
+                        co.getImports().add("jakarta.persistence.FetchType");
+                        co.getImports().add("jakarta.persistence.OneToOne");
                         String oname = field.getKey();
 
                         if (oname.toUpperCase().endsWith(Constants.IDCONST)) {
@@ -1031,8 +1031,8 @@ public class Core {
 
                     case MANY_TO_ONE_FIELD:
                         property.setManyToOne(true);
-                        co.getImports().add("javax.persistence.FetchType");
-                        co.getImports().add("javax.persistence.ManyToOne");
+                        co.getImports().add("jakarta.persistence.FetchType");
+                        co.getImports().add("jakarta.persistence.ManyToOne");
                         for (KeyObj keyObj : tobj.getImportedKeys().values()) {
                             if (keyObj.getKeyLinks().containsKey(field.getKey())) {
                                 property.setJavaType(SyncUtils.upfirstChar(keyObj.getPkTableName().toLowerCase()));
@@ -1088,7 +1088,7 @@ public class Core {
                             co.getImports().add("org.hibernate.annotations.TypeDefs");
                             co.getImports().add("org.hibernate.annotations.Type");
                             co.getImports().add("org.hibernate.annotations.Columns");
-                            co.getImports().add("javax.persistence.Column");
+                            co.getImports().add("jakarta.persistence.Column");
                         }
 
                         if (fieldObj.isEncryptedType()) {
@@ -1129,8 +1129,8 @@ public class Core {
                                 property.setGeneratorType(GeneratorEnum.AUTO);
                             }
 
-                            co.getImports().add("javax.persistence.GeneratedValue");
-                            // co.getImports().add("javax.persistence.GenerationType");
+                            co.getImports().add("jakarta.persistence.GeneratedValue");
+                            // co.getImports().add("jakarta.persistence.GenerationType");
                         }
 
                         String name = Core.fixConflictingInheritedNames(property.getJavaName(), co);
@@ -1679,8 +1679,8 @@ public class Core {
 
                         Clazz superClass = clazz.getExtendsFrom().getClazz();
                         superClass.setSuperclass(true);
-                        superClass.getImports().add("javax.persistence.Inheritance");
-                        superClass.getImports().add("javax.persistence.InheritanceType");
+                        superClass.getImports().add("jakarta.persistence.Inheritance");
+                        superClass.getImports().add("jakarta.persistence.InheritanceType");
 
                     }
 
@@ -1815,7 +1815,7 @@ public class Core {
      */
     private static void addImports(TreeMap<String, Clazz> classes) {
         for (Clazz clazz : classes.values()) {
-            clazz.getImports().add("javax.persistence.Transient");
+            clazz.getImports().add("jakarta.persistence.Transient");
 
             List<String> keySearch = new LinkedList<String>();
             String tmp = clazz.getClassPackage() + "." + clazz.getClassName();
@@ -1871,35 +1871,35 @@ public class Core {
                     switch (property.getGeneratorType()) {
                         case AUTO:
                             if (!property.isComposite()) {
-                                clazz.getImports().add("javax.persistence.GenerationType");
-                                clazz.getImports().add("javax.persistence.GeneratedValue");
+                                clazz.getImports().add("jakarta.persistence.GenerationType");
+                                clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             }
                             break; // no annotation necessary
                         case GUID:
                             clazz.setGeneratedValueGUID(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             break;
                         case CUSTOM:
                             clazz.setGeneratedValueCustom(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             break;
                         case PKS:
                             clazz.setGeneratedValuePKS(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             break;
                         case IDAWARE:
                             clazz.setGeneratedValueIDAware(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             break;
 
                         case UUID:
                             clazz.setGeneratedValueUUID(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             clazz.getImports().add("org.hibernate.annotations.Parameter");
                             break;
                         case UUIDWithoutDashes:
                             clazz.setGeneratedValueUUIDWithoutDashes(true);
-                            clazz.getImports().add("javax.persistence.GeneratedValue");
+                            clazz.getImports().add("jakarta.persistence.GeneratedValue");
                             break;
                         default:
                             break;
@@ -1907,10 +1907,10 @@ public class Core {
                 }
 
                 if (property.isOneToMany() && !property.isOneToNBackLinkDisabled()) {
-                    clazz.getImports().add("javax.persistence.OneToMany");
-                    clazz.getImports().add("javax.persistence.FetchType");
+                    clazz.getImports().add("jakarta.persistence.OneToMany");
+                    clazz.getImports().add("jakarta.persistence.FetchType");
                     if (property.isOneToManyCascadeEnabledByConfig()) {
-                        clazz.getImports().add("javax.persistence.CascadeType");
+                        clazz.getImports().add("jakarta.persistence.CascadeType");
                     }
                     clazz.getImports().add("java.util.HashSet");
                     clazz.getImports().add("java.util.Set");
@@ -1925,29 +1925,29 @@ public class Core {
                 if (property.isManyToMany() && !property.isOneToNBackLinkDisabled()) {
                     clazz.getImports().add("java.util.HashSet");
                     clazz.getImports().add("java.util.Set");
-                    clazz.getImports().add("javax.persistence.FetchType");
-                    clazz.getImports().add("javax.persistence.ManyToMany");
+                    clazz.getImports().add("jakarta.persistence.FetchType");
+                    clazz.getImports().add("jakarta.persistence.ManyToMany");
                     if (property.isManyToManyCascadeEnabledByConfig()) {
-                        clazz.getImports().add("javax.persistence.CascadeType");
+                        clazz.getImports().add("jakarta.persistence.CascadeType");
                     }
                 }
                 if (property.isManyToOne() && !property.isManyToMany()) {
-                    clazz.getImports().add("javax.persistence.JoinColumn");
+                    clazz.getImports().add("jakarta.persistence.JoinColumn");
                 }
                 if (property.isOneToOne()) {
-                    clazz.getImports().add("javax.persistence.OneToOne");
-                    clazz.getImports().add("javax.persistence.FetchType");
+                    clazz.getImports().add("jakarta.persistence.OneToOne");
+                    clazz.getImports().add("jakarta.persistence.FetchType");
 
                     if (!property.isOneTooneInverseSide()) {
-                        clazz.getImports().add("javax.persistence.JoinColumn");
+                        clazz.getImports().add("jakarta.persistence.JoinColumn");
                     }
                     if (property.isOneToOneCascadeEnabledByConfig()) {
-                        clazz.getImports().add("javax.persistence.CascadeType");
+                        clazz.getImports().add("jakarta.persistence.CascadeType");
                     }
                 }
 
                 if (property.isManyToOne() && property.isManyToOneCascadeEnabledByConfig()) {
-                    clazz.getImports().add("javax.persistence.CascadeType");
+                    clazz.getImports().add("jakarta.persistence.CascadeType");
                 }
 
 
@@ -1965,15 +1965,15 @@ public class Core {
                         }
                     } else {
                     }
-                    clazz.getImports().add("javax.persistence.Enumerated");
-                    clazz.getImports().add("javax.persistence.EnumType");
+                    clazz.getImports().add("jakarta.persistence.Enumerated");
+                    clazz.getImports().add("jakarta.persistence.EnumType");
                 }
 
                 if (property.isArrayType()) {
                     clazz.getImports().add("java.util.Arrays");
                 }
                 if (property.isTransientField()) {
-                    clazz.getImports().add("javax.persistence.Transient");
+                    clazz.getImports().add("jakarta.persistence.Transient");
                 }
                 if ((property.getJavaType() != null) && property.getJavaType().equalsIgnoreCase(Constants.DATE)) {
                     clazz.getImports().add("java.util.Date");
@@ -2001,11 +2001,11 @@ public class Core {
 
 
                 if (!property.getColumnAnnotation().equals("")) {
-                    clazz.getImports().add("javax.persistence.Column");
+                    clazz.getImports().add("jakarta.persistence.Column");
                 }
 
                 if (!property.isNullable()) {
-                    clazz.getImports().add("javax.persistence.Basic");
+                    clazz.getImports().add("jakarta.persistence.Basic");
                 }
 
                 if (State.getInstance().isEnableHibernateValidator()) {
@@ -2368,8 +2368,8 @@ public class Core {
                                     dstClassName));
 
 
-                    srcProperty.getClazz().getImports().add("javax.persistence.JoinColumn");
-                    srcProperty.getClazz().getImports().add("javax.persistence.JoinTable");
+                    srcProperty.getClazz().getImports().add("jakarta.persistence.JoinColumn");
+                    srcProperty.getClazz().getImports().add("jakarta.persistence.JoinTable");
                     dstProperty.setManyToManyInverseSide(true);
                     srcProperty.setManyToManyLink(srcJoin);
                     dstProperty.setManyToManyLink(dstJoin);

@@ -11,7 +11,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.persistence.Basic;
+import jakarta.persistence.Basic;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.Serializable;

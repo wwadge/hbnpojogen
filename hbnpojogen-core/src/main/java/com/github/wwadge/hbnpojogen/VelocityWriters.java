@@ -131,15 +131,15 @@ public class VelocityWriters {
     static {
         notForInterfaceImports.add("java.io.Serializable");
         notForInterfaceImports.add("java.util.HashSet");
-        notForInterfaceImports.add("javax.persistence.*");
+        notForInterfaceImports.add("jakarta.persistence.*");
 
         notForInterfaceImports.add("org.hibernate.annotations.Parameter");
         notForInterfaceImports.add("org.hibernate.annotations.Type");
         notForInterfaceImports.add("org.hibernate.annotations.TypeDef");
         notForInterfaceImports.add("org.hibernate.annotations.TypeDefs");
-        notForInterfaceImports.add("javax.persistence.Inheritance");
-        notForInterfaceImports.add("javax.persistence.InheritanceType");
-        notForInterfaceImports.add("javax.persistence.PrimaryKeyJoinColumn");
+        notForInterfaceImports.add("jakarta.persistence.Inheritance");
+        notForInterfaceImports.add("jakarta.persistence.InheritanceType");
+        notForInterfaceImports.add("jakarta.persistence.PrimaryKeyJoinColumn");
         notForInterfaceImports.add("java.util.Arrays");
         notForInterfaceImports.add("org.hibernate.validator.Size");
         notForInterfaceImports.add("org.hibernate.validator.NotNull");
