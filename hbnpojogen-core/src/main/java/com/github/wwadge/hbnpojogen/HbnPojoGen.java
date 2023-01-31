@@ -373,6 +373,10 @@ public class HbnPojoGen {
         if (generator.equalsIgnoreCase("AUTO")) {
             return GeneratorEnum.AUTO;
         }
+        if (generator.equalsIgnoreCase("IDENTITY")) {
+            return GeneratorEnum.IDENTITY;
+        }
+
         if (generator.equalsIgnoreCase("UUID")) {
             return GeneratorEnum.UUID;
         }
