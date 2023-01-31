@@ -892,7 +892,7 @@ public class Core {
                                 co.getImports().add("jakarta.persistence.SequenceGenerator");
                                 co.getImports().add("jakarta.persistence.GenerationType");
                             } else {
-                                property.setGeneratorType(GeneratorEnum.AUTO);
+                                property.setGeneratorType(GeneratorEnum.IDENTITY);
 
                             }
                             property.setGeneratedValue(true);

@@ -388,6 +388,10 @@ public class HbnPojoGen {
         if (generator.equalsIgnoreCase("IDAWARE")) {
             return GeneratorEnum.IDAWARE;
         }
+        if (generator.equalsIgnoreCase("IDENTITY")) {
+            return GeneratorEnum.IDAWARE;
+        }
+
         if (generator.equalsIgnoreCase("PKS")) {
             return GeneratorEnum.PKS;
         }

@@ -36,6 +36,7 @@ public enum GeneratorEnum implements Serializable {
      * Constant.
      */
     PKS,
+    IDENTITY,
     SEQUENCE,
     /**
      * Constant.
