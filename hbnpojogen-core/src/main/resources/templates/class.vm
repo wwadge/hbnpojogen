@@ -57,9 +57,8 @@ package ${packagename};
 	@GeneratedValue(generator = "hibernate-pks")
 #end
 #if ( $property.isGeneratedValueIdentity() )
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 #end
-
 #if ( $property.isGeneratedValueSequence() )
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "$property.sequenceHibernateRef")
 #end
@@ -252,7 +251,7 @@ $classCustomCodeFields
 	 */
 #end
 #if ( ($property.idField) && (! $class.subclass) && (! $class.compositePrimaryKey ))
-    @Id
+	@Id
 #end
 #if ($property.isTransientField())
     @Transient

@@ -51,7 +51,7 @@ public class Core {
         // importedKeys
         // so let's fetch them now
         for (String tableName : commitOrder) {
-                  System.out.println(tableName);
+//                  System.out.println(tableName);
             if (checkInIgnoreList(tableName)) {
                 continue;
             }
@@ -893,6 +893,9 @@ public class Core {
                                 co.getImports().add("jakarta.persistence.GenerationType");
                             } else {
                                 property.setGeneratorType(GeneratorEnum.AUTO);
+                                if (property.getFieldObj().getName().equalsIgnoreCase(defaultPattern)) {
+                                    property.setGeneratorType(defaultGeneratorType);
+                                }
 
                             }
                             property.setGeneratedValue(true);

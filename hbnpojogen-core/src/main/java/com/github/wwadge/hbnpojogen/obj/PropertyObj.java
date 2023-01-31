@@ -1353,6 +1353,10 @@ public class PropertyObj
         return GeneratorEnum.IDAWARE.equals(this.generatorType);
     }
 
+    public boolean isGeneratedValueIdentity() {
+        return GeneratorEnum.IDENTITY.equals(this.generatorType);
+    }
+
 
     /**
      * @return genvalue custom
