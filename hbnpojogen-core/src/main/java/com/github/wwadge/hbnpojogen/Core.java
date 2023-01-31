@@ -894,6 +894,7 @@ public class Core {
                             } else {
                                 property.setGeneratorType(GeneratorEnum.AUTO);
                                 if (property.getFieldObj().getName().equalsIgnoreCase(defaultPattern)) {
+                                    co.getImports().add("jakarta.persistence.GenerationType");
                                     property.setGeneratorType(defaultGeneratorType);
                                 }
 
