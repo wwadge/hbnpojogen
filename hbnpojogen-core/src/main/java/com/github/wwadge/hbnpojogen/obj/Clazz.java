@@ -1389,6 +1389,10 @@ public class Clazz
         return this.generatorEnumSupport.get(GeneratorEnum.AUTO.ordinal());
     }
 
+    public boolean isGeneratedValueIdentity() {
+        return this.generatorEnumSupport.get(GeneratorEnum.IDENTITY.ordinal());
+    }
+
 
     /**
      * @return true if generated enum = guid
@@ -1452,7 +1456,9 @@ public class Clazz
     public void setGeneratedValueGUID(boolean enabled) {
         this.generatorEnumSupport.set(GeneratorEnum.GUID.ordinal(), enabled);
     }
-
+    public void setGeneratedValueIdentity(boolean enabled) {
+        this.generatorEnumSupport.set(GeneratorEnum.IDENTITY.ordinal(), enabled);
+    }
 
     /**
      * @param enabled

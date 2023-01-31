@@ -56,6 +56,10 @@ package ${packagename};
 #if ( $property.isGeneratedValuePKS() )
 	@GeneratedValue(generator = "hibernate-pks")
 #end
+#if ( $property.isGeneratedValueIdentity() )
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+#end
+
 #if ( $property.isGeneratedValueSequence() )
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "$property.sequenceHibernateRef")
 #end
