@@ -136,6 +136,7 @@ public class VelocityWriters {
         notForInterfaceImports.add("org.hibernate.annotations.Parameter");
         notForInterfaceImports.add("org.hibernate.annotations.Type");
         notForInterfaceImports.add("org.hibernate.annotations.TypeDef");
+        notForInterfaceImports.add("jakarta.persistence.AttributeOverride");
         notForInterfaceImports.add("org.hibernate.annotations.TypeDefs");
         notForInterfaceImports.add("jakarta.persistence.Inheritance");
         notForInterfaceImports.add("jakarta.persistence.InheritanceType");
@@ -520,7 +521,7 @@ public class VelocityWriters {
 
             if (clazz.hasPropertyWithMoneyType()) {
                 String type = State.getInstance().getCustomMoneyType().substring(State.getInstance().getCustomMoneyType().lastIndexOf(".") + 1);
-                typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = " + type + ".class),\n";
+//                typedefs += "\t\t@TypeDef(name = \"moneyAmountWithCurrencyType\", typeClass = " + type + ".class),\n";
             }
             if (clazz.hasPropertyWithCurrencyType()) {
                 String type = State.getInstance().getCustomCurrencyUnitType().substring(State.getInstance().getCustomCurrencyUnitType().lastIndexOf(".") + 1);

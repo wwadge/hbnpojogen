@@ -1087,7 +1087,10 @@ public class Core {
                                 property.setHiddenCurrencyField(true);
                             }
                         }
-                        if (fieldObj.isEncryptedType() || fieldObj.isMoneyType() || fieldObj.isCurrencyType()) {
+                        if ( fieldObj.isMoneyType()) {
+                            co.getImports().add("jakarta.persistence.AttributeOverride");
+                        }
+                        if (fieldObj.isEncryptedType() || fieldObj.isCurrencyType()) {
                             co.getImports().add("org.hibernate.annotations.TypeDef");
                             co.getImports().add("org.hibernate.annotations.TypeDefs");
                             co.getImports().add("org.hibernate.annotations.Type");
@@ -1103,7 +1106,8 @@ public class Core {
                         checkCustomType(fieldObj, property);
 
                         if (fieldObj.isMoneyType()) {
-                            co.getImports().add(State.getInstance().getCustomMoneyType());
+//                            co.getImports().add(State.getInstance().getCustomMoneyType());
+                            co.getImports().add("io.hypersistence.utils.hibernate.type.money.MonetaryAmountType");
                             co.getImports().add("org.javamoney.moneta.Money");
                             property.setMoneyType(true);
                             property.setJavaType("Money");
@@ -1863,7 +1867,7 @@ public class Core {
                     clazz.getImports().add("java.util.WeakHashMap");
 
                 }
-                clazz.getImports().add("org.hibernate.proxy.HibernateProxy");
+//                clazz.getImports().add("org.hibernate.proxy.HibernateProxy");
                 // clazz.getImports().add(clazz.getDataLayerImplFullClassName());
             }
             boolean didScrubbedEnum = false;

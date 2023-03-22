@@ -1118,9 +1118,9 @@ public class PropertyObj
     public final String getColumnAnnotation() {
         LinkedList<String> annotation = new LinkedList<String>();
         StringBuffer sb = new StringBuffer();
-        if (!this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne()) {
+        if (!this.isMoneyType() && !this.manyToOne && !this.manyToMany && (!this.isPFK() || this.getClazz().isEmbeddable()) && !this.isOneToOne()) {
 
-            if ((!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0)) {
+            if ( (!this.clazz.isCompositePrimaryKey() && this.idField) || (this.fieldObj.getName().indexOf("_") > 0)) {
                 annotation.add(String.format("name = \"%s\"", this.fieldObj.getName()));
             }
             if (this.clazz.isSubclass() && this.idField) {
@@ -1162,16 +1162,19 @@ public class PropertyObj
 
                 System.exit(1);
             }
-            sb.insert(0, "\t@Columns(columns = {\n\t\t\t" + p.getColumnAnnotation() + ",\n\t\t");
-            if (sb.toString().endsWith(",\n\t\t")) {
-                sb.append("\t@Column()");
-            }
-            sb.append("\n\t})\n\t@Type(type = \"moneyAmountWithCurrencyType\")");
+            sb.insert(0, "\n\t@AttributeOverride(name = \"amount\", column = @Column(name = \""+this.fieldObj.getName() + "\"))");
+            sb.insert(0, "\t\n@AttributeOverride(name = \"currency\", column = @Column(name = \""+this.fieldObj.getName() + "_currency\"))");
+//            if (sb.toString().endsWith(",\n\t\t")) {
+//                sb.append("\t@Column()");
+//            }
+            sb.append("\n\t@CompositeType(MonetaryAmountType.class)");
             if (State.getInstance().isEnableJacksonSupport()) {
                 sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = org.zalando.jackson.datatype.money.MonetaryAmountDeserializer.class)");
                 sb.append("\n\t@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = org.zalando.jackson.datatype.money.MonetaryAmountSerializer.class)");
             }
         }
+
+
         if (this.isCurrencyType()) {
             sb.append("\n\t@Type(type = \"currencyUnitType\")");
             if (State.getInstance().isEnableJacksonSupport()) {
